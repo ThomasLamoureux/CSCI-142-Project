@@ -1,5 +1,6 @@
 package combat;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -15,16 +16,33 @@ public class CombatEntity {
 	public boolean dead = false;
 	private double damageMultiplier = 1.0;
 	private Point fieldPosition;
-	public String name;
+	private String name;
 	public JLabel sprite;
 	public JLabel healthBar;
 	public int maxHealth;
 	
-	public CombatEntity(String name, int health, Move[] moveSet) {
+	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite) {
 		this.health = health;
 		this.moveSet = moveSet;
 		this.name = name; // Temporarys
 		this.maxHealth = health;
+		
+		if (sprite == null) {
+			JLabel defaultSprite = new JLabel(this.getName());
+			defaultSprite.setPreferredSize(new Dimension(70, 70));
+			defaultSprite.setSize(new Dimension(70, 70));
+			defaultSprite.setBackground(new Color(20, 0, 255));
+			defaultSprite.setOpaque(true);
+			
+			this.sprite = defaultSprite;
+		} else {
+			this.sprite = sprite;
+		}
+	}
+	
+	
+	public String getName() {
+		return this.name;
 	}
 
 	
@@ -32,9 +50,11 @@ public class CombatEntity {
 		this.moveSet = moveSet;
 	}
 	
+	
 	public void performTurn(Move move, CombatEntity target) {
 		move.useMove(target);
 	}
+	
 	
 	public void recieveDamage(int damage) {
 		int totalDamage = (int)(damage - damage * this.damageResistence);

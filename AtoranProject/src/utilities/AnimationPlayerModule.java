@@ -2,6 +2,8 @@ package utilities;
 
 import java.util.ArrayList;
 
+import animations.Animation;
+
 public class AnimationPlayerModule {
 	private static ArrayList<Animation> animations = new ArrayList<Animation>();
 

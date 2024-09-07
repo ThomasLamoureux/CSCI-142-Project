@@ -1,11 +1,12 @@
 package engine;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import animations.Animation;
 import combat.CombatEntity;
 import main.Window;
-import utilities.Animation;
 import utilities.AnimationPlayerModule;
 
 public class Engine {
@@ -53,6 +54,9 @@ public class Engine {
 				//playAnimationFrame();
 				AnimationPlayerModule.playAnimations();
 				refreshWindow();
+				Date dt = new Date();
+				
+				//System.out.println(dt.getTime());
 				
 			} catch (InterruptedException err) {
 				err.printStackTrace();

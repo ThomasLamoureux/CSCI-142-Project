@@ -49,87 +49,49 @@ public class CombatPlayerInteractions {
 		layerOnePane.add(moveMenu, 0);
 		
 		
-		loadTeamEntitiesImages();
+		loadEntityImagesOfTeam(Combat.teams[0], true);
 		
 				
 		window.setVisible(true);
 	}
 	
 	
-	public static void loadEnemyEntitiesImages() {
-		final Point[] positionsArrayRight = {new Point(1600, 500), new Point(1650, 600), new Point(1660, 400)};
+	public static JLabel createHealthBar() {
+		JLabel healthBar = new JLabel();
 		
-		Team teamTwo = Combat.teams[1];
+		healthBar.setPreferredSize(new Dimension(80, 20));
+		healthBar.setSize(new Dimension(80, 20));
+		healthBar.setBackground(new Color(0, 255, 0));
+		healthBar.setOpaque(true);
 		
-		for (int i = 0; i < teamTwo.members.length; i++) {
-			System.out.println("ran once");
-			CombatEntity member = teamTwo.members[i];
-			
-			member.setFieldPosition(positionsArrayRight[i]);
-			
-			JLabel temporaryLabel = new JLabel(member.name);
-			temporaryLabel.setPreferredSize(new Dimension(70, 70));
-			temporaryLabel.setSize(new Dimension(70, 70));
-			temporaryLabel.setBackground(new Color(255, 0, 0));
-			temporaryLabel.setOpaque(true);
-			
-			JLabel healthBar = new JLabel();
-			healthBar.setPreferredSize(new Dimension(80, 20));
-			healthBar.setSize(new Dimension(80, 20));
-			healthBar.setBackground(new Color(0, 255, 0));
-			healthBar.setOpaque(true);
-			
-			healthBar.setLocation(new Point(member.getFieldPosition().x, member.getFieldPosition().y - 90));
-			
-			
-			temporaryLabel.setLocation(member.getFieldPosition());
-			
-			member.sprite = temporaryLabel;
-			member.healthBar = healthBar;
-			
-			//Window.getWindow().add(temporaryLabel);
-			
-			layerOnePane.add(temporaryLabel, JLayeredPane.DEFAULT_LAYER);
-			layerOnePane.add(healthBar, JLayeredPane.DEFAULT_LAYER);
-		}
-		
+		return healthBar;
 	}
 	
 	
-	public static void loadTeamEntitiesImages() {
-		final Point[] positionsArrayLeft = {new Point(100, 500), new Point(50, 600), new Point(40, 400)};
+	public static void loadEntityImagesOfTeam(Team team, boolean leftSide) {
+		Point[] positionsArray;
 		
-		System.out.print("test");
+		if (leftSide == true) {
+			positionsArray = new Point[]{new Point(100, 500), new Point(50, 600), new Point(40, 400)};
+		} else {
+			positionsArray = new Point[]{new Point(1600, 500), new Point(1650, 600), new Point(1660, 400)};
+		}
 		
-		Team teamOne = Combat.teams[0];
-		
-		for (int i = 0; i < teamOne.members.length; i++) {
-			CombatEntity member = teamOne.members[i];
+		for (int i = 0; i < team.members.length; i++) {
+			CombatEntity member = team.members[i];
 			
-			member.setFieldPosition(positionsArrayLeft[i]);
+			member.setFieldPosition(positionsArray[i]);
 			
-			JLabel temporaryLabel = new JLabel(member.name);
-			temporaryLabel.setPreferredSize(new Dimension(70, 70));
-			temporaryLabel.setSize(new Dimension(70, 70));
-			temporaryLabel.setBackground(new Color(20, 0, 255));
-			temporaryLabel.setOpaque(true);
-			
-			temporaryLabel.setLocation(member.getFieldPosition());
+			JLabel sprite = member.sprite;	
+			sprite.setLocation(member.getFieldPosition());
 			
 			JLabel healthBar = new JLabel();
-			healthBar.setPreferredSize(new Dimension(80, 20));
-			healthBar.setSize(new Dimension(80, 20));
-			healthBar.setBackground(new Color(0, 255, 0));
-			healthBar.setOpaque(true);
+			//healthBar.setLocation(new Point(member.getFieldPosition().x, member.getFieldPosition().y + 290));
 			
-			healthBar.setLocation(new Point(member.getFieldPosition().x, member.getFieldPosition().y - 90));
-
-			
-			member.sprite = temporaryLabel;
 			member.healthBar = healthBar;
 			
 			
-			layerOnePane.add(temporaryLabel, JLayeredPane.DEFAULT_LAYER);
+			layerOnePane.add(sprite, JLayeredPane.DEFAULT_LAYER);
 			layerOnePane.add(healthBar, JLayeredPane.DEFAULT_LAYER);
 		}	
 	}
@@ -174,7 +136,7 @@ public class CombatPlayerInteractions {
 	private static void createTargetButton(CombatEntity target) {
 		JButton targetButton = new JButton();
 		
-		targetButton.setText("test");
+		targetButton.setText("Select");
 		targetButton.addActionListener(new ActionListener() {
 			@Override
             public void actionPerformed(ActionEvent event) {

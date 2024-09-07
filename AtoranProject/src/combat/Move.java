@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
-import utilities.Animation;
+import animations.Animation;
 import utilities.AnimationPlayerModule;
 
 public class Move {
@@ -20,9 +20,6 @@ public class Move {
 		validTargets.put("enemies", enemies);
 	}
 	
-	public void selected() {
-		
-	}
 	
 	public void setDamage(int damage) {
 		this.damage = damage;
@@ -43,8 +40,6 @@ public class Move {
 	// Overrided
 	public void useMove(CombatEntity target) {
 		target.recieveDamage(damage);
-		System.out.println(target.health);
-		System.out.println(target.name);
 		
 		Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
 		int[] framesToTake = {16, 20};
