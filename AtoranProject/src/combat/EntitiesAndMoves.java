@@ -1,11 +1,15 @@
 package combat;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -17,9 +21,35 @@ import utilities.AnimationPlayerModule;
 
 public class EntitiesAndMoves {
 	
+	public static JLabel getAtoranSprite() {
+		JLabel atoranSprite = new JLabel("Atoran");
+		atoranSprite.setPreferredSize(new Dimension(200, 200));
+		atoranSprite.setSize(new Dimension(200, 200));
+		atoranSprite.setBackground(new Color(20, 0, 255));
+		atoranSprite.setOpaque(false);
+		
+		File targetFile = new File("Resources\\Images\\AtoranStand.png");
+		Image image = null;
+		try {
+			image = ImageIO.read(targetFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+		image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
+		ImageIcon targetIcon = new ImageIcon(image);
+		atoranSprite.setIcon(targetIcon);
+		
+		return atoranSprite;
+	}
+	
+	
 	public static class AtoranEntity extends CombatEntity {
+
 		public AtoranEntity() {
-			super("Atoran", 150, null, null);
+			super("Atoran", 250, null, getAtoranSprite());
 			
 			Move[] moveSet = {new SlashMove(this), new SweepMove(this)};
 			this.setMoveSet(moveSet);

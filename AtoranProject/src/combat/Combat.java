@@ -108,7 +108,7 @@ public class Combat {
 	
 
 	public static void levelLost() {
-		
+		System.out.println("YYY");
 	}
 	
 	
@@ -138,8 +138,9 @@ public class Combat {
 			waveComplete();
 		}
 		
-		if (checkIfTeamIsDead(teams[0]) == false) {
+		if (checkIfTeamIsDead(teams[0]) == true) {
 			levelLost();
+			return;
 		}
 		
 		if (currentEntityTurnIndex == currentTeam.members.length) { 

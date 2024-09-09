@@ -142,7 +142,7 @@ public class CombatPlayerInteractions {
 	private static void createTargetButton(CombatEntity target) {
 		JButton targetButton = new JButton();
 		
-		targetButton.setText("Select");
+
 		targetButton.addActionListener(new ActionListener() {
 			@Override
             public void actionPerformed(ActionEvent event) {
