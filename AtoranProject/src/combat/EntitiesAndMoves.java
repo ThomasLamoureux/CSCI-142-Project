@@ -79,10 +79,9 @@ public class EntitiesAndMoves {
 					animationLabel.setLocation(location);
 					if (fi == 0) {
 						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.PALETTE_LAYER);
-					} else if (fi == images.length) {
-						
 					} else if (fi == 2) {
 						AnimationPlayerModule.shakeAnimation(target);
+						target.updateHealthBar();
 					}
 					System.out.println("method played");
 				};
@@ -138,7 +137,7 @@ public class EntitiesAndMoves {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			Point targetDestination = new Point((int)(target.sprite.getLocation().x * 0.8), target.sprite.getLocation().y);
+			Point targetDestination = new Point(1300, 500);
 			
 			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
 			int[] framesToTake = {24, 28, 22};
@@ -159,17 +158,18 @@ public class EntitiesAndMoves {
 					//BufferedImage mirror = AnimationPlayerModule.createMirror(images[fi]);
 					Image image = images[fi];
 					image = image.getScaledInstance((int)(550 * 1.4), (int)(400 * 1.4), Image.SCALE_DEFAULT);
+					
+					//image = AnimationPlayerModule.rotateImage(image, fi);
 					animationLabel.setIcon(new ImageIcon(image));
 					Point spriteLocation = this.getParent().sprite.getLocation();
-					Point location = new Point(spriteLocation.x - 150, spriteLocation.y - 300);
+					Point location = new Point(spriteLocation.x - 200, spriteLocation.y - 250);
 					animationLabel.setLocation(location);
 					if (fi == 0) {
 						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.PALETTE_LAYER);
-					} else if (fi == images.length) {
-						
 					} else if (fi == 1) {
 						for (int j = 0; j < enemies.length; j++) {
 							AnimationPlayerModule.shakeAnimation(enemies[j]);
+							enemies[j].updateHealthBar();
 						}
 					}
 					System.out.println("method played");

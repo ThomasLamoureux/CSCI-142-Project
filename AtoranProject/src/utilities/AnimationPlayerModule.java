@@ -113,6 +113,18 @@ public class AnimationPlayerModule {
 		
 		return newImage;
     }
+    
+    public static BufferedImage rotateImage(Image image, int degrees) {
+		BufferedImage newImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		
+		Graphics2D draw = newImage.createGraphics();
+		draw.rotate(Math.PI / degrees, newImage.getWidth() / 2, newImage.getHeight() / 2);
+		draw.drawImage(image, 0, 0, null);
+		
+		draw.dispose();
+		
+		return newImage;
+    }
 	
 	/*public static void main(String[] args) {
 		System.out.println("ran");

@@ -4,9 +4,13 @@ import main.Window;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
@@ -15,6 +19,8 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class CombatPlayerInteractions {
 	private static JPanel moveMenu = new JPanel();
@@ -85,8 +91,8 @@ public class CombatPlayerInteractions {
 			JLabel sprite = member.sprite;	
 			sprite.setLocation(member.getFieldPosition());
 			
-			JLabel healthBar = new JLabel();
-			//healthBar.setLocation(new Point(member.getFieldPosition().x, member.getFieldPosition().y + 290));
+			JLabel healthBar = createHealthBar();
+			healthBar.setLocation(new Point(member.getFieldPosition().x, member.getFieldPosition().y + 75));
 			
 			member.healthBar = healthBar;
 			
@@ -144,27 +150,42 @@ public class CombatPlayerInteractions {
             }
         });
 		//targetButton.setPreferredSize(new Dimension(100, 100));
-		targetButton.setSize(new Dimension(target.sprite.getSize()));
-		targetButton.setOpaque(true);
-		targetButton.setBackground(new Color(0x005572));
+		targetButton.setSize(new Dimension(100, 100));
+		targetButton.setBackground(null);
+		targetButton.setOpaque(false);
+		targetButton.setContentAreaFilled(false);
+		targetButton.setBorderPainted(false);
 		
+		File targetFile = new File("Resources\\Images\\target.png");
+		Image image = null;
+		try {
+			image = ImageIO.read(targetFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+		image = image.getScaledInstance(100, 100, Image.SCALE_DEFAULT);
+		ImageIcon targetIcon = new ImageIcon(image);
+		targetButton.setIcon(targetIcon);
+			
 		
 		selectTargetButtonsPanel.add(targetButton);
-		selectTargetButtonsPanel.setPreferredSize(new Dimension(1920, 1080));
-		selectTargetButtonsPanel.setSize(new Dimension(1920, 1080));
-		selectTargetButtonsPanel.setLayout(null);
-		selectTargetButtonsPanel.setLocation(new Point(0, 0));
-		selectTargetButtonsPanel.setOpaque(false);
 		
-		targetButton.setLocation(target.getFieldPosition());
-		
-		layerOnePane.add(selectTargetButtonsPanel, JLayeredPane.PALETTE_LAYER);
+		targetButton.setLocation(target.sprite.getLocation().x - 15, target.sprite.getLocation().y - 15);
 		//Window.getWindow().refresh();
 	}
 	
 	
 	private static void createTargetSelection(Move move) {
 		Team[] teams = Combat.teams;
+		
+		selectTargetButtonsPanel.setPreferredSize(new Dimension(1920, 1080));
+		selectTargetButtonsPanel.setSize(new Dimension(1920, 1080));
+		selectTargetButtonsPanel.setLayout(null);
+		selectTargetButtonsPanel.setLocation(new Point(0, 0));
+		selectTargetButtonsPanel.setOpaque(false);
 		
 		if (move.checkIfTargetIsValid("enemies")) {
 			System.out.println("ene");
@@ -174,6 +195,8 @@ public class CombatPlayerInteractions {
 				}
 			}
 		}
+		
+		layerOnePane.add(selectTargetButtonsPanel, JLayeredPane.PALETTE_LAYER);
 	}
 	
 	

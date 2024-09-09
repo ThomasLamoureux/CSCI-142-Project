@@ -38,6 +38,8 @@ public class Move {
 	}
 	
 	protected void runAnimation(CombatEntity target) {
+		target.updateHealthBar();
+		
 		Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
 		int[] framesToTake = {30, 38};
 		

@@ -56,15 +56,17 @@ public class CombatEntity {
 	}
 	
 	
+	public void updateHealthBar() {
+		int healthBarPercent = (int)((double)this.health/(double)this.maxHealth * 80);
+		this.healthBar.setPreferredSize(new Dimension(healthBarPercent, 20 ));
+		this.healthBar.setSize(new Dimension(healthBarPercent, 20 ));
+	}
+	
+	
 	public void recieveDamage(int damage) {
 		int totalDamage = (int)(damage - damage * this.damageResistence);
 		
 		this.health = this.health - totalDamage;
-		int healthBarPercent = (int)((double)this.health/(double)this.maxHealth * 80);
-		System.out.println(healthBarPercent);
-		System.out.println("HAHAHAHA");
-		this.healthBar.setPreferredSize(new Dimension(healthBarPercent, 20 ));
-		this.healthBar.setSize(new Dimension(healthBarPercent, 20 ));
 		
 		if (this.health <= 0 ) {
 			this.death();
@@ -74,7 +76,18 @@ public class CombatEntity {
 	
 	public void death() {
 		this.dead = true;
-		sprite.setVisible(false);
+		
+		Runnable removeSprite = () -> {
+			try {
+				TimeUnit.MILLISECONDS.sleep(1000);
+				this.sprite.setVisible(false);
+			} catch (InterruptedException err) {
+				err.printStackTrace();
+			}
+		};
+		
+		Thread removeSpriteThread = new Thread(removeSprite);
+		removeSpriteThread.start();
 	}
 	
 	

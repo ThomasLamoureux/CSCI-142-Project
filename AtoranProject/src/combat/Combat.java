@@ -170,7 +170,7 @@ public class Combat {
 		// Using a runnable and thread is necessary to prevent the player screen from freezing during the wait
 		Runnable turnWait = () -> {
 			try {
-				TimeUnit.MILLISECONDS.sleep(1000);
+				TimeUnit.MILLISECONDS.sleep(1200);
 				entity.myTurn(currentTeam.automatic, currentTeam.members, notCurrentTeam.members);
 			} catch (InterruptedException err) {
 				err.printStackTrace();
