@@ -1,8 +1,18 @@
 package combat;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 
 import animations.Animation;
+import animations.Keyframe;
+import main.Window;
 import utilities.AnimationPlayerModule;
 
 public class EntitiesAndMoves {
@@ -33,13 +43,67 @@ public class EntitiesAndMoves {
 			Move[] moveSet = null;
 		}
 	}
+
 	
 	public static class SlashMove extends Move {
 
 		public SlashMove(CombatEntity parent) {
 			super("Slash", false, true, parent);
 		
-			this.setDamage(25);
+			this.setDamage(20);
+		}
+		
+		@Override
+		protected void runAnimation(CombatEntity target) {
+			Point targetDestination = new Point((int)(target.sprite.getLocation().x * 0.9), target.sprite.getLocation().y);
+			
+			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
+			int[] framesToTake = {24, 28, 22};
+			Keyframe[] keyframes = new Keyframe[24 + 28 + 22];
+			
+			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources\\Animations\\SlashingAnimation");
+			
+			
+			JLabel animationLabel = new JLabel();
+			animationLabel.setSize(new Dimension(434, 230));
+
+			int index = 24;
+			for (int i = 0; i < images.length; i++) {
+				final int fi = i;
+				Runnable method = () -> {
+					BufferedImage mirror = AnimationPlayerModule.createMirror(images[fi]);
+					
+					animationLabel.setIcon(new ImageIcon(mirror));
+					Point spriteLocation = this.getParent().sprite.getLocation();
+					Point location = new Point(spriteLocation.x - 90, spriteLocation.y - 100);
+					animationLabel.setLocation(location);
+					if (fi == 0) {
+						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.PALETTE_LAYER);
+					} else if (fi == images.length) {
+						
+					} else if (fi == 2) {
+						AnimationPlayerModule.shakeAnimation(target);
+					}
+					System.out.println("method played");
+				};
+				
+				Keyframe keyframe = new Keyframe(method);
+				keyframes[i + index] = keyframe;
+				index += 2;
+				System.out.println("made key");
+			}
+			
+			Runnable method = () -> {
+				CombatPlayerInteractions.layerOnePane.remove(animationLabel);
+			};
+			
+			keyframes[index + 2] = new Keyframe(method);
+			
+			
+			Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
+			animation.keyframes = keyframes;
+			
+			AnimationPlayerModule.addAnimation(animation);
 		}
 	}
 	
@@ -69,10 +133,63 @@ public class EntitiesAndMoves {
 				enemies[i].recieveDamage(this.getDamage());
 			}
 			
-			Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
-			int[] framesToTake = {16, 20};
+			runAnimation(target);
+		}
+		
+		@Override
+		protected void runAnimation(CombatEntity target) {
+			Point targetDestination = new Point((int)(target.sprite.getLocation().x * 0.8), target.sprite.getLocation().y);
 			
-			Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake);
+			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
+			int[] framesToTake = {24, 28, 22};
+			Keyframe[] keyframes = new Keyframe[24 + 28 + 22];
+			
+			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources\\Animations\\SweepAnimation");
+			
+			
+			JLabel animationLabel = new JLabel();
+			animationLabel.setSize(new Dimension((int)(550 * 1.4), (int)(400 * 1.4)));
+			
+			final CombatEntity[] enemies = Combat.notCurrentTeam.members;
+
+			int index = 24;
+			for (int i = 0; i < images.length; i++) {
+				final int fi = i;
+				Runnable method = () -> {
+					//BufferedImage mirror = AnimationPlayerModule.createMirror(images[fi]);
+					Image image = images[fi];
+					image = image.getScaledInstance((int)(550 * 1.4), (int)(400 * 1.4), Image.SCALE_DEFAULT);
+					animationLabel.setIcon(new ImageIcon(image));
+					Point spriteLocation = this.getParent().sprite.getLocation();
+					Point location = new Point(spriteLocation.x - 150, spriteLocation.y - 300);
+					animationLabel.setLocation(location);
+					if (fi == 0) {
+						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.PALETTE_LAYER);
+					} else if (fi == images.length) {
+						
+					} else if (fi == 1) {
+						for (int j = 0; j < enemies.length; j++) {
+							AnimationPlayerModule.shakeAnimation(enemies[j]);
+						}
+					}
+					System.out.println("method played");
+				};
+				
+				Keyframe keyframe = new Keyframe(method);
+				keyframes[i + index] = keyframe;
+				index += 2;
+				System.out.println("made key");
+			}
+			
+			Runnable method = () -> {
+				CombatPlayerInteractions.layerOnePane.remove(animationLabel);
+			};
+			
+			keyframes[index + 2] = new Keyframe(method);
+			
+			
+			Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
+			animation.keyframes = keyframes;
 			
 			AnimationPlayerModule.addAnimation(animation);
 		}

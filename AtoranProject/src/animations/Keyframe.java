@@ -4,15 +4,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class Keyframe {
+	private Runnable method;
 	
-	public Keyframe(Animation parent, Runnable method) {
-		if (method != null) {
-			method.run();
-		}
+	public Keyframe(Runnable method) {
+		this.method = method;
 	}
 
 	
 	public void playKeyframe() {
-		
+		method.run();
 	}
 }

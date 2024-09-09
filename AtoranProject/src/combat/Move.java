@@ -37,16 +37,20 @@ public class Move {
 		return this.parent;
 	}
 	
+	protected void runAnimation(CombatEntity target) {
+		Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
+		int[] framesToTake = {30, 38};
+		
+		Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
+		
+		AnimationPlayerModule.addAnimation(animation);
+	}
+	
 	// Overrided
 	public void useMove(CombatEntity target) {
 		target.recieveDamage(damage);
-		
-		Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
-		int[] framesToTake = {16, 20};
-		
-		Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake);
-		
-		AnimationPlayerModule.addAnimation(animation);
+	
+		runAnimation(target);
 	}
 	
 	public Boolean checkIfTargetIsValid(String target) {

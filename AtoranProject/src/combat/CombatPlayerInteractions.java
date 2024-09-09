@@ -21,7 +21,7 @@ public class CombatPlayerInteractions {
 	private static JPanel selectTargetButtonsPanel = new JPanel();
 	private static Move selectedMove;
 	private static CombatEntity selectedTarget;
-	private static JLayeredPane layerOnePane = new JLayeredPane(); 
+	public static JLayeredPane layerOnePane = new JLayeredPane(); 
 	
 	public static void openCombatScreen() {
 		Window window = main.Window.createWindow(); // New JFrame
