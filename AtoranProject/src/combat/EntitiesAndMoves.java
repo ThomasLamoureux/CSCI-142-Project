@@ -28,7 +28,7 @@ public class EntitiesAndMoves {
 		atoranSprite.setBackground(new Color(20, 0, 255));
 		atoranSprite.setOpaque(false);
 		
-		File targetFile = new File("Resources\\Images\\AtoranStand.png");
+		File targetFile = new File("Resources/Images/AtoranStand.png");
 		Image image = null;
 		try {
 			image = ImageIO.read(targetFile);
@@ -91,7 +91,7 @@ public class EntitiesAndMoves {
 			int[] framesToTake = {24, 28, 22};
 			Keyframe[] keyframes = new Keyframe[24 + 28 + 22];
 			
-			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources\\Animations\\SlashingAnimation");
+			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources/Animations/SlashingAnimation");
 			
 			
 			JLabel animationLabel = new JLabel();
@@ -173,7 +173,7 @@ public class EntitiesAndMoves {
 			int[] framesToTake = {24, 28, 22};
 			Keyframe[] keyframes = new Keyframe[24 + 28 + 22];
 			
-			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources\\Animations\\SweepAnimation");
+			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources/Animations/SweepAnimation");
 			
 			
 			JLabel animationLabel = new JLabel();

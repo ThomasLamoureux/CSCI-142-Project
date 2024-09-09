@@ -156,7 +156,7 @@ public class CombatPlayerInteractions {
 		targetButton.setContentAreaFilled(false);
 		targetButton.setBorderPainted(false);
 		
-		File targetFile = new File("Resources\\Images\\target.png");
+		File targetFile = new File("Resources/Images/target.png");
 		Image image = null;
 		try {
 			image = ImageIO.read(targetFile);
