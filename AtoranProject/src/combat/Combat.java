@@ -32,6 +32,8 @@ public class Combat {
 	
 	
 	public static void createLevelFromInfo(Level level) {
+		Window.createWindow();
+		
 		currentLevel = level;
 		
 		teamTurn = 0;

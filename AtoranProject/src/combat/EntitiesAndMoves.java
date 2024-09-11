@@ -48,14 +48,14 @@ public class EntitiesAndMoves {
 	
 	
 	public static class AtoranEntity extends CombatEntity {
-
 		public AtoranEntity() {
-			super("Atoran", 250, null, getAtoranSprite());
+			super("Atoran", 5, null, getAtoranSprite());
 			
 			Move[] moveSet = {new SlashMove(this), new SweepMove(this)};
 			this.setMoveSet(moveSet);
 		}	
 	}
+	
 	
 	public static class SlimeEntity extends CombatEntity {
 		public SlimeEntity() {
@@ -66,6 +66,7 @@ public class EntitiesAndMoves {
 		}
 	}
 
+	
 	public static class BanditEntity extends CombatEntity {
 
 		public BanditEntity() {
@@ -86,7 +87,8 @@ public class EntitiesAndMoves {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			Point targetDestination = new Point((int)(target.sprite.getLocation().x + 250 * this.getParent().facingLeft), target.sprite.getLocation().y);
+			Point targetDestination = new Point((int)(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), target.sprite.getLocation().y);
+			//targetDestination = Window.scalePoint(targetDestination);
 			
 			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
 			int[] framesToTake = {24, 28, 22};
@@ -154,8 +156,7 @@ public class EntitiesAndMoves {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			Point targetDestination = new Point((int)(target.sprite.getLocation().x + 250 * this.getParent().facingLeft), target.sprite.getLocation().y);
-			targetDestination = Window.scalePoint(targetDestination);
+			Point targetDestination = new Point((int)(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), target.sprite.getLocation().y);
 			
 			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
 			int[] framesToTake = {24, 28, 22};
@@ -235,6 +236,7 @@ public class EntitiesAndMoves {
 		@Override
 		protected void runAnimation(CombatEntity target) {
 			Point targetDestination = new Point(1300, 500);
+			targetDestination = Window.scalePoint(targetDestination);
 			
 			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
 			int[] framesToTake = {24, 28, 22};
