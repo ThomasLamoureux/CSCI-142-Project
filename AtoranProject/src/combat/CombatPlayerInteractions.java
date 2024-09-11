@@ -1,6 +1,7 @@
 package combat;
 
 import main.Window;
+import utilities.AnimationPlayerModule;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -60,7 +61,7 @@ public class CombatPlayerInteractions {
 		
 		Window.scaleComponent(moveMenu);
 		//moveMenu.setVisible(false);
-		layerOnePane.add(moveMenu, JLayeredPane.DEFAULT_LAYER);
+		layerOnePane.add(moveMenu, JLayeredPane.PALETTE_LAYER);
 		
 		inventoryPanel.setLocation(0, 880);
 		inventoryPanel.setSize(new Dimension(500, 200));
@@ -70,7 +71,7 @@ public class CombatPlayerInteractions {
 		
 		Window.scaleComponent(inventoryPanel);
 		
-		layerOnePane.add(inventoryPanel, JLayeredPane.DEFAULT_LAYER);
+		layerOnePane.add(inventoryPanel, JLayeredPane.PALETTE_LAYER);
 		
 		
 		announcementText.setLocation(0, 100);
@@ -84,23 +85,52 @@ public class CombatPlayerInteractions {
 		
 		Window.scaleComponent(announcementText);
 		
-		layerOnePane.add(announcementText, JLayeredPane.MODAL_LAYER); 
+		layerOnePane.add(announcementText, JLayeredPane.PALETTE_LAYER); 
 		
 		
 		loadEntityImagesOfTeam(Combat.teams[0], true);
+		
+		
+		JLabel background = new JLabel();
+		background.setLocation(0, 0);
+		background.setSize(new Dimension(1920, 1080));
+		background.setVisible(true);
+		
+		File backgroundFile = new File("Resources/Images/TemporaryForestBackgroundCropped.png");
+		
+		Image image = null;
+		try {
+			image = ImageIO.read(backgroundFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+		//image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
+		image = Window.scaleImage(1920, 1080, image);
+		
+		ImageIcon backgroundIcon = new ImageIcon(image);
+		
+		background.setIcon(backgroundIcon);
+		
+		
+		layerOnePane.add(background, JLayeredPane.DEFAULT_LAYER); 
 		
 				
 		window.setVisible(true);
 	}
 	
 	
-	public static JLabel createHealthBar() {
+	public static JLabel createHealthBar(int Size) {
 		JLabel healthBar = new JLabel();
 		
-		healthBar.setPreferredSize(new Dimension(80, 20));
-		healthBar.setSize(new Dimension(80, 20));
+		healthBar.setPreferredSize(new Dimension(Size, 15));
+		healthBar.setSize(new Dimension(Size, 15));
 		healthBar.setBackground(new Color(0, 255, 0));
 		healthBar.setOpaque(true);
+		
+		Window.scaleComponent(healthBar);
 		
 		return healthBar;
 	}
@@ -110,9 +140,9 @@ public class CombatPlayerInteractions {
 		Point[] positionsArray;
 		
 		if (leftSide == true) {
-			positionsArray = new Point[]{new Point(100, 500), new Point(50, 600), new Point(40, 400)};
+			positionsArray = new Point[]{new Point(500, 900), new Point(350, 950), new Point(250, 850)};
 		} else {
-			positionsArray = new Point[]{new Point(1600, 500), new Point(1650, 600), new Point(1660, 400)};
+			positionsArray = new Point[]{new Point(1200, 900), new Point(1350, 950), new Point(1450, 850)};
 		}
 		
 		for (int i = 0; i < team.members.length; i++) {
@@ -124,13 +154,17 @@ public class CombatPlayerInteractions {
 				member.facingLeft = 1;
 			}
 			
+			Point position = positionsArray[i];
+			position = Window.scalePoint(position);
+			position = new Point(position.x, position.y - member.sprite.getHeight());
+			
 			member.loadSpriteIcon();
-			member.setFieldPosition(positionsArray[i]);
+			member.setFieldPosition(position);
 			
 			JLabel sprite = member.sprite;	
 			sprite.setLocation(member.getFieldPosition());
 			
-			JLabel healthBar = createHealthBar();
+			JLabel healthBar = createHealthBar(member.health);
 			healthBar.setLocation(new Point(member.getFieldPosition().x, member.getFieldPosition().y + 75));
 			
 			member.healthBar = healthBar;
@@ -140,8 +174,8 @@ public class CombatPlayerInteractions {
 			Window.scaleComponent(member.sprite);
 			
 			
-			layerOnePane.add(sprite, JLayeredPane.DEFAULT_LAYER);
-			layerOnePane.add(healthBar, JLayeredPane.DEFAULT_LAYER);
+			layerOnePane.add(sprite, JLayeredPane.PALETTE_LAYER);
+			layerOnePane.add(healthBar, JLayeredPane.PALETTE_LAYER);
 		}	
 	}
 	
@@ -239,7 +273,7 @@ public class CombatPlayerInteractions {
 			}
 		}
 		
-		layerOnePane.add(selectTargetButtonsPanel, JLayeredPane.PALETTE_LAYER);
+		layerOnePane.add(selectTargetButtonsPanel, JLayeredPane.MODAL_LAYER);
 	}
 	
 	

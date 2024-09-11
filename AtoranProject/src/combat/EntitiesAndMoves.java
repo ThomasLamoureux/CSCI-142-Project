@@ -23,8 +23,8 @@ public class EntitiesAndMoves {
 	
 	public static JLabel getAtoranSprite() {
 		JLabel atoranSprite = new JLabel("Atoran");
-		atoranSprite.setPreferredSize(new Dimension(200, 200));
-		atoranSprite.setSize(new Dimension(200, 200));
+		atoranSprite.setPreferredSize(new Dimension(225, 225));
+		atoranSprite.setSize(new Dimension(225, 225));
 		atoranSprite.setBackground(new Color(20, 0, 255));
 		atoranSprite.setOpaque(false);
 		
@@ -33,8 +33,8 @@ public class EntitiesAndMoves {
 	
 	public static JLabel getSlimeSprite() {
 		JLabel slimeSprite = new JLabel("Atoran");
-		slimeSprite.setPreferredSize(new Dimension(100, 100));
-		slimeSprite.setSize(new Dimension(100, 100));
+		slimeSprite.setPreferredSize(new Dimension(125, 125));
+		slimeSprite.setSize(new Dimension(125, 125));
 		slimeSprite.setBackground(new Color(20, 0, 255));
 		slimeSprite.setOpaque(false);
 		
@@ -59,7 +59,7 @@ public class EntitiesAndMoves {
 	
 	public static class SlimeEntity extends CombatEntity {
 		public SlimeEntity() {
-			super("Slime", 25, null, getSlimeSprite());
+			super("Slime", 80, null, getSlimeSprite());
 			
 			File targetFile = new File("Resources/Images/BlueslimeStill.png");
 			this.setImageFile(targetFile);
@@ -79,7 +79,7 @@ public class EntitiesAndMoves {
 			
 			this.flipIfFacingLeft = true;
 			
-			File targetFile = new File("Resources/Images/AtoranStand.png");
+			File targetFile = new File("Resources/Images/AtoranStand.png"); // FILLER, REPLACE
 			this.setImageFile(targetFile);
 			
 			Move[] moveSet = null;
@@ -97,7 +97,10 @@ public class EntitiesAndMoves {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			Point targetDestination = new Point((int)(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), target.sprite.getLocation().y);
+			Point targetDestination = new Point((int)
+					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
+					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
+			
 			//targetDestination = Window.scalePoint(targetDestination);
 			
 			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
@@ -109,6 +112,7 @@ public class EntitiesAndMoves {
 			
 			JLabel animationLabel = new JLabel();
 			animationLabel.setSize(new Dimension(434, 230));
+			Window.scaleComponent(animationLabel);
 
 			int index = 24;
 			for (int i = 0; i < images.length; i++) {
@@ -124,11 +128,15 @@ public class EntitiesAndMoves {
 					image = Window.scaleImage(434, 230, image);
 					
 					animationLabel.setIcon(new ImageIcon(image));
-					Point spriteLocation = this.getParent().sprite.getLocation();
-					Point location = new Point(spriteLocation.x - 90, spriteLocation.y - 100);
+					Point spriteLocation = new Point(
+							this.getParent().sprite.getLocation().x, 
+							this.getParent().sprite.getLocation().y + this.getParent().sprite.getHeight()
+							- animationLabel.getHeight());
+					
+					Point location = new Point(spriteLocation.x, spriteLocation.y);
 					animationLabel.setLocation(location);
 					if (fi == 0) {
-						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.PALETTE_LAYER);
+						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
 					} else if (fi == 2) {
 						AnimationPlayerModule.shakeAnimation(target);
 						target.updateHealthBar();
@@ -166,7 +174,11 @@ public class EntitiesAndMoves {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			Point targetDestination = new Point((int)(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), target.sprite.getLocation().y);
+			Point targetDestination = new Point((int)
+					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
+					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
+			
+			//targetDestination = Window.scalePoint(targetDestination);
 			
 			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
 			int[] framesToTake = {24, 28, 22};
@@ -177,6 +189,7 @@ public class EntitiesAndMoves {
 			
 			JLabel animationLabel = new JLabel();
 			animationLabel.setSize(new Dimension(434, 230));
+			Window.scaleComponent(animationLabel);
 
 			int index = 24;
 			for (int i = 0; i < images.length; i++) {
@@ -192,11 +205,15 @@ public class EntitiesAndMoves {
 					image = Window.scaleImage(434, 230, image);
 					
 					animationLabel.setIcon(new ImageIcon(image));
-					Point spriteLocation = this.getParent().sprite.getLocation();
-					Point location = new Point(spriteLocation.x - 280 * this.getParent().facingLeft, spriteLocation.y - 100);
+					Point spriteLocation = new Point(
+							this.getParent().sprite.getLocation().x, 
+							this.getParent().sprite.getLocation().y + this.getParent().sprite.getHeight()
+							- animationLabel.getHeight());
+					
+					Point location = new Point(spriteLocation.x, spriteLocation.y);
 					animationLabel.setLocation(location);
 					if (fi == 0) {
-						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.PALETTE_LAYER);
+						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
 					} else if (fi == 2) {
 						AnimationPlayerModule.shakeAnimation(target);
 						target.updateHealthBar();
@@ -245,7 +262,7 @@ public class EntitiesAndMoves {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			Point targetDestination = new Point(1300, 500);
+			Point targetDestination = new Point(Window.scaleInt(900), 900 - this.getParent().sprite.getHeight());
 			targetDestination = Window.scalePoint(targetDestination);
 			
 			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
@@ -278,7 +295,7 @@ public class EntitiesAndMoves {
 					Point location = new Point(spriteLocation.x - 200, spriteLocation.y - 250);
 					animationLabel.setLocation(location);
 					if (fi == 0) {
-						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.PALETTE_LAYER);
+						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
 					} else if (fi == 1) {
 						for (int j = 0; j < enemies.length; j++) {
 							AnimationPlayerModule.shakeAnimation(enemies[j]);

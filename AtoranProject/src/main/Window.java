@@ -62,6 +62,7 @@ public class Window extends JFrame {
 		
 		MainWindow.setSize((int)(windowScale * (double)xWindowDefaultSize), (int)(windowScale * (double)yWindowDefaultSize));
 		MainWindow.setSize(1920, 1080);
+		MainWindow.setTitle("Atoran");
 		return MainWindow;
 	}
 	

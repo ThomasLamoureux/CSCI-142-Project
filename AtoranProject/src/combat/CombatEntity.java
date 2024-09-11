@@ -97,9 +97,9 @@ public class CombatEntity {
 	
 	
 	public void updateHealthBar() {
-		int healthBarPercent = (int)((double)this.health/(double)this.maxHealth * 80);
-		this.healthBar.setPreferredSize(new Dimension(healthBarPercent, 20 ));
-		this.healthBar.setSize(new Dimension(healthBarPercent, 20 ));
+		int healthBarPercent = (int)((double)this.health/(double)this.maxHealth * this.maxHealth);
+		this.healthBar.setPreferredSize(new Dimension(healthBarPercent, Window.scaleInt(15) ));
+		this.healthBar.setSize(new Dimension(healthBarPercent, Window.scaleInt(15) ));
 	}
 	
 	
