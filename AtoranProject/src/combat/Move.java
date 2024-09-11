@@ -3,14 +3,17 @@ package combat;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
-import utilities.Animation;
+import animations.Animation;
 import utilities.AnimationPlayerModule;
 
 public class Move {
 	public String name = "default";
 	private Map<String, Boolean> validTargets = new HashMap<String, Boolean>(); //team, enemies
 	private int damage;
+	private int critChance = 20;
+	private double critDamage = 1.4;
 	private CombatEntity parent;
 
 	public Move(String name, boolean team, boolean enemies, CombatEntity parent) {
@@ -20,9 +23,6 @@ public class Move {
 		validTargets.put("enemies", enemies);
 	}
 	
-	public void selected() {
-		
-	}
 	
 	public void setDamage(int damage) {
 		this.damage = damage;
@@ -40,18 +40,32 @@ public class Move {
 		return this.parent;
 	}
 	
+	public void damageTarget(CombatEntity target) {
+		Random randomGenerator = new Random();
+		int randumNumber = randomGenerator.nextInt(0, 100);
+		if (randumNumber <= this.critChance) {
+			target.recieveDamage((int)((double)this.damage * this.critDamage));
+		} else {
+			target.recieveDamage(this.damage);
+		}
+	}
+	
+	protected void runAnimation(CombatEntity target) {
+		target.updateHealthBar();
+		
+		Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
+		int[] framesToTake = {30, 38};
+		
+		Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
+		
+		AnimationPlayerModule.addAnimation(animation);
+	}
+	
 	// Overrided
 	public void useMove(CombatEntity target) {
 		target.recieveDamage(damage);
-		System.out.println(target.health);
-		System.out.println(target.name);
-		
-		Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
-		int[] framesToTake = {16, 20};
-		
-		Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake);
-		
-		AnimationPlayerModule.addAnimation(animation);
+	
+		runAnimation(target);
 	}
 	
 	public Boolean checkIfTargetIsValid(String target) {

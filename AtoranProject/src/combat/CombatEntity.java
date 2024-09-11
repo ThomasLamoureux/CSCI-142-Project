@@ -1,5 +1,6 @@
 package combat;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -15,16 +16,34 @@ public class CombatEntity {
 	public boolean dead = false;
 	private double damageMultiplier = 1.0;
 	private Point fieldPosition;
-	public String name;
+	private String name;
 	public JLabel sprite;
 	public JLabel healthBar;
 	public int maxHealth;
+	public int facingLeft;
 	
-	public CombatEntity(String name, int health, Move[] moveSet) {
+	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite) {
 		this.health = health;
 		this.moveSet = moveSet;
 		this.name = name; // Temporarys
 		this.maxHealth = health;
+		
+		if (sprite == null) {
+			JLabel defaultSprite = new JLabel(this.getName());
+			defaultSprite.setPreferredSize(new Dimension(70, 70));
+			defaultSprite.setSize(new Dimension(70, 70));
+			defaultSprite.setBackground(new Color(20, 0, 255));
+			defaultSprite.setOpaque(true);
+			
+			this.sprite = defaultSprite;
+		} else {
+			this.sprite = sprite;
+		}
+	}
+	
+	
+	public String getName() {
+		return this.name;
 	}
 
 	
@@ -32,19 +51,23 @@ public class CombatEntity {
 		this.moveSet = moveSet;
 	}
 	
+	
 	public void performTurn(Move move, CombatEntity target) {
 		move.useMove(target);
 	}
+	
+	
+	public void updateHealthBar() {
+		int healthBarPercent = (int)((double)this.health/(double)this.maxHealth * 80);
+		this.healthBar.setPreferredSize(new Dimension(healthBarPercent, 20 ));
+		this.healthBar.setSize(new Dimension(healthBarPercent, 20 ));
+	}
+	
 	
 	public void recieveDamage(int damage) {
 		int totalDamage = (int)(damage - damage * this.damageResistence);
 		
 		this.health = this.health - totalDamage;
-		int healthBarPercent = (int)((double)this.health/(double)this.maxHealth * 80);
-		System.out.println(healthBarPercent);
-		System.out.println("HAHAHAHA");
-		this.healthBar.setPreferredSize(new Dimension(healthBarPercent, 20 ));
-		this.healthBar.setSize(new Dimension(healthBarPercent, 20 ));
 		
 		if (this.health <= 0 ) {
 			this.death();
@@ -54,7 +77,18 @@ public class CombatEntity {
 	
 	public void death() {
 		this.dead = true;
-		sprite.setVisible(false);
+		
+		Runnable removeSprite = () -> {
+			try {
+				TimeUnit.MILLISECONDS.sleep(1000);
+				this.sprite.setVisible(false);
+			} catch (InterruptedException err) {
+				err.printStackTrace();
+			}
+		};
+		
+		Thread removeSpriteThread = new Thread(removeSprite);
+		removeSpriteThread.start();
 	}
 	
 	

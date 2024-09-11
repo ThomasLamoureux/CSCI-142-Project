@@ -1,5 +1,6 @@
 package combat;
 
+import java.awt.Dimension;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
@@ -10,6 +11,7 @@ import javax.swing.SwingUtilities;
 import combat.EntitiesAndMoves.AtoranEntity;
 import combat.EntitiesAndMoves.SlimeEntity;
 import engine.Engine;
+import levels.Level;
 import main.Window;
 import utilities.AnimationPlayerModule;
 
@@ -26,7 +28,7 @@ public class Combat {
 
 	
 	
-	public static void createLevelFromInfo() {
+	public static void createLevelFromInfo(Level level) {
 		teamTurn = 0;
 		teams = new Team[2];
 		boolean fighting = true;
@@ -56,10 +58,13 @@ public class Combat {
 		System.out.println(waves);
 	}
 	
+	// Temporary function
 	public static void main(String[] args) {
-		createLevelFromInfo();
+		Window.createWindow();
+		createLevelFromInfo(null);
 		initializeCombat();
 	}
+	
 	
 	public static void initializeCombat() {
 		CombatPlayerInteractions.openCombatScreen();
@@ -72,19 +77,19 @@ public class Combat {
 		turn();
 	}
 	
+	
 	public static void loadWave() {
 		teams[1].members = waves[currentWave].enemies;
 		
-		CombatPlayerInteractions.loadEnemyEntitiesImages();
-		
-		//Window.getWindow().refresh();
+		CombatPlayerInteractions.loadEntityImagesOfTeam(teams[1], false);
 	}
 	
-	private static boolean checkWaveCompletion() {
+	
+	private static boolean checkIfTeamIsDead(Team team) {
 		boolean foundAlive = false;
 		
-		for (int i = 0; i < teams[1].members.length; i++) {
-			CombatEntity entity = teams[1].members[i];
+		for (int i = 0; i < team.members.length; i++) {
+			CombatEntity entity = team.members[i];
 			
 			if (entity.dead == false) {
 				foundAlive = true;
@@ -99,60 +104,68 @@ public class Combat {
 		}
 	}
 	
-	private static boolean checkIfPlayerAlive() {
-		boolean foundAlive = false;
-		
-		for (int i = 0; i < teams[0].members.length; i++) {
-			CombatEntity entity = teams[0].members[i];
-			
-			if (entity.dead == false) {
-				foundAlive = true;
-				break;
-			}
-		}
-		
-		if (foundAlive == true) {
-			return false;
-		} else {
-			return true;
-		}
+	
+	public static void levelComplete() {
+		CombatPlayerInteractions.announcementText.setText("LEVEL BEAT");
+		CombatPlayerInteractions.announcementText.setVisible(true);
 	}
 	
 
 	public static void levelLost() {
-		
+		CombatPlayerInteractions.announcementText.setText("LEVEL LOST");
+		CombatPlayerInteractions.announcementText.setVisible(true);
 	}
 	
 	
-	public static void turn() {
+	public static void waveComplete() {
+		int waveCount = waves.length;
+		System.out.println("WAVE COMPLETED");
+		CombatPlayerInteractions.announcementText.setText("WAVE COMPLETE");
+		CombatPlayerInteractions.announcementText.setVisible(true);
 		
-		if (checkWaveCompletion() == true) {
+		if (currentWave == waveCount - 1) {
+			System.out.println("LEVEL COMPLETED");
+			fighting = false;
 			
-			int waveCount = waves.length;
-			System.out.println("WAVE COMPLETED");
-			
-			if (currentWave == waveCount - 1) {
-				System.out.println("LEVEL COMPLETED");
-				fighting = false;
-			} else {
-				currentWave++;
-				
-				loadWave();
-			}
+			levelComplete();
+		} else {
+			currentWave++;
 			
 			currentEntityTurnIndex = 0;
 			teamTurn = 0;
 			currentTeam = teams[0];
 			notCurrentTeam = teams[1];
+			
+			Runnable turnWait = () -> {
+				try {
+					TimeUnit.MILLISECONDS.sleep(3000);
+					CombatPlayerInteractions.announcementText.setVisible(false);
+					loadWave();
+					turn();
+				} catch (InterruptedException err) {
+					err.printStackTrace();
+				}
+			};
+			
+			Thread turnWaitThread = new Thread(turnWait);
+			turnWaitThread.start();
+		}
+	}
+	
+	
+	public static void turn() {
+		
+		if (checkIfTeamIsDead(teams[1]) == true) {
+			waveComplete();
+			return;
 		}
 		
-		if (checkIfPlayerAlive() == false) {
+		if (checkIfTeamIsDead(teams[0]) == true) {
 			levelLost();
+			return;
 		}
 		
-		CombatEntity entity;
-		
-		if (currentEntityTurnIndex == currentTeam.members.length) {
+		if (currentEntityTurnIndex == currentTeam.members.length) { 
 			// Switches team 
 			if (teamTurn == 0) {
 				teamTurn = 1;
@@ -164,38 +177,31 @@ public class Combat {
 	
 			currentEntityTurnIndex = 0;
 			currentTeam = teams[teamTurn];
-			
-			entity = currentTeam.members[currentEntityTurnIndex];
-			currentEntityTurn = entity;
-			currentEntityTurnIndex++;
-			System.out.println("If");
-			if (entity.dead == true) {
-				turn();
-				return;
-			}
-			
-		} else {
-			entity = currentTeam.members[currentEntityTurnIndex];
-			currentEntityTurn = entity;
-			currentEntityTurnIndex++;
-			System.out.println("else");
-			
-			if (entity.dead == true) {
-				turn();
-				return;
-			}
 		}
-
-		Runnable fpsMethod = () -> {
+		
+		CombatEntity entity = currentTeam.members[currentEntityTurnIndex];
+		currentEntityTurn = entity;
+		currentEntityTurnIndex++;
+		System.out.println("else");
+		
+		if (entity.dead == true) {
+			//Window.resizeWindow(new Dimension(1, 1));
+			turn();
+			return;
+		}
+		
+		// This wait exists to give time for animations to play
+		// Using a runnable and thread is necessary to prevent the player screen from freezing during the wait
+		Runnable turnWait = () -> {
 			try {
-				TimeUnit.MILLISECONDS.sleep(1000);
+				TimeUnit.MILLISECONDS.sleep(1200);
 				entity.myTurn(currentTeam.automatic, currentTeam.members, notCurrentTeam.members);
 			} catch (InterruptedException err) {
 				err.printStackTrace();
 			}
 		};
 		
-		Thread fpsThread = new Thread(fpsMethod);
-		fpsThread.start();
+		Thread turnWaitThread = new Thread(turnWait);
+		turnWaitThread.start();
 	}
 }
