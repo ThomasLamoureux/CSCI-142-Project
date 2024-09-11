@@ -2,6 +2,9 @@ package levels;
 import javax.swing.*;
 
 import combat.Combat;
+import combat.CombatEntity;
+import combat.Wave;
+import combat.EntitiesAndMoves.SlimeEntity;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,14 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameMap extends JFrame {
+	public static GameMap currentMap;
     private List<Level> levels;
 
     public GameMap() {
+		CombatEntity[] enemies = {new SlimeEntity(), new SlimeEntity()};
+		CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
+		Wave wave = new Wave(enemies);
+		Wave waveTwo = new Wave(enemiesTwo);
+		Wave[] waves = {wave, waveTwo};
+		
         levels = new ArrayList<>();
-        levels.add(new Level(1, "Village", "Slime", true));  // Первый уровень разблокирован по умолчанию
-        levels.add(new Level(2, "Forest", "Bear", false));
-        levels.add(new Level(3, "Cave", "Dragon", false));
-        levels.add(new Level(4, "Mountains", "Wizard", false));
+        levels.add(new Level(1, "Village", "Slime", true, waves));  // Первый уровень разблокирован по умолчанию
+        levels.add(new Level(2, "Forest", "Bear", false, waves));
+        levels.add(new Level(3, "Cave", "Dragon", false, waves));
+        levels.add(new Level(4, "Mountains", "Wizard", false, waves));
 
         setTitle("Game Map");
         setSize(400, 400);
@@ -32,6 +42,8 @@ public class GameMap extends JFrame {
         }
 
         setVisible(true);
+        
+        currentMap = this;
     }
 
     private class LevelButtonActionListener implements ActionListener {
@@ -61,13 +73,14 @@ public class GameMap extends JFrame {
 
     private void startLevel(Level level) {
         // Вызов класса с логикой боя
+    	
         System.out.println("Starting Level " + level.getLevelNumber() + " in location: " + level.getLocation() + " against " + level.getEnemy());
         // Здесь добавить вызов класса combat
+    	Combat.createLevelFromInfo(level);
         // После завершения боя установить уровень как пройденный
-        level.setCompleted(true);
     }
 
-    private void updateMap() {
+    public void updateMap() {
         getContentPane().removeAll(); // Удаляем все компоненты
         for (Level level : levels) {
             JButton levelButton = new JButton("Level " + level.getLevelNumber());
@@ -77,6 +90,10 @@ public class GameMap extends JFrame {
         }
         revalidate();
         repaint();
+    }
+    
+    public static List<Level> getLevels() {
+    	return currentMap.levels;
     }
 
     public static void main(String[] args) {

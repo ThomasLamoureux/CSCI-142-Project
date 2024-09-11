@@ -2,19 +2,23 @@ package levels;
 
 import java.util.List;
 
+import combat.Wave;
+
 public class Level {
     private int levelNumber;
     private String location;
     private String enemy;
+    private Wave[] waves;
     private boolean isUnlocked;
     private boolean isCompleted;
 
-    public Level(int levelNumber, String location, String enemy, boolean isUnlocked) {
+    public Level(int levelNumber, String location, String enemy, boolean isUnlocked, Wave[] waves) {
         this.levelNumber = levelNumber;
         this.location = location;
         this.enemy = enemy;
         this.isUnlocked = isUnlocked;
         this.isCompleted = false; // Изначально уровень не пройден
+        this.waves = waves;
     }
 
     // Геттеры и сеттеры
@@ -44,6 +48,10 @@ public class Level {
 
     public void unlock() {
         this.isUnlocked = true;
+    }
+    
+    public Wave[] getWaves() {
+    	return this.waves;
     }
 
     // Метод для прохождения уровня

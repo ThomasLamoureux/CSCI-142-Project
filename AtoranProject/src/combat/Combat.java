@@ -1,6 +1,7 @@
 package combat;
 
 import java.awt.Dimension;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
@@ -11,6 +12,7 @@ import javax.swing.SwingUtilities;
 import combat.EntitiesAndMoves.AtoranEntity;
 import combat.EntitiesAndMoves.SlimeEntity;
 import engine.Engine;
+import levels.GameMap;
 import levels.Level;
 import main.Window;
 import utilities.AnimationPlayerModule;
@@ -25,10 +27,13 @@ public class Combat {
 	public static int currentEntityTurnIndex = 0;
 	public static Team currentTeam;
 	public static Team notCurrentTeam;
+	public static Level currentLevel;
 
 	
 	
 	public static void createLevelFromInfo(Level level) {
+		currentLevel = level;
+		
 		teamTurn = 0;
 		teams = new Team[2];
 		boolean fighting = true;
@@ -49,19 +54,9 @@ public class Combat {
 		notCurrentTeam = teams[1];
 
 		
-		CombatEntity[] enemies = {new SlimeEntity(), new SlimeEntity()};
-		CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
-		Wave wave = new Wave(enemies);
-		Wave waveTwo = new Wave(enemiesTwo);
-		Wave[] wavesThing = {wave, waveTwo};
-		waves = wavesThing;
+		waves = level.getWaves();
 		System.out.println(waves);
-	}
-	
-	// Temporary function
-	public static void main(String[] args) {
-		Window.createWindow();
-		createLevelFromInfo(null);
+		
 		initializeCombat();
 	}
 	
@@ -108,6 +103,15 @@ public class Combat {
 	public static void levelComplete() {
 		CombatPlayerInteractions.announcementText.setText("LEVEL BEAT");
 		CombatPlayerInteractions.announcementText.setVisible(true);
+		
+		currentLevel.setCompleted(true);
+		
+		
+		
+		List<Level> levels = GameMap.getLevels();
+        Level nextLevel = levels.get(currentLevel.getLevelNumber());
+        nextLevel.unlock();
+        GameMap.currentMap.updateMap();
 	}
 	
 
