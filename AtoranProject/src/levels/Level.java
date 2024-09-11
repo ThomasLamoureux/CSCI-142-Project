@@ -1,18 +1,58 @@
 package levels;
-// This is a class (OOP)
 
-/* 
- * This class contains all the data for each level, including its waves (the Wave Java class under the combat package),
- * name (We name them by number, e.g, Lv1, Lv2), its prerequisite level (the level that needs to be beat before 
- * this level is unlocked), and the rewards for beating it.
- * 
- * Each level should allow for the implementation of an optional cut scene (cut scene class) at the start or end)
- * 
-*/ 
+import java.util.List;
+
 public class Level {
+    private int levelNumber;
+    private String location;
+    private String enemy;
+    private boolean isUnlocked;
+    private boolean isCompleted;
 
-	// Constructor
-	public Level() {
-		
-	}
+    public Level(int levelNumber, String location, String enemy, boolean isUnlocked) {
+        this.levelNumber = levelNumber;
+        this.location = location;
+        this.enemy = enemy;
+        this.isUnlocked = isUnlocked;
+        this.isCompleted = false; // Изначально уровень не пройден
+    }
+
+    // Геттеры и сеттеры
+    public int getLevelNumber() {
+        return levelNumber;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getEnemy() {
+        return enemy;
+    }
+
+    public boolean isUnlocked() {
+        return isUnlocked;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public void unlock() {
+        this.isUnlocked = true;
+    }
+
+    // Метод для прохождения уровня
+    public void completeLevel() {
+        if (isUnlocked) {
+            System.out.println("Level " + levelNumber + " completed!");
+            this.isCompleted = true;
+        } else {
+            System.out.println("Level " + levelNumber + " is locked.");
+        }
+    }
 }
