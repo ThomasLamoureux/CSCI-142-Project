@@ -28,28 +28,28 @@ public class EntitiesAndMoves {
 		atoranSprite.setBackground(new Color(20, 0, 255));
 		atoranSprite.setOpaque(false);
 		
-		File targetFile = new File("Resources/Images/AtoranStand.png");
-		Image image = null;
-		try {
-			image = ImageIO.read(targetFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-		//image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
-		image = Window.scaleImage(200, 200, image);
-		ImageIcon targetIcon = new ImageIcon(image);
-		atoranSprite.setIcon(targetIcon);
-		
 		return atoranSprite;
 	}
 	
+	public static JLabel getSlimeSprite() {
+		JLabel slimeSprite = new JLabel("Atoran");
+		slimeSprite.setPreferredSize(new Dimension(100, 100));
+		slimeSprite.setSize(new Dimension(100, 100));
+		slimeSprite.setBackground(new Color(20, 0, 255));
+		slimeSprite.setOpaque(false);
+		
+		return slimeSprite;
+	}
 	
+	// Atoran entity, the main character
 	public static class AtoranEntity extends CombatEntity {
 		public AtoranEntity() {
-			super("Atoran", 5, null, getAtoranSprite());
+			super("Atoran", 250, null, getAtoranSprite());
+			
+			File targetFile = new File("Resources/Images/AtoranStand.png");
+			this.setImageFile(targetFile);
+			
+			this.flipIfFacingLeft = true;
 			
 			Move[] moveSet = {new SlashMove(this), new SweepMove(this)};
 			this.setMoveSet(moveSet);
@@ -59,7 +59,12 @@ public class EntitiesAndMoves {
 	
 	public static class SlimeEntity extends CombatEntity {
 		public SlimeEntity() {
-			super("Slime", 25, null, null);
+			super("Slime", 25, null, getSlimeSprite());
+			
+			File targetFile = new File("Resources/Images/BlueslimeStill.png");
+			this.setImageFile(targetFile);
+			
+			this.flipIfFacingLeft = false;
 			
 			Move[] moveSet = {new BumpMove(this)};
 			this.setMoveSet(moveSet);
@@ -71,6 +76,11 @@ public class EntitiesAndMoves {
 
 		public BanditEntity() {
 			super("Bandit", 50, null, null);
+			
+			this.flipIfFacingLeft = true;
+			
+			File targetFile = new File("Resources/Images/AtoranStand.png");
+			this.setImageFile(targetFile);
 			
 			Move[] moveSet = null;
 		}

@@ -2,12 +2,20 @@ package combat;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+
+import main.Window;
+import utilities.AnimationPlayerModule;
 
 public class CombatEntity {
 	private Move[] moveSet = {};
@@ -21,6 +29,8 @@ public class CombatEntity {
 	public JLabel healthBar;
 	public int maxHealth;
 	public int facingLeft;
+	public boolean flipIfFacingLeft;
+	private File imageFile;
 	
 	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite) {
 		this.health = health;
@@ -42,8 +52,37 @@ public class CombatEntity {
 	}
 	
 	
+	public void setImageFile(File image) {
+		this.imageFile = image;
+	}
+	
+	
 	public String getName() {
 		return this.name;
+	}
+	
+	
+	public void loadSpriteIcon() {
+		Image image = null;
+		try {
+			image = ImageIO.read(this.imageFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+		//image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
+		image = Window.scaleImage(this.sprite.getWidth(), this.sprite.getHeight(), image);
+		
+		if (facingLeft == 1 && flipIfFacingLeft == true) {
+			image = AnimationPlayerModule.createMirror(image);
+		} else if (facingLeft == -1 && flipIfFacingLeft == false) {
+			image = AnimationPlayerModule.createMirror(image);
+		}
+		
+		ImageIcon targetIcon = new ImageIcon(image);
+		this.sprite.setIcon(targetIcon);
 	}
 
 	

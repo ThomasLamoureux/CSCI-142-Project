@@ -124,6 +124,7 @@ public class CombatPlayerInteractions {
 				member.facingLeft = 1;
 			}
 			
+			member.loadSpriteIcon();
 			member.setFieldPosition(positionsArray[i]);
 			
 			JLabel sprite = member.sprite;	
