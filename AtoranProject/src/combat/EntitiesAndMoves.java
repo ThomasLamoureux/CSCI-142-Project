@@ -38,7 +38,8 @@ public class EntitiesAndMoves {
 		}
 		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
-		image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
+		//image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
+		image = Window.scaleImage(200, 200, image);
 		ImageIcon targetIcon = new ImageIcon(image);
 		atoranSprite.setIcon(targetIcon);
 		
@@ -85,7 +86,7 @@ public class EntitiesAndMoves {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			Point targetDestination = new Point((int)(target.sprite.getLocation().x * 0.9), target.sprite.getLocation().y);
+			Point targetDestination = new Point((int)(target.sprite.getLocation().x + 250 * this.getParent().facingLeft), target.sprite.getLocation().y);
 			
 			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
 			int[] framesToTake = {24, 28, 22};
@@ -101,9 +102,16 @@ public class EntitiesAndMoves {
 			for (int i = 0; i < images.length; i++) {
 				final int fi = i;
 				Runnable method = () -> {
-					BufferedImage mirror = AnimationPlayerModule.createMirror(images[fi]);
+					Image image;
+					if (this.getParent().facingLeft == -1) {
+						image = AnimationPlayerModule.createMirror(images[fi]);
+					} else {
+						image = images[fi];
+					}
 					
-					animationLabel.setIcon(new ImageIcon(mirror));
+					image = Window.scaleImage(434, 230, image);
+					
+					animationLabel.setIcon(new ImageIcon(image));
 					Point spriteLocation = this.getParent().sprite.getLocation();
 					Point location = new Point(spriteLocation.x - 90, spriteLocation.y - 100);
 					animationLabel.setLocation(location);
@@ -144,6 +152,65 @@ public class EntitiesAndMoves {
 			this.setDamage(8);
 		}
 		
+		@Override
+		protected void runAnimation(CombatEntity target) {
+			Point targetDestination = new Point((int)(target.sprite.getLocation().x + 250 * this.getParent().facingLeft), target.sprite.getLocation().y);
+			targetDestination = Window.scalePoint(targetDestination);
+			
+			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
+			int[] framesToTake = {24, 28, 22};
+			Keyframe[] keyframes = new Keyframe[24 + 28 + 22];
+			
+			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources/Animations/SlashingAnimation");
+			
+			
+			JLabel animationLabel = new JLabel();
+			animationLabel.setSize(new Dimension(434, 230));
+
+			int index = 24;
+			for (int i = 0; i < images.length; i++) {
+				final int fi = i;
+				Runnable method = () -> {
+					Image image;
+					if (this.getParent().facingLeft == -1) {
+						image = AnimationPlayerModule.createMirror(images[fi]);
+					} else {
+						image = images[fi];
+					}
+					
+					image = Window.scaleImage(434, 230, image);
+					
+					animationLabel.setIcon(new ImageIcon(image));
+					Point spriteLocation = this.getParent().sprite.getLocation();
+					Point location = new Point(spriteLocation.x - 280 * this.getParent().facingLeft, spriteLocation.y - 100);
+					animationLabel.setLocation(location);
+					if (fi == 0) {
+						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.PALETTE_LAYER);
+					} else if (fi == 2) {
+						AnimationPlayerModule.shakeAnimation(target);
+						target.updateHealthBar();
+					}
+					System.out.println("method played");
+				};
+				
+				Keyframe keyframe = new Keyframe(method);
+				keyframes[i + index] = keyframe;
+				index += 2;
+				System.out.println("made key");
+			}
+			
+			Runnable method = () -> {
+				CombatPlayerInteractions.layerOnePane.remove(animationLabel);
+			};
+			
+			keyframes[index + 2] = new Keyframe(method);
+			
+			
+			Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
+			animation.keyframes = keyframes;
+			
+			AnimationPlayerModule.addAnimation(animation);
+		}
 	}
 	
 	public static class SweepMove extends Move {
@@ -185,11 +252,15 @@ public class EntitiesAndMoves {
 			for (int i = 0; i < images.length; i++) {
 				final int fi = i;
 				Runnable method = () -> {
-					//BufferedImage mirror = AnimationPlayerModule.createMirror(images[fi]);
-					Image image = images[fi];
-					image = image.getScaledInstance((int)(550 * 1.4), (int)(400 * 1.4), Image.SCALE_DEFAULT);
+					Image image;
+					if (this.getParent().facingLeft == 1) {
+						image = AnimationPlayerModule.createMirror(images[fi]);
+					} else {
+						image = images[fi];
+					}
 					
-					//image = AnimationPlayerModule.rotateImage(image, fi);
+					image = Window.scaleImage((int)(550 * 1.4), (int)(400 * 1.4), image);
+
 					animationLabel.setIcon(new ImageIcon(image));
 					Point spriteLocation = this.getParent().sprite.getLocation();
 					Point location = new Point(spriteLocation.x - 200, spriteLocation.y - 250);

@@ -1,5 +1,6 @@
 package combat;
 
+import java.awt.Dimension;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
@@ -10,6 +11,7 @@ import javax.swing.SwingUtilities;
 import combat.EntitiesAndMoves.AtoranEntity;
 import combat.EntitiesAndMoves.SlimeEntity;
 import engine.Engine;
+import levels.Level;
 import main.Window;
 import utilities.AnimationPlayerModule;
 
@@ -26,7 +28,7 @@ public class Combat {
 
 	
 	
-	public static void createLevelFromInfo() {
+	public static void createLevelFromInfo(Level level) {
 		teamTurn = 0;
 		teams = new Team[2];
 		boolean fighting = true;
@@ -58,7 +60,8 @@ public class Combat {
 	
 	// Temporary function
 	public static void main(String[] args) {
-		createLevelFromInfo();
+		Window.createWindow();
+		createLevelFromInfo(null);
 		initializeCombat();
 	}
 	
@@ -103,32 +106,50 @@ public class Combat {
 	
 	
 	public static void levelComplete() {
-		
+		CombatPlayerInteractions.announcementText.setText("LEVEL BEAT");
+		CombatPlayerInteractions.announcementText.setVisible(true);
 	}
 	
 
 	public static void levelLost() {
-		System.out.println("YYY");
+		CombatPlayerInteractions.announcementText.setText("LEVEL LOST");
+		CombatPlayerInteractions.announcementText.setVisible(true);
 	}
 	
 	
 	public static void waveComplete() {
 		int waveCount = waves.length;
 		System.out.println("WAVE COMPLETED");
+		CombatPlayerInteractions.announcementText.setText("WAVE COMPLETE");
+		CombatPlayerInteractions.announcementText.setVisible(true);
 		
 		if (currentWave == waveCount - 1) {
 			System.out.println("LEVEL COMPLETED");
 			fighting = false;
+			
+			levelComplete();
 		} else {
 			currentWave++;
 			
-			loadWave();
+			currentEntityTurnIndex = 0;
+			teamTurn = 0;
+			currentTeam = teams[0];
+			notCurrentTeam = teams[1];
+			
+			Runnable turnWait = () -> {
+				try {
+					TimeUnit.MILLISECONDS.sleep(3000);
+					CombatPlayerInteractions.announcementText.setVisible(false);
+					loadWave();
+					turn();
+				} catch (InterruptedException err) {
+					err.printStackTrace();
+				}
+			};
+			
+			Thread turnWaitThread = new Thread(turnWait);
+			turnWaitThread.start();
 		}
-		
-		currentEntityTurnIndex = 0;
-		teamTurn = 0;
-		currentTeam = teams[0];
-		notCurrentTeam = teams[1];
 	}
 	
 	
@@ -136,6 +157,7 @@ public class Combat {
 		
 		if (checkIfTeamIsDead(teams[1]) == true) {
 			waveComplete();
+			return;
 		}
 		
 		if (checkIfTeamIsDead(teams[0]) == true) {
@@ -163,6 +185,7 @@ public class Combat {
 		System.out.println("else");
 		
 		if (entity.dead == true) {
+			//Window.resizeWindow(new Dimension(1, 1));
 			turn();
 			return;
 		}

@@ -20,6 +20,7 @@ public class CombatEntity {
 	public JLabel sprite;
 	public JLabel healthBar;
 	public int maxHealth;
+	public int facingLeft;
 	
 	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite) {
 		this.health = health;

@@ -4,6 +4,7 @@ import main.Window;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -18,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -28,6 +30,8 @@ public class CombatPlayerInteractions {
 	private static Move selectedMove;
 	private static CombatEntity selectedTarget;
 	public static JLayeredPane layerOnePane = new JLayeredPane(); 
+	public static JPanel inventoryPanel = new JPanel();
+	public static JLabel announcementText = new JLabel("nil", SwingConstants.CENTER);
 	
 	public static void openCombatScreen() {
 		Window window = main.Window.createWindow(); // New JFrame
@@ -35,11 +39,13 @@ public class CombatPlayerInteractions {
 		// Sets window attributes
 		window.getContentPane().setBackground(new Color(0xFFFFFF));
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(1920, 1080);
+		//window.setSize(1920, 1080);
 		window.setLayout(null);
 		
 		layerOnePane.setLocation(new Point(0, 0));
 		layerOnePane.setSize(new Dimension(1920, 1080));
+		
+		Window.scaleComponent(layerOnePane);
 		
 		window.add(layerOnePane);
 		
@@ -51,8 +57,34 @@ public class CombatPlayerInteractions {
 		moveMenu.setPreferredSize(new Dimension(320, 280));
 		moveMenu.setBackground(new Color(50, 50, 50, 20));
 		moveMenu.setVisible(false);
+		
+		Window.scaleComponent(moveMenu);
 		//moveMenu.setVisible(false);
-		layerOnePane.add(moveMenu, 0);
+		layerOnePane.add(moveMenu, JLayeredPane.DEFAULT_LAYER);
+		
+		inventoryPanel.setLocation(0, 880);
+		inventoryPanel.setSize(new Dimension(500, 200));
+		inventoryPanel.setPreferredSize(new Dimension(500, 200));
+		inventoryPanel.setVisible(true);
+		inventoryPanel.setBackground(new Color(0x7e4f2f));
+		
+		Window.scaleComponent(inventoryPanel);
+		
+		layerOnePane.add(inventoryPanel, JLayeredPane.DEFAULT_LAYER);
+		
+		
+		announcementText.setLocation(0, 100);
+		announcementText.setSize(new Dimension(1920, 200));
+		announcementText.setFont(new Font("Algerian", Font.PLAIN, 125));
+		announcementText.setVisible(false);
+		announcementText.setBackground(new Color(0x7e4f2f));
+		announcementText.setOpaque(false);
+		
+		announcementText.setText("WAVE COMPLETE");
+		
+		Window.scaleComponent(announcementText);
+		
+		layerOnePane.add(announcementText, JLayeredPane.MODAL_LAYER); 
 		
 		
 		loadEntityImagesOfTeam(Combat.teams[0], true);
@@ -86,6 +118,12 @@ public class CombatPlayerInteractions {
 		for (int i = 0; i < team.members.length; i++) {
 			CombatEntity member = team.members[i];
 			
+			if (leftSide == true) {
+				member.facingLeft = -1;
+			} else {
+				member.facingLeft = 1;
+			}
+			
 			member.setFieldPosition(positionsArray[i]);
 			
 			JLabel sprite = member.sprite;	
@@ -95,6 +133,10 @@ public class CombatPlayerInteractions {
 			healthBar.setLocation(new Point(member.getFieldPosition().x, member.getFieldPosition().y + 75));
 			
 			member.healthBar = healthBar;
+			
+			Window.scaleComponent(healthBar);
+			
+			Window.scaleComponent(member.sprite);
 			
 			
 			layerOnePane.add(sprite, JLayeredPane.DEFAULT_LAYER);

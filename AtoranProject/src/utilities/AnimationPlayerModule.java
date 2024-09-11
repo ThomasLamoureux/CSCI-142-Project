@@ -13,6 +13,7 @@ import javax.swing.ImageIcon;
 
 import animations.Animation;
 import combat.CombatEntity;
+import main.Window;
 
 public class AnimationPlayerModule {
 	private static ArrayList<Animation> animations = new ArrayList<Animation>();
@@ -76,8 +77,8 @@ public class AnimationPlayerModule {
 	public static void shakeAnimation(CombatEntity target) {
 		Point targetLocation = target.sprite.getLocation();
 		
-		Point destinationOne = new Point(targetLocation.x + 4, targetLocation.y + 5);
-		Point destinationTwo = new Point(targetLocation.x - 4, targetLocation.y - 5);
+		Point destinationOne = Window.scalePoint(new Point(targetLocation.x + 4, targetLocation.y + 5));
+		Point destinationTwo = Window.scalePoint(new Point(targetLocation.x - 4, targetLocation.y - 5));
 		
 		Point[] destinations = new Point[6];
 		int[] framesToTake = new int[6];

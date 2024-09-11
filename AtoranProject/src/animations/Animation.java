@@ -4,6 +4,8 @@ import java.awt.Point;
 
 import javax.swing.JLabel;
 
+import main.Window;
+
 public class Animation {
 	public int[] framesToTake;
 	public Point[] destinations;
@@ -25,7 +27,14 @@ public class Animation {
 		this.startingLocation = sprite.getLocation();
 		this.sprite = sprite;
 		this.easingStyle = easingStyle;
+
 		
+		/*for (int i = 0; i < destinations.length; i++) {
+			if (destinations[i] != null) {
+				destinations[i] = new Point(Window.scaleInt(destinations[i].x), Window.scaleInt(destinations[i].y));
+				destinations[i] = Window.scalePoint(destinations[i]);
+			}
+		}*/
 		
 		System.out.println(this.startingLocation.y);
 		
@@ -67,8 +76,6 @@ public class Animation {
 		
 		Point newSport = new Point(xPosition, yPosition);
 		
-		System.out.println(xPosition + " x");
-		
 		this.sprite.setLocation(newSport);
 	}
 	
@@ -80,7 +87,6 @@ public class Animation {
 
 			if (this.keyframes[currentKeyframe] != null) {
 				this.keyframes[currentKeyframe].playKeyframe();
-				System.out.println("played");
 			}
 		}
 		System.out.println(currentKeyframe);
@@ -110,8 +116,6 @@ public class Animation {
 
 					xIncrement = (this.destinations[currentDestination].x - sprite.getLocation().x) / framesToTake[currentDestination];
 					yIncrement = (this.destinations[currentDestination].y - sprite.getLocation().y) / framesToTake[currentDestination];
-					System.out.println(xIncrement);
-					System.out.println("frames");
 				}
 				
 				return false;
