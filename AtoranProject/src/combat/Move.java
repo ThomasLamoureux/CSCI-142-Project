@@ -15,6 +15,7 @@ public class Move {
 	private int critChance = 20;
 	private double critDamage = 1.4;
 	private CombatEntity parent;
+	private String description;
 
 	public Move(String name, boolean team, boolean enemies, CombatEntity parent) {
 		this.name = name;
@@ -30,6 +31,22 @@ public class Move {
 	
 	public int getDamage() {
 		return this.damage;
+	}
+	
+	public String getDescription() {
+		return this.description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public int getCritChance() {
+		return this.critChance;
+	}
+	
+	public double getCritDamage() {
+		return this.critDamage;
 	}
 	
 	public void setParent(CombatEntity entity) {

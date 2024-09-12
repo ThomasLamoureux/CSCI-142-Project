@@ -3,13 +3,18 @@ package combat;
 import main.Window;
 import utilities.AnimationPlayerModule;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +27,11 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+
+import animations.Animation;
+
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 public class CombatPlayerInteractions {
@@ -33,9 +42,14 @@ public class CombatPlayerInteractions {
 	public static JLayeredPane layerOnePane = new JLayeredPane(); 
 	public static JPanel inventoryPanel = new JPanel();
 	public static JLabel announcementText = new JLabel("nil", SwingConstants.CENTER);
+	public static JPanel infoPanel;
+	public static JLabel infoLabel;
+	public static JButton expandButton;
+	public static JPanel moveInfoDisplay;
+	public static boolean infoPanelExpanded = false;
 	
 	public static void openCombatScreen() {
-		Window window = main.Window.createWindow(); // New JFrame
+		Window window = Window.getWindow(); // New JFrame
 		window.clearFrame();
 		// Sets window attributes
 		window.getContentPane().setBackground(new Color(0xFFFFFF));
@@ -53,30 +67,24 @@ public class CombatPlayerInteractions {
 		// Move menu
 		//moveMenu.setLayout(null);
 		//moveMenu.setBounds(200, 700, 0, 0);
-		moveMenu.setLocation(new Point(100, 700));
-		moveMenu.setSize(new Dimension(320, 280));
-		moveMenu.setPreferredSize(new Dimension(320, 280));
+		moveMenu.setLocation(new Point(20, 1080 - 200));
+		moveMenu.setSize(new Dimension(300, 200));
+		moveMenu.setPreferredSize(new Dimension(300, 200));
 		moveMenu.setBackground(new Color(50, 50, 50, 20));
 		moveMenu.setVisible(false);
+		moveMenu.setLayout(new FlowLayout());
 		
 		Window.scaleComponent(moveMenu);
 		//moveMenu.setVisible(false);
 		layerOnePane.add(moveMenu, JLayeredPane.PALETTE_LAYER);
 		
-		inventoryPanel.setLocation(0, 880);
-		inventoryPanel.setSize(new Dimension(500, 200));
-		inventoryPanel.setPreferredSize(new Dimension(500, 200));
-		inventoryPanel.setVisible(true);
-		inventoryPanel.setBackground(new Color(0x7e4f2f));
 		
-		Window.scaleComponent(inventoryPanel);
-		
-		layerOnePane.add(inventoryPanel, JLayeredPane.PALETTE_LAYER);
+		createInfoPanel();
 		
 		
 		announcementText.setLocation(0, 100);
 		announcementText.setSize(new Dimension(1920, 200));
-		announcementText.setFont(new Font("Algerian", Font.PLAIN, 125));
+		announcementText.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(125)));
 		announcementText.setVisible(false);
 		announcementText.setBackground(new Color(0x7e4f2f));
 		announcementText.setOpaque(false);
@@ -117,9 +125,117 @@ public class CombatPlayerInteractions {
 		
 		layerOnePane.add(background, JLayeredPane.DEFAULT_LAYER); 
 		
+		moveInfoDisplay = new JPanel();
+		moveInfoDisplay.setVisible(false);
+		moveInfoDisplay.setSize(new Dimension(375, 250));
+		moveInfoDisplay.setLocation(new Point(20, 300));
+		moveInfoDisplay.setLayout(new FlowLayout());
+		
+		Window.scaleComponent(moveInfoDisplay);
+		
+		layerOnePane.add(moveInfoDisplay, JLayeredPane.MODAL_LAYER);
+		
 				
 		window.setVisible(true);
 	}
+	
+	
+	public static void expandInfoPanel() {		
+		Point[] destination = new Point[1];
+		
+		if (infoPanelExpanded == true) {
+			destination[0] = Window.scalePoint(new Point(0, -453));
+			expandButton.setLocation(Window.scalePoint(new Point(875, 0)));
+			infoPanelExpanded = false;
+		} else {
+			destination[0] = Window.scalePoint(new Point(0, 0));
+			expandButton.setLocation(Window.scalePoint(new Point(875, 450)));
+			infoPanelExpanded = true;
+		}
+		
+		Animation animation = new Animation(infoLabel, destination, new int[] {15}, "easeInOutSine");
+		
+		AnimationPlayerModule.addAnimation(animation);
+	}
+	
+	
+	public static void createInfoPanel() {
+		infoPanel = new JPanel();
+		infoPanel.setLocation(0, 0);
+		infoPanel.setSize(new Dimension(1920, 500));
+		infoPanel.setPreferredSize(new Dimension(1920, 500));
+		infoPanel.setBackground(new Color(200, 200, 200, 230));
+		infoPanel.setVisible(true);
+		infoPanel.setOpaque(false);
+		//infoPanel.setLayout(null);
+		
+		infoLabel = new JLabel();
+		infoLabel.setLocation(0, -453);
+		infoLabel.setSize(new Dimension(1920, 500));
+		infoLabel.setPreferredSize(new Dimension(1920, 500));
+		infoLabel.setBackground(new Color(200, 200, 200, 230));
+		infoLabel.setVisible(true);
+		
+		File infoFile = new File("Resources/Images/AtoranInventory.png");
+		
+		Image infoImage = null;
+		try {
+			infoImage = ImageIO.read(infoFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+		//image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
+		infoImage = Window.scaleImage(1920, 500, infoImage);
+		
+		ImageIcon infoIcon = new ImageIcon(infoImage);
+		
+		infoLabel.setIcon(infoIcon);
+		
+		Window.scaleComponent(infoLabel);
+		
+		Window.scaleComponent(inventoryPanel);
+		
+		Window.scaleComponent(infoPanel);
+		
+		layerOnePane.add(infoPanel, JLayeredPane.PALETTE_LAYER);
+		
+		layerOnePane.add(infoLabel, JLayeredPane.PALETTE_LAYER);
+		
+		
+		//inventoryPanel.setLocation(0, 880);
+		inventoryPanel.setSize(new Dimension(500, 200));
+		inventoryPanel.setPreferredSize(new Dimension(500, 200));
+		inventoryPanel.setVisible(false);
+		inventoryPanel.setBackground(new Color(0x7e4f2f));
+		
+		infoPanel.add(inventoryPanel);
+		
+		infoPanel.setLayout(null);
+		
+		expandButton = new JButton();
+		expandButton.setSize(new Dimension(170, 45));
+		expandButton.setPreferredSize(new Dimension(170, 45));
+		expandButton.setVisible(true);
+		expandButton.setLocation(875, 0);
+		expandButton.setOpaque(false);
+		expandButton.setContentAreaFilled(false);
+		expandButton.setBorderPainted(false);
+		
+		expandButton.addActionListener(new ActionListener() {
+			@Override
+            public void actionPerformed(ActionEvent event) {
+				expandInfoPanel();
+            }
+        });
+		
+		Window.scaleComponent(expandButton);
+		
+		layerOnePane.add(expandButton, JLayeredPane.PALETTE_LAYER);
+	}
+	
 	
 	
 	public static JLabel createHealthBar(int Size) {
@@ -127,7 +243,7 @@ public class CombatPlayerInteractions {
 		
 		healthBar.setPreferredSize(new Dimension(Size, 15));
 		healthBar.setSize(new Dimension(Size, 15));
-		healthBar.setBackground(new Color(0, 255, 0));
+		healthBar.setBackground(new Color(150, 0, 0));
 		healthBar.setOpaque(true);
 		
 		Window.scaleComponent(healthBar);
@@ -165,13 +281,16 @@ public class CombatPlayerInteractions {
 			sprite.setLocation(member.getFieldPosition());
 			
 			JLabel healthBar = createHealthBar(member.health);
-			healthBar.setLocation(new Point(member.getFieldPosition().x, member.getFieldPosition().y + 75));
 			
 			member.healthBar = healthBar;
 			
-			Window.scaleComponent(healthBar);
-			
 			Window.scaleComponent(member.sprite);
+			
+			healthBar.setLocation(new Point(
+					member.getFieldPosition().x + sprite.getWidth() / 2 - healthBar.getWidth() / 2, 
+					member.getFieldPosition().y + sprite.getWidth()));
+			
+			Window.scaleComponent(healthBar);
 			
 			
 			layerOnePane.add(sprite, JLayeredPane.PALETTE_LAYER);
@@ -241,9 +360,9 @@ public class CombatPlayerInteractions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-		image = image.getScaledInstance(100, 100, Image.SCALE_DEFAULT);
+		
+		image = Window.scaleImage(100, 100, image);
+		
 		ImageIcon targetIcon = new ImageIcon(image);
 		targetButton.setIcon(targetIcon);
 			
@@ -288,6 +407,31 @@ public class CombatPlayerInteractions {
 	private static void addMovesToMoveMenu(Move[] moveSet) {
 		moveMenu.removeAll();
 		
+		moveInfoDisplay.removeAll();
+		JLabel descriptionDisplay = new JLabel("", SwingConstants.CENTER);
+		descriptionDisplay.setSize(new Dimension(375, 150));
+		descriptionDisplay.setPreferredSize(new Dimension(375,150));
+		descriptionDisplay.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		moveInfoDisplay.add(descriptionDisplay);
+		
+		JLabel damageDisplay = new JLabel("", SwingConstants.CENTER);
+		damageDisplay.setSize(new Dimension(120, 100));
+		damageDisplay.setPreferredSize(new Dimension(120, 100));
+		damageDisplay.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		moveInfoDisplay.add(damageDisplay);
+		
+		JLabel critIncreaseDisplay = new JLabel("", SwingConstants.CENTER);
+		critIncreaseDisplay.setSize(new Dimension(120, 100));
+		critIncreaseDisplay.setPreferredSize(new Dimension(120, 100));
+		critIncreaseDisplay.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		moveInfoDisplay.add(critIncreaseDisplay);
+		
+		JLabel critChanceDisplay = new JLabel("", SwingConstants.CENTER);
+		critChanceDisplay.setSize(new Dimension(120, 100));
+		critChanceDisplay.setPreferredSize(new Dimension(120, 100));
+		critChanceDisplay.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		moveInfoDisplay.add(critChanceDisplay);
+		
 		for (int i = 0; i < moveSet.length; i++) {
 			Move move = moveSet[i];
 			
@@ -298,6 +442,50 @@ public class CombatPlayerInteractions {
 					selectMove(move);
 	            }
 	        });
+			
+			moveButton.setPreferredSize(new Dimension(140, 50));
+			moveButton.setSize(new Dimension(140, 50));
+			moveButton.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(20)));
+			moveButton.setBackground(new Color(0x1e1006));
+			moveButton.setForeground(Color.WHITE);
+			
+			// For some reason this requires that all methods are overridden
+			moveButton.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					// TODO Auto-generated method stub
+					moveInfoDisplay.setVisible(true);
+					descriptionDisplay.setText(move.getDescription());
+					damageDisplay.setText("<html>Damage:<br/>" + move.getDamage() + "</html");
+					critIncreaseDisplay.setText("<html>Crit Increase:<br/>" + move.getCritDamage() + "</html");
+					critChanceDisplay.setText("<html>Crit Chance:<br/>" + move.getCritChance() + "%</html");
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub
+					moveInfoDisplay.setVisible(false);
+				}
+			});
 			
 			moveMenu.add(moveButton);
 			moveMenu.repaint();
@@ -310,8 +498,6 @@ public class CombatPlayerInteractions {
 		addMovesToMoveMenu(moveSet);
 		
 		moveMenu.setVisible(true);
-		Window window = Window.getWindow();
-		//window.refresh();
 	}
 	
 	

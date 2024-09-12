@@ -51,7 +51,8 @@ public class EntitiesAndMoves {
 			
 			this.flipIfFacingLeft = true;
 			
-			Move[] moveSet = {new SlashMove(this), new SweepMove(this)};
+			Move[] moveSet = {new SlashMove(this), new SweepMove(this), new SweepMove(this),
+					new SlashMove(this), new SweepMove(this), new SweepMove(this)};
 			this.setMoveSet(moveSet);
 		}	
 	}

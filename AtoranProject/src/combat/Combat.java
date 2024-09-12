@@ -32,7 +32,7 @@ public class Combat {
 	
 	
 	public static void createLevelFromInfo(Level level) {
-		Window.createWindow();
+		Window.getWindow().clearFrame();
 		
 		currentLevel = level;
 		
@@ -48,9 +48,10 @@ public class Combat {
 		teams[0] = new Team();
 		
 		AtoranEntity atoran = new AtoranEntity();
+		AtoranEntity atoran2 = new AtoranEntity();
+		AtoranEntity atoran3 = new AtoranEntity();
 		
-		teams[0].members = new CombatEntity[1];
-		teams[0].members[0] = atoran;
+		teams[0].members = new CombatEntity[] {atoran, atoran2, atoran3};
 		
 		currentTeam = teams[0];
 		notCurrentTeam = teams[1];

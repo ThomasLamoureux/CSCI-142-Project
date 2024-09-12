@@ -11,7 +11,7 @@ public class Menu {
 
     public static void main(String[] args) {
         // Creating a window
-        Window window = Window.createWindow();
+        Window window = Window.getWindow();
 
         if (window == null) {
             System.out.println("Error: The window could not be created.");

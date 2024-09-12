@@ -24,6 +24,11 @@ public class Window extends JFrame {
 	private static Window MainWindow;
 	
 	
+	public Window() {
+		
+	}
+	
+	
 	public static double getWindowScale() {
 		return windowScale;
 	}
@@ -49,7 +54,7 @@ public class Window extends JFrame {
 	}
 
 	
-	public static Window createWindow() {
+	private static Window createWindow() {
 		MainWindow = new Window();
 		double screenScale = (double)java.awt.Toolkit.getDefaultToolkit().getScreenResolution() / 96.0;
 		System.out.println(screenScale);
@@ -63,6 +68,8 @@ public class Window extends JFrame {
 		MainWindow.setSize((int)(windowScale * (double)xWindowDefaultSize), (int)(windowScale * (double)yWindowDefaultSize));
 		MainWindow.setSize(1920, 1080);
 		MainWindow.setTitle("Atoran");
+		MainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		//MainWindow.setUndecorated(true);
 		return MainWindow;
 	}
 	
@@ -71,11 +78,6 @@ public class Window extends JFrame {
 			createWindow();
 		}
 		return MainWindow;
-	}
-	
-	
-	public Window() {
-		
 	}
 	
 	public void clearFrame() {
