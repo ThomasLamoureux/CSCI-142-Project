@@ -29,7 +29,7 @@ public class Menu {
             panel.add(titleLabel);
 
             // Adding space between the labels and title
-            panel.add(new JLabel());
+           // panel.add(new JLabel());
 
             // Create and add the "Play" button
             JButton playButton = new JButton("Play");
