@@ -4,6 +4,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
+
+import java.awt.Font;
 import java.awt.GridLayout;
 import main.Window;
 
@@ -19,13 +21,14 @@ public class Menu {
             
             // Properties for the window
             window.setDefaultCloseOperation(Window.EXIT_ON_CLOSE);
-            window.setSize(400, 300);
+            //window.setSize(400, 300);
 
             // Use a GridLayout with 3 rows and 1 column
             JPanel panel = new JPanel(new GridLayout(4, 1));
 
             // Creating a title for the Main Menu
             JLabel titleLabel = new JLabel("ATORAN", JLabel.CENTER);
+            titleLabel.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(125)));
             panel.add(titleLabel);
 
             // Adding space between the labels and title

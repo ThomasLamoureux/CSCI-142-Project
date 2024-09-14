@@ -34,7 +34,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
-public class CombatPlayerInteractions {
+public class CombatInterface {
 	private static JPanel moveMenu = new JPanel();
 	private static JPanel selectTargetButtonsPanel = new JPanel();
 	private static Move selectedMove;
@@ -47,6 +47,10 @@ public class CombatPlayerInteractions {
 	public static JButton expandButton;
 	public static JPanel moveInfoDisplay;
 	public static boolean infoPanelExpanded = false;
+	
+	public static void levelBeatScreen() {
+		
+	}
 	
 	public static void openCombatScreen() {
 		Window window = Window.getWindow(); // New JFrame
@@ -87,13 +91,14 @@ public class CombatPlayerInteractions {
 		announcementText.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(125)));
 		announcementText.setVisible(false);
 		announcementText.setBackground(new Color(0x7e4f2f));
+		announcementText.setForeground(Color.WHITE);
 		announcementText.setOpaque(false);
 		
 		announcementText.setText("WAVE COMPLETE");
 		
 		Window.scaleComponent(announcementText);
 		
-		layerOnePane.add(announcementText, JLayeredPane.PALETTE_LAYER); 
+		layerOnePane.add(announcementText, JLayeredPane.MODAL_LAYER); 
 		
 		
 		loadEntityImagesOfTeam(Combat.teams[0], true);
@@ -122,14 +127,16 @@ public class CombatPlayerInteractions {
 		
 		background.setIcon(backgroundIcon);
 		
+		Window.scaleComponent(background);
 		
 		layerOnePane.add(background, JLayeredPane.DEFAULT_LAYER); 
 		
 		moveInfoDisplay = new JPanel();
 		moveInfoDisplay.setVisible(false);
 		moveInfoDisplay.setSize(new Dimension(375, 250));
-		moveInfoDisplay.setLocation(new Point(20, 300));
+		moveInfoDisplay.setLocation(new Point(80, 600));
 		moveInfoDisplay.setLayout(new FlowLayout());
+		moveInfoDisplay.setBackground(new Color(0x1e1006));
 		
 		Window.scaleComponent(moveInfoDisplay);
 		
@@ -271,7 +278,6 @@ public class CombatPlayerInteractions {
 			}
 			
 			Point position = positionsArray[i];
-			position = Window.scalePoint(position);
 			position = new Point(position.x, position.y - member.sprite.getHeight());
 			
 			member.loadSpriteIcon();
@@ -370,6 +376,8 @@ public class CombatPlayerInteractions {
 		selectTargetButtonsPanel.add(targetButton);
 		
 		targetButton.setLocation(target.sprite.getLocation().x - 15, target.sprite.getLocation().y - 15);
+		
+		Window.scaleComponent(targetButton);
 		//Window.getWindow().refresh();
 	}
 	
@@ -411,25 +419,34 @@ public class CombatPlayerInteractions {
 		JLabel descriptionDisplay = new JLabel("", SwingConstants.CENTER);
 		descriptionDisplay.setSize(new Dimension(375, 150));
 		descriptionDisplay.setPreferredSize(new Dimension(375,150));
-		descriptionDisplay.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		descriptionDisplay.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(18)));
+		descriptionDisplay.setForeground(Color.WHITE);
+		Window.scaleComponent(descriptionDisplay);
 		moveInfoDisplay.add(descriptionDisplay);
 		
 		JLabel damageDisplay = new JLabel("", SwingConstants.CENTER);
 		damageDisplay.setSize(new Dimension(120, 100));
 		damageDisplay.setPreferredSize(new Dimension(120, 100));
 		damageDisplay.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		damageDisplay.setForeground(Color.WHITE);
+		Window.scaleComponent(damageDisplay);
 		moveInfoDisplay.add(damageDisplay);
 		
 		JLabel critIncreaseDisplay = new JLabel("", SwingConstants.CENTER);
 		critIncreaseDisplay.setSize(new Dimension(120, 100));
 		critIncreaseDisplay.setPreferredSize(new Dimension(120, 100));
 		critIncreaseDisplay.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		Window.scaleComponent(critIncreaseDisplay);
+		System.out.println(Window.scaleInt(15) + " " +  critIncreaseDisplay.getWidth());
+		critIncreaseDisplay.setForeground(Color.WHITE);
 		moveInfoDisplay.add(critIncreaseDisplay);
 		
 		JLabel critChanceDisplay = new JLabel("", SwingConstants.CENTER);
 		critChanceDisplay.setSize(new Dimension(120, 100));
 		critChanceDisplay.setPreferredSize(new Dimension(120, 100));
 		critChanceDisplay.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		critChanceDisplay.setForeground(Color.WHITE);
+		Window.scaleComponent(critChanceDisplay);
 		moveInfoDisplay.add(critChanceDisplay);
 		
 		for (int i = 0; i < moveSet.length; i++) {
@@ -448,6 +465,10 @@ public class CombatPlayerInteractions {
 			moveButton.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(20)));
 			moveButton.setBackground(new Color(0x1e1006));
 			moveButton.setForeground(Color.WHITE);
+			
+			Window.scaleComponent(moveButton);
+			
+			System.out.println(moveButton.getWidth());
 			
 			// For some reason this requires that all methods are overridden
 			moveButton.addMouseListener(new MouseListener() {
@@ -474,7 +495,7 @@ public class CombatPlayerInteractions {
 				public void mouseEntered(MouseEvent e) {
 					// TODO Auto-generated method stub
 					moveInfoDisplay.setVisible(true);
-					descriptionDisplay.setText(move.getDescription());
+					descriptionDisplay.setText("<html>" + move.getDescription() + "</html");
 					damageDisplay.setText("<html>Damage:<br/>" + move.getDamage() + "</html");
 					critIncreaseDisplay.setText("<html>Crit Increase:<br/>" + move.getCritDamage() + "</html");
 					critChanceDisplay.setText("<html>Crit Chance:<br/>" + move.getCritChance() + "%</html");

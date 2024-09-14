@@ -82,7 +82,7 @@ public class EntitiesAndMoves {
 			
 			File targetFile = new File("Resources/Images/AtoranStand.png"); // FILLER, REPLACE
 			this.setImageFile(targetFile);
-			
+			 
 			Move[] moveSet = null;
 		}
 	}
@@ -93,7 +93,8 @@ public class EntitiesAndMoves {
 		public SlashMove(CombatEntity parent) {
 			super("Slash", false, true, parent);
 		
-			this.setDamage(20);
+			this.setDamage(80);
+			this.setDescription("Targets a single enemy with a slashing attack");
 		}
 		
 		@Override
@@ -108,37 +109,39 @@ public class EntitiesAndMoves {
 			int[] framesToTake = {24, 28, 22};
 			Keyframe[] keyframes = new Keyframe[24 + 28 + 22];
 			
-			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources/Animations/SlashingAnimation");
+			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources/Animations/NewSlashingAnimation");
 			
 			
 			JLabel animationLabel = new JLabel();
-			animationLabel.setSize(new Dimension(434, 230));
+			animationLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
 			Window.scaleComponent(animationLabel);
 
 			int index = 24;
 			for (int i = 0; i < images.length; i++) {
 				final int fi = i;
 				Runnable method = () -> {
+					int offSet = Window.scaleInt(200);
 					Image image;
-					if (this.getParent().facingLeft == -1) {
+					if (this.getParent().facingLeft == 1) {
 						image = AnimationPlayerModule.createMirror(images[fi]);
+						offSet += animationLabel.getWidth() - this.getParent().sprite.getWidth();
 					} else {
 						image = images[fi];
 					}
 					
-					image = Window.scaleImage(434, 230, image);
+					image = Window.scaleImage((int)(550 * 1.2), (int)(400 * 1.2), image);
 					
 					animationLabel.setIcon(new ImageIcon(image));
 					Point spriteLocation = new Point(
-							this.getParent().sprite.getLocation().x, 
+							this.getParent().sprite.getLocation().x + offSet * this.getParent().facingLeft, 
 							this.getParent().sprite.getLocation().y + this.getParent().sprite.getHeight()
-							- animationLabel.getHeight());
+							- animationLabel.getHeight() + Window.scaleInt(100));
 					
 					Point location = new Point(spriteLocation.x, spriteLocation.y);
 					animationLabel.setLocation(location);
 					if (fi == 0) {
-						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
-					} else if (fi == 2) {
+						CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
+					} else if (fi == 1) {
 						AnimationPlayerModule.shakeAnimation(target);
 						target.updateHealthBar();
 					}
@@ -147,12 +150,12 @@ public class EntitiesAndMoves {
 				
 				Keyframe keyframe = new Keyframe(method);
 				keyframes[i + index] = keyframe;
-				index += 2;
+				index += 1;
 				System.out.println("made key");
 			}
 			
 			Runnable method = () -> {
-				CombatPlayerInteractions.layerOnePane.remove(animationLabel);
+				CombatInterface.layerOnePane.remove(animationLabel);
 			};
 			
 			keyframes[index + 2] = new Keyframe(method);
@@ -185,7 +188,7 @@ public class EntitiesAndMoves {
 			int[] framesToTake = {24, 28, 22};
 			Keyframe[] keyframes = new Keyframe[24 + 28 + 22];
 			
-			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources/Animations/SlashingAnimation");
+			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources/Animations/HitEffect");
 			
 			
 			JLabel animationLabel = new JLabel();
@@ -197,25 +200,27 @@ public class EntitiesAndMoves {
 				final int fi = i;
 				Runnable method = () -> {
 					Image image;
+					int offSet = 0;
 					if (this.getParent().facingLeft == -1) {
 						image = AnimationPlayerModule.createMirror(images[fi]);
 					} else {
 						image = images[fi];
+						offSet = animationLabel.getWidth() - this.getParent().sprite.getWidth();
 					}
 					
 					image = Window.scaleImage(434, 230, image);
 					
 					animationLabel.setIcon(new ImageIcon(image));
 					Point spriteLocation = new Point(
-							this.getParent().sprite.getLocation().x, 
+							this.getParent().sprite.getLocation().x - offSet, 
 							this.getParent().sprite.getLocation().y + this.getParent().sprite.getHeight()
 							- animationLabel.getHeight());
 					
 					Point location = new Point(spriteLocation.x, spriteLocation.y);
 					animationLabel.setLocation(location);
 					if (fi == 0) {
-						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
-					} else if (fi == 2) {
+						CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
+					} else if (fi == 1) {
 						AnimationPlayerModule.shakeAnimation(target);
 						target.updateHealthBar();
 					}
@@ -223,13 +228,13 @@ public class EntitiesAndMoves {
 				};
 				
 				Keyframe keyframe = new Keyframe(method);
-				keyframes[i + index] = keyframe;
-				index += 2;
+				keyframes[index] = keyframe;
+				index += 1;
 				System.out.println("made key");
 			}
 			
 			Runnable method = () -> {
-				CombatPlayerInteractions.layerOnePane.remove(animationLabel);
+				CombatInterface.layerOnePane.remove(animationLabel);
 			};
 			
 			keyframes[index + 2] = new Keyframe(method);
@@ -247,7 +252,8 @@ public class EntitiesAndMoves {
 		public SweepMove(CombatEntity parent) {
 			super("Sweep", false, true, parent);
 		
-			this.setDamage(13);
+			this.setDamage(50);
+			this.setDescription("Targets all enemies on the field with a sweeping attack");
 		}
 		
 		@Override
@@ -283,8 +289,10 @@ public class EntitiesAndMoves {
 				final int fi = i;
 				Runnable method = () -> {
 					Image image;
+					int offSet = 0;
 					if (this.getParent().facingLeft == 1) {
 						image = AnimationPlayerModule.createMirror(images[fi]);
+						offSet = animationLabel.getWidth() - this.getParent().sprite.getWidth();
 					} else {
 						image = images[fi];
 					}
@@ -293,10 +301,13 @@ public class EntitiesAndMoves {
 
 					animationLabel.setIcon(new ImageIcon(image));
 					Point spriteLocation = this.getParent().sprite.getLocation();
-					Point location = new Point(spriteLocation.x - 200, spriteLocation.y - 250);
+					Point location = new Point(
+							this.getParent().sprite.getLocation().x - offSet + 200 * this.getParent().facingLeft, 
+							this.getParent().sprite.getLocation().y + this.getParent().sprite.getHeight()
+							- animationLabel.getHeight() + 150);
 					animationLabel.setLocation(location);
 					if (fi == 0) {
-						CombatPlayerInteractions.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
+						CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
 					} else if (fi == 1) {
 						for (int j = 0; j < enemies.length; j++) {
 							AnimationPlayerModule.shakeAnimation(enemies[j]);
@@ -313,7 +324,7 @@ public class EntitiesAndMoves {
 			}
 			
 			Runnable method = () -> {
-				CombatPlayerInteractions.layerOnePane.remove(animationLabel);
+				CombatInterface.layerOnePane.remove(animationLabel);
 			};
 			
 			keyframes[index + 2] = new Keyframe(method);
