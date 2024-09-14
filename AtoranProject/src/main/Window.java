@@ -12,7 +12,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import combat.CombatPlayerInteractions;
+import combat.CombatInterface;
 
 
 public class Window extends JFrame {
@@ -46,7 +46,6 @@ public class Window extends JFrame {
 	}
 	
 	public static Component scaleComponent(Component component) {
-		
 		component.setSize((int)((double)component.getSize().width * windowScale), (int)((double)component.getSize().height * windowScale));
 		component.setLocation((int)((double)component.getLocation().x * windowScale), (int)((double)component.getLocation().y * windowScale));
 		
@@ -59,6 +58,8 @@ public class Window extends JFrame {
 		double screenScale = (double)java.awt.Toolkit.getDefaultToolkit().getScreenResolution() / 96.0;
 		System.out.println(screenScale);
 		int xWidth = (int)((double)GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getWidth() / screenScale);
+		System.out.println(xWidth);
+		System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice());
 		if (xWindowDefaultSize != xWidth) {
 			windowScale = ((double)xWidth / (double)xWindowDefaultSize);
 			

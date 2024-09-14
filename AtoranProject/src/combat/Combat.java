@@ -51,7 +51,7 @@ public class Combat {
 		AtoranEntity atoran2 = new AtoranEntity();
 		AtoranEntity atoran3 = new AtoranEntity();
 		
-		teams[0].members = new CombatEntity[] {atoran, atoran2, atoran3};
+		teams[0].members = new CombatEntity[] {atoran};
 		
 		currentTeam = teams[0];
 		notCurrentTeam = teams[1];
@@ -65,7 +65,7 @@ public class Combat {
 	
 	
 	public static void initializeCombat() {
-		CombatPlayerInteractions.openCombatScreen();
+		CombatInterface.openCombatScreen();
 		loadWave();
 		
 		Engine.toggleFps(true);
@@ -79,7 +79,7 @@ public class Combat {
 	public static void loadWave() {
 		teams[1].members = waves[currentWave].enemies;
 		
-		CombatPlayerInteractions.loadEntityImagesOfTeam(teams[1], false);
+		CombatInterface.loadEntityImagesOfTeam(teams[1], false);
 	}
 	
 	
@@ -104,8 +104,8 @@ public class Combat {
 	
 	
 	public static void levelComplete() {
-		CombatPlayerInteractions.announcementText.setText("LEVEL BEAT");
-		CombatPlayerInteractions.announcementText.setVisible(true);
+		CombatInterface.announcementText.setText("LEVEL BEAT");
+		CombatInterface.announcementText.setVisible(true);
 		
 		currentLevel.setCompleted(true);
 		
@@ -114,21 +114,21 @@ public class Combat {
 		List<Level> levels = GameMap.getLevels();
         Level nextLevel = levels.get(currentLevel.getLevelNumber());
         nextLevel.unlock();
-        GameMap.currentMap.updateMap();
+        //GameMap.currentMap.updateMap();
 	}
 	
 
 	public static void levelLost() {
-		CombatPlayerInteractions.announcementText.setText("LEVEL LOST");
-		CombatPlayerInteractions.announcementText.setVisible(true);
+		CombatInterface.announcementText.setText("LEVEL LOST");
+		CombatInterface.announcementText.setVisible(true);
 	}
 	
 	
 	public static void waveComplete() {
 		int waveCount = waves.length;
 		System.out.println("WAVE COMPLETED");
-		CombatPlayerInteractions.announcementText.setText("WAVE COMPLETE");
-		CombatPlayerInteractions.announcementText.setVisible(true);
+		CombatInterface.announcementText.setText("WAVE COMPLETE");
+		CombatInterface.announcementText.setVisible(true);
 		
 		if (currentWave == waveCount - 1) {
 			System.out.println("LEVEL COMPLETED");
@@ -146,7 +146,7 @@ public class Combat {
 			Runnable turnWait = () -> {
 				try {
 					TimeUnit.MILLISECONDS.sleep(3000);
-					CombatPlayerInteractions.announcementText.setVisible(false);
+					CombatInterface.announcementText.setVisible(false);
 					loadWave();
 					turn();
 				} catch (InterruptedException err) {

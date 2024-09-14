@@ -206,7 +206,7 @@ public class CombatEntity {
 			automatedTurn(team, enemyTeam);
 			
 		} else {
-			combat.CombatPlayerInteractions.getTurn(moveSet);
+			combat.CombatInterface.getTurn(moveSet);
 		}
 	}
 }
