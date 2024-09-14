@@ -1,6 +1,8 @@
 package levels;
 import javax.swing.*;
 
+import main.Window;
+
 import combat.Combat;
 import combat.CombatEntity;
 import combat.Wave;
@@ -12,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameMap extends JFrame {
+public class GameMap {
 	public static GameMap currentMap;
     private List<Level> levels;
 
@@ -28,20 +30,20 @@ public class GameMap extends JFrame {
         levels.add(new Level(2, "Forest", "Bear", false, waves));
         levels.add(new Level(3, "Cave", "Dragon", false, waves));
         levels.add(new Level(4, "Mountains", "Wizard", false, waves));
+        
+        Window window = Window.getWindow();
+        
 
-        setTitle("Game Map");
-        setSize(400, 400);
-        setLayout(new GridLayout(4, 1)); // Сетка для кнопок уровней
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        window.setLayout(new GridLayout(4, 1)); // Сетка для кнопок уровней
+        
         for (Level level : levels) {
             JButton levelButton = new JButton("Level " + level.getLevelNumber());
             levelButton.setEnabled(level.isUnlocked());
             levelButton.addActionListener(new LevelButtonActionListener(level));
-            add(levelButton);
+            window.add(levelButton);
         }
 
-        setVisible(true);
+        window.setVisible(true);
         
         currentMap = this;
     }
@@ -81,22 +83,21 @@ public class GameMap extends JFrame {
     }
 
     public void updateMap() {
-        getContentPane().removeAll(); // Удаляем все компоненты
+        Window.getWindow().clearFrame();; // Удаляем все компоненты
         for (Level level : levels) {
             JButton levelButton = new JButton("Level " + level.getLevelNumber());
             levelButton.setEnabled(level.isUnlocked());
             levelButton.addActionListener(new LevelButtonActionListener(level));
-            add(levelButton);
+            Window.getWindow().add(levelButton);
         }
-        revalidate();
-        repaint();
+        Window.getWindow().refresh();
     }
     
     public static List<Level> getLevels() {
     	return currentMap.levels;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         new GameMap();
-    }
+    }*/
 }

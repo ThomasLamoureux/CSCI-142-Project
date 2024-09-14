@@ -3,14 +3,17 @@ package mainMenu;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import levels.GameMap;
+
 import javax.swing.JFrame;
 
-<<<<<<< HEAD
 import java.awt.Color;
-=======
->>>>>>> 65efff6afb7c4569f3eb0e57a62327351f846253
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import main.Window;
 
 public class Menu {
@@ -33,7 +36,7 @@ public class Menu {
 
             // Creating a title for the Main Menu
             JLabel titleLabel = new JLabel("ATORAN", JLabel.CENTER);
-<<<<<<< HEAD
+
             // Gives color and font for the Menu
             //titleLabel.setFont(new Font("Arial", Font.BOLD, 48));
             //titleLabel.setForeground(Color.BLUE);  // Customize the color
@@ -42,10 +45,9 @@ public class Menu {
     		panel.add(titleLabel);
            
 
-=======
             titleLabel.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(125)));
             panel.add(titleLabel);
->>>>>>> 65efff6afb7c4569f3eb0e57a62327351f846253
+
 
             // Adding space between the labels and title
            // panel.add(new JLabel());
@@ -53,6 +55,17 @@ public class Menu {
             // Create and add the "Play" button
             JButton playButton = new JButton("Play");
             playButton.setFont(new Font("Calibri", Font.PLAIN, 30));  
+            
+            
+            playButton.addActionListener(new ActionListener() {
+    			@Override
+                public void actionPerformed(ActionEvent event) {
+    				window.clearFrame();
+    				window.refresh();
+    				 new GameMap();
+                }
+            });
+            
             panel.add(playButton);
             
 
