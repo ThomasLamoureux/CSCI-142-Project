@@ -5,7 +5,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 
+<<<<<<< HEAD
 import java.awt.Color;
+=======
+>>>>>>> 65efff6afb7c4569f3eb0e57a62327351f846253
 import java.awt.Font;
 import java.awt.GridLayout;
 import main.Window;
@@ -30,6 +33,7 @@ public class Menu {
 
             // Creating a title for the Main Menu
             JLabel titleLabel = new JLabel("ATORAN", JLabel.CENTER);
+<<<<<<< HEAD
             // Gives color and font for the Menu
             //titleLabel.setFont(new Font("Arial", Font.BOLD, 48));
             //titleLabel.setForeground(Color.BLUE);  // Customize the color
@@ -38,6 +42,10 @@ public class Menu {
     		panel.add(titleLabel);
            
 
+=======
+            titleLabel.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(125)));
+            panel.add(titleLabel);
+>>>>>>> 65efff6afb7c4569f3eb0e57a62327351f846253
 
             // Adding space between the labels and title
            // panel.add(new JLabel());
