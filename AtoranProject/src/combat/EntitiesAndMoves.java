@@ -252,13 +252,13 @@ public class EntitiesAndMoves {
 		public SweepMove(CombatEntity parent) {
 			super("Sweep", false, true, parent);
 		
-			this.setDamage(50);
+			this.setDamage(100);
 			this.setDescription("Targets all enemies on the field with a sweeping attack");
 		}
 		
 		@Override
 		public void useMove(CombatEntity target) {
-			CombatEntity[] enemies = Combat.notCurrentTeam.members;
+			CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
 			
 			for (int i = 0; i < enemies.length; i++) {
 				enemies[i].recieveDamage(this.getDamage());
@@ -282,7 +282,7 @@ public class EntitiesAndMoves {
 			JLabel animationLabel = new JLabel();
 			animationLabel.setSize(new Dimension((int)(550 * 1.4), (int)(400 * 1.4)));
 			
-			final CombatEntity[] enemies = Combat.notCurrentTeam.members;
+			final CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
 
 			int index = 24;
 			for (int i = 0; i < images.length; i++) {

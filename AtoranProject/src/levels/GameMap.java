@@ -21,16 +21,26 @@ public class GameMap {
     public GameMap() {
 		CombatEntity[] enemies = {new SlimeEntity(), new SlimeEntity()};
 		CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
+		CombatEntity[] enemiesThree = {new SlimeEntity()};
 		Wave wave = new Wave(enemies);
 		Wave waveTwo = new Wave(enemiesTwo);
 		Wave[] waves = {wave, waveTwo};
 		
+		Wave waveThree = new Wave(enemiesThree);
+		Wave[] wavesTwo = {waveThree};
+		
         levels = new ArrayList<>();
         levels.add(new Level(1, "Village", "Slime", true, waves));  // Первый уровень разблокирован по умолчанию
-        levels.add(new Level(2, "Forest", "Bear", false, waves));
+        levels.add(new Level(2, "Forest", "Bear", false, wavesTwo));
         levels.add(new Level(3, "Cave", "Dragon", false, waves));
         levels.add(new Level(4, "Mountains", "Wizard", false, waves));
         
+        currentMap = this;
+        
+        this.openGameMap();
+    }
+    
+    public void openGameMap() {
         Window window = Window.getWindow();
         
 
@@ -44,8 +54,6 @@ public class GameMap {
         }
 
         window.setVisible(true);
-        
-        currentMap = this;
     }
 
     private class LevelButtonActionListener implements ActionListener {
@@ -78,7 +86,7 @@ public class GameMap {
     	
         System.out.println("Starting Level " + level.getLevelNumber() + " in location: " + level.getLocation() + " against " + level.getEnemy());
         // Здесь добавить вызов класса combat
-    	Combat.createLevelFromInfo(level);
+    	new Combat(level);
         // После завершения боя установить уровень как пройденный
     }
 

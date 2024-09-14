@@ -178,7 +178,7 @@ public class CombatEntity {
 		
 		int arrayListSize = potentialTargets.size();
 		if (arrayListSize == 0) {
-			Combat.turn();
+			Combat.currentCombatInstance.turn();
 			return;
 		} else if (arrayListSize == 1){
 			target = potentialTargets.get(0);
@@ -190,7 +190,7 @@ public class CombatEntity {
 		Runnable fpsMethod = () -> {
 			try {
 				TimeUnit.MILLISECONDS.sleep(1500);
-				Combat.turn();
+				Combat.currentCombatInstance.turn();
 			} catch (InterruptedException err) {
 				err.printStackTrace();
 			}

@@ -62,7 +62,7 @@ public class Menu {
                 public void actionPerformed(ActionEvent event) {
     				window.clearFrame();
     				window.refresh();
-    				 new GameMap();
+    				new GameMap();
                 }
             });
             

@@ -18,20 +18,28 @@ import main.Window;
 import utilities.AnimationPlayerModule;
 
 public class Combat {
-	public static byte teamTurn = 0; // 0 = player team, 1 = enemy team
-	public static Team[] teams = new Team[2];
-	public static boolean fighting; // Loop variable for fighting until all enemies or player is dead
-	public static int currentWave = 0;
-	public static Wave[] waves;
-	public static CombatEntity currentEntityTurn;
-	public static int currentEntityTurnIndex = 0;
-	public static Team currentTeam;
-	public static Team notCurrentTeam;
-	public static Level currentLevel;
+	public byte teamTurn = 0; // 0 = player team, 1 = enemy team
+	public Team[] teams = new Team[2];
+	public boolean fighting; // Loop variable for fighting until all enemies or player is dead
+	public int currentWave = 0;
+	public Wave[] waves;
+	public CombatEntity currentEntityTurn;
+	public int currentEntityTurnIndex = 0;
+	public Team currentTeam;
+	public Team notCurrentTeam;
+	public Level currentLevel;
+	public static Combat currentCombatInstance;
+	
+	
+	public Combat(Level level) {
+		currentCombatInstance = this;
+		
+		createLevelFromInfo(level);
+	}
 
 	
 	
-	public static void createLevelFromInfo(Level level) {
+	public void createLevelFromInfo(Level level) {
 		Window.getWindow().clearFrame();
 		
 		currentLevel = level;
@@ -64,7 +72,7 @@ public class Combat {
 	}
 	
 	
-	public static void initializeCombat() {
+	public void initializeCombat() {
 		CombatInterface.openCombatScreen();
 		loadWave();
 		
@@ -76,14 +84,14 @@ public class Combat {
 	}
 	
 	
-	public static void loadWave() {
+	public void loadWave() {
 		teams[1].members = waves[currentWave].enemies;
 		
 		CombatInterface.loadEntityImagesOfTeam(teams[1], false);
 	}
 	
 	
-	private static boolean checkIfTeamIsDead(Team team) {
+	private boolean checkIfTeamIsDead(Team team) {
 		boolean foundAlive = false;
 		
 		for (int i = 0; i < team.members.length; i++) {
@@ -103,7 +111,7 @@ public class Combat {
 	}
 	
 	
-	public static void levelComplete() {
+	public void levelComplete() {
 		CombatInterface.announcementText.setText("LEVEL BEAT");
 		CombatInterface.announcementText.setVisible(true);
 		
@@ -115,16 +123,29 @@ public class Combat {
         Level nextLevel = levels.get(currentLevel.getLevelNumber());
         nextLevel.unlock();
         //GameMap.currentMap.updateMap();
+        
+		Runnable turnWait = () -> {
+			try {
+				TimeUnit.MILLISECONDS.sleep(3000);
+				Window.getWindow().clearFrame();
+				GameMap.currentMap.openGameMap();
+			} catch (InterruptedException err) {
+				err.printStackTrace();
+			}
+		};
+		
+		Thread turnWaitThread = new Thread(turnWait);
+		turnWaitThread.start();
 	}
 	
 
-	public static void levelLost() {
+	public void levelLost() {
 		CombatInterface.announcementText.setText("LEVEL LOST");
 		CombatInterface.announcementText.setVisible(true);
 	}
 	
 	
-	public static void waveComplete() {
+	public void waveComplete() {
 		int waveCount = waves.length;
 		System.out.println("WAVE COMPLETED");
 		CombatInterface.announcementText.setText("WAVE COMPLETE");
@@ -160,7 +181,7 @@ public class Combat {
 	}
 	
 	
-	public static void turn() {
+	public void turn() {
 		
 		if (checkIfTeamIsDead(teams[1]) == true) {
 			waveComplete();

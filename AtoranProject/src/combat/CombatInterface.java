@@ -35,13 +35,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 public class CombatInterface {
-	private static JPanel moveMenu = new JPanel();
-	private static JPanel selectTargetButtonsPanel = new JPanel();
+	private static JPanel moveMenu;// = new JPanel();
+	private static JPanel selectTargetButtonsPanel;// = new JPanel();
 	private static Move selectedMove;
 	private static CombatEntity selectedTarget;
-	public static JLayeredPane layerOnePane = new JLayeredPane(); 
-	public static JPanel inventoryPanel = new JPanel();
-	public static JLabel announcementText = new JLabel("nil", SwingConstants.CENTER);
+	public static JLayeredPane layerOnePane;// = new JLayeredPane(); 
+	public static JPanel inventoryPanel;// = new JPanel();
+	public static JLabel announcementText;// = new JLabel("nil", SwingConstants.CENTER);
 	public static JPanel infoPanel;
 	public static JLabel infoLabel;
 	public static JButton expandButton;
@@ -61,6 +61,7 @@ public class CombatInterface {
 		//window.setSize(1920, 1080);
 		window.setLayout(null);
 		
+		layerOnePane = new JLayeredPane();
 		layerOnePane.setLocation(new Point(0, 0));
 		layerOnePane.setSize(new Dimension(1920, 1080));
 		
@@ -71,6 +72,7 @@ public class CombatInterface {
 		// Move menu
 		//moveMenu.setLayout(null);
 		//moveMenu.setBounds(200, 700, 0, 0);
+		moveMenu = new JPanel();
 		moveMenu.setLocation(new Point(20, 1080 - 200));
 		moveMenu.setSize(new Dimension(300, 200));
 		moveMenu.setPreferredSize(new Dimension(300, 200));
@@ -85,7 +87,7 @@ public class CombatInterface {
 		
 		createInfoPanel();
 		
-		
+		announcementText = new JLabel("nil", SwingConstants.CENTER);
 		announcementText.setLocation(0, 100);
 		announcementText.setSize(new Dimension(1920, 200));
 		announcementText.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(125)));
@@ -101,7 +103,7 @@ public class CombatInterface {
 		layerOnePane.add(announcementText, JLayeredPane.MODAL_LAYER); 
 		
 		
-		loadEntityImagesOfTeam(Combat.teams[0], true);
+		loadEntityImagesOfTeam(Combat.currentCombatInstance.teams[0], true);
 		
 		
 		JLabel background = new JLabel();
@@ -202,9 +204,7 @@ public class CombatInterface {
 		infoLabel.setIcon(infoIcon);
 		
 		Window.scaleComponent(infoLabel);
-		
-		Window.scaleComponent(inventoryPanel);
-		
+			
 		Window.scaleComponent(infoPanel);
 		
 		layerOnePane.add(infoPanel, JLayeredPane.PALETTE_LAYER);
@@ -213,10 +213,13 @@ public class CombatInterface {
 		
 		
 		//inventoryPanel.setLocation(0, 880);
+		inventoryPanel = new JPanel();
 		inventoryPanel.setSize(new Dimension(500, 200));
 		inventoryPanel.setPreferredSize(new Dimension(500, 200));
 		inventoryPanel.setVisible(false);
 		inventoryPanel.setBackground(new Color(0x7e4f2f));
+		
+		Window.scaleComponent(inventoryPanel);
 		
 		infoPanel.add(inventoryPanel);
 		
@@ -316,12 +319,12 @@ public class CombatInterface {
 	
 	
 	private static void confirmTurn() {
-		Combat.currentEntityTurn.performTurn(selectedMove, selectedTarget);
+		Combat.currentCombatInstance.currentEntityTurn.performTurn(selectedMove, selectedTarget);
 		
 		Runnable fpsMethod = () -> {
 			try {
 				TimeUnit.MILLISECONDS.sleep(1000);
-				Combat.turn();
+				Combat.currentCombatInstance.turn();
 			} catch (InterruptedException err) {
 				err.printStackTrace();
 			}
@@ -383,8 +386,9 @@ public class CombatInterface {
 	
 	
 	private static void createTargetSelection(Move move) {
-		Team[] teams = Combat.teams;
+		Team[] teams = Combat.currentCombatInstance.teams;
 		
+		selectTargetButtonsPanel = new JPanel();
 		selectTargetButtonsPanel.setPreferredSize(new Dimension(1920, 1080));
 		selectTargetButtonsPanel.setSize(new Dimension(1920, 1080));
 		selectTargetButtonsPanel.setLayout(null);
