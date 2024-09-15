@@ -70,11 +70,12 @@ public class GameMap {
                 startLevel(level);
 
                 // Если уровень завершен, разблокировать следующий
-                if (level.isCompleted() && level.getLevelNumber() < levels.size()) {
+                /*if (level.isCompleted() && level.getLevelNumber() < levels.size()) {
                     Level nextLevel = levels.get(level.getLevelNumber());
                     nextLevel.unlock();
                     updateMap();
-                }
+                }*/
+                // I commented this out because whenever you tried to replay a level it would break and this was the cause
             } else {
                 JOptionPane.showMessageDialog(null, "Этот уровень заблокирован!");
             }

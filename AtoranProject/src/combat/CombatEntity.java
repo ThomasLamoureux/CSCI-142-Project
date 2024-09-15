@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import main.Window;
 import utilities.AnimationPlayerModule;
 
-public class CombatEntity {
+public class CombatEntity implements Cloneable {
 	private Move[] moveSet = {};
 	private double damageResistence = 0.0;
 	public int health = 0;
@@ -206,7 +206,12 @@ public class CombatEntity {
 			automatedTurn(team, enemyTeam);
 			
 		} else {
-			combat.CombatInterface.getTurn(moveSet);
+			CombatInterface.getTurn(moveSet);
 		}
 	}
+	
+	 @Override
+	 public Object clone() throws CloneNotSupportedException {
+		 return super.clone();
+	 }
 }

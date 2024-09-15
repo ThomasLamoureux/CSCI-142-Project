@@ -70,7 +70,7 @@ public class Window extends JFrame {
 		MainWindow.setSize(1920, 1080);
 		MainWindow.setTitle("Atoran");
 		MainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		//MainWindow.setUndecorated(true);
+		MainWindow.setUndecorated(true);
 		return MainWindow;
 	}
 	

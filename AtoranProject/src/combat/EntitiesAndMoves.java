@@ -252,7 +252,7 @@ public class EntitiesAndMoves {
 		public SweepMove(CombatEntity parent) {
 			super("Sweep", false, true, parent);
 		
-			this.setDamage(100);
+			this.setDamage(50);
 			this.setDescription("Targets all enemies on the field with a sweeping attack");
 		}
 		

@@ -60,13 +60,15 @@ public class Combat {
 		AtoranEntity atoran3 = new AtoranEntity();
 		
 		teams[0].members = new CombatEntity[] {atoran};
-		
+
 		currentTeam = teams[0];
 		notCurrentTeam = teams[1];
 
 		
-		waves = level.getWaves();
+		waves = level.getWaves().clone();
 		System.out.println(waves);
+		
+		//waves = new Wave[] {new Wave(new CombatEntity[] {new SlimeEntity()})};
 		
 		initializeCombat();
 	}
@@ -127,6 +129,8 @@ public class Combat {
 		Runnable turnWait = () -> {
 			try {
 				TimeUnit.MILLISECONDS.sleep(3000);
+				Engine.toggleFps(false);
+				
 				Window.getWindow().clearFrame();
 				GameMap.currentMap.openGameMap();
 			} catch (InterruptedException err) {
