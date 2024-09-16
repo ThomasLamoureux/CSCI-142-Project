@@ -5,6 +5,7 @@ import java.util.List;
 import combat.Wave;
 
 public class Level {
+	// Поля класса - Class fields
     private int levelNumber;
     private String location;
     private String enemy;
@@ -12,16 +13,18 @@ public class Level {
     private boolean isUnlocked;
     private boolean isCompleted;
 
+    // Constructor for the Level class
     public Level(int levelNumber, String location, String enemy, boolean isUnlocked, Wave[] waves) {
+    	// Инициализация полей класса - Initializing class fields
         this.levelNumber = levelNumber;
         this.location = location;
         this.enemy = enemy;
         this.isUnlocked = isUnlocked;
-        this.isCompleted = false; // Изначально уровень не пройден
+        this.isCompleted = false; // Изначально уровень не пройден - initially level is not completed
         this.waves = waves;
     }
 
-    // Геттеры и сеттеры
+    // Геттеры и сеттеры - Getters and Setters 
     public int getLevelNumber() {
         return levelNumber;
     }
@@ -54,7 +57,7 @@ public class Level {
     	return this.waves;
     }
 
-    // Метод для прохождения уровня
+    // Метод для прохождения уровня - Method to complete the level
     public void completeLevel() {
         if (isUnlocked) {
             System.out.println("Level " + levelNumber + " completed!");
