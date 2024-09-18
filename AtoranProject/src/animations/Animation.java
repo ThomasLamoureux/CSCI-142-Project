@@ -36,12 +36,8 @@ public class Animation {
 			}
 		}*/
 		
-		System.out.println(this.startingLocation.y);
-		
 		xIncrement = (this.destinations[currentDestination].x - sprite.getLocation().x) / framesToTake[currentDestination];
 		yIncrement = (this.destinations[currentDestination].y - sprite.getLocation().y) / framesToTake[currentDestination];
-		
-		System.out.println(yIncrement);
 	}
 	
 	
@@ -89,7 +85,6 @@ public class Animation {
 				this.keyframes[currentKeyframe].playKeyframe();
 			}
 		}
-		System.out.println(currentKeyframe);
 
 		//this.sprite.setLocation(new Point(this.startingLocation.x + xIncrement * (currentPoint + 1), this.startingLocation.y + yIncrement * (currentPoint + 1)));
 		currentKeyframe += 1;
@@ -140,12 +135,41 @@ public class Animation {
 	}
 	
 	// Squishes character to add movement
-	public static class IdleAnimation extends Animation {
+	public static class FadeAnimation extends Animation {
 
-		public IdleAnimation(JLabel sprite, Point[] destinations, int[] framesToTake, String easingStyle) {
+		public FadeAnimation(JLabel sprite, Point[] destinations, int[] framesToTake, String easingStyle) {
 			super(sprite, destinations, framesToTake, easingStyle);
 			// TODO Auto-generated constructor stub
 		}
 		
+	}
+	
+	
+	public static class GraphicAnimation extends Animation {
+
+		public GraphicAnimation(JLabel sprite, Point[] destinations, int[] framesToTake, String easingStyle) {
+			super(sprite, destinations, framesToTake, easingStyle);
+			// TODO Auto-generated constructor stub
+		}
+		
+	}
+	
+	
+	public static class ResizeAnimation extends Animation {
+
+		public ResizeAnimation(JLabel sprite, Point[] destinations, int[] framesToTake, String easingStyle) {
+			super(sprite, destinations, framesToTake, easingStyle);
+			// TODO Auto-generated constructor stub
+		}
+		
+	}
+	
+	
+	public static class CombinedAnimation extends Animation {
+
+		public CombinedAnimation(JLabel sprite, Point[] destinations, int[] framesToTake, String easingStyle) {
+			super(sprite, destinations, framesToTake, easingStyle);
+			// TODO Auto-generated constructor stub
+		}
 	}
 }

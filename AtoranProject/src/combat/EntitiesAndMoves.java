@@ -73,17 +73,18 @@ public class EntitiesAndMoves {
 	}
 
 	
-	public static class BanditEntity extends CombatEntity {
+	public static class SamohtEntity extends CombatEntity {
 
-		public BanditEntity() {
-			super("Bandit", 50, null, null);
+		public SamohtEntity() {
+			super("Samoht", 800, null, getSlimeSprite());
 			
-			this.flipIfFacingLeft = true;
+			this.flipIfFacingLeft = false;
 			
 			File targetFile = new File("Resources/Images/AtoranStand.png"); // FILLER, REPLACE
 			this.setImageFile(targetFile);
 			 
-			Move[] moveSet = null;
+			Move[] moveSet = {new SamohtMultiHit(this), new SamohtSingleHit(this)};
+			this.setMoveSet(moveSet);
 		}
 	}
 
@@ -336,4 +337,177 @@ public class EntitiesAndMoves {
 			AnimationPlayerModule.addAnimation(animation);
 		}
 	}
+	
+	// -- Samoht
+	public static class SamohtMultiHit extends Move {
+
+		public SamohtMultiHit(CombatEntity parent) {
+			super("SamohtMultiHit", false, true, parent);
+		
+			this.setDamage(50);
+			this.setDescription("Targets all enemies on the field with a powerful spell");
+		}
+		
+		@Override
+		public void useMove(CombatEntity target) {
+			CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
+			
+			for (int i = 0; i < enemies.length; i++) {
+				enemies[i].recieveDamage(this.getDamage());
+			}
+			
+			runAnimation(target);
+		}
+		
+		@Override
+		protected void runAnimation(CombatEntity target) {
+			Point targetDestination = new Point(Window.scaleInt(900), 900 - this.getParent().sprite.getHeight());
+			targetDestination = Window.scalePoint(targetDestination);
+			
+			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
+			int[] framesToTake = {24, 28, 22};
+			Keyframe[] keyframes = new Keyframe[24 + 28 + 22];
+			
+			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources/Animations/SweepAnimation");
+			
+			
+			JLabel animationLabel = new JLabel();
+			animationLabel.setSize(new Dimension((int)(550 * 1.4), (int)(400 * 1.4)));
+			
+			final CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
+
+			int index = 24;
+			for (int i = 0; i < images.length; i++) {
+				final int fi = i;
+				Runnable method = () -> {
+					Image image;
+					int offSet = 0;
+					if (this.getParent().facingLeft == 1) {
+						image = AnimationPlayerModule.createMirror(images[fi]);
+						offSet = animationLabel.getWidth() - this.getParent().sprite.getWidth();
+					} else {
+						image = images[fi];
+					}
+					
+					image = Window.scaleImage((int)(550 * 1.4), (int)(400 * 1.4), image);
+
+					animationLabel.setIcon(new ImageIcon(image));
+					Point spriteLocation = this.getParent().sprite.getLocation();
+					Point location = new Point(
+							this.getParent().sprite.getLocation().x - offSet + 200 * this.getParent().facingLeft, 
+							this.getParent().sprite.getLocation().y + this.getParent().sprite.getHeight()
+							- animationLabel.getHeight() + 150);
+					animationLabel.setLocation(location);
+					if (fi == 0) {
+						CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
+					} else if (fi == 1) {
+						for (int j = 0; j < enemies.length; j++) {
+							AnimationPlayerModule.shakeAnimation(enemies[j]);
+							enemies[j].updateHealthBar();
+						}
+					}
+					System.out.println("method played");
+				};
+				
+				Keyframe keyframe = new Keyframe(method);
+				keyframes[i + index] = keyframe;
+				index += 2;
+				System.out.println("made key");
+			}
+			
+			Runnable method = () -> {
+				CombatInterface.layerOnePane.remove(animationLabel);
+			};
+			
+			keyframes[index + 2] = new Keyframe(method);
+			
+			
+			Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
+			animation.keyframes = keyframes;
+			
+			AnimationPlayerModule.addAnimation(animation);
+		}
+	}
+	
+	public static class SamohtSingleHit extends Move {
+
+		public SamohtSingleHit(CombatEntity parent) {
+			super("SamohtSingleHit", false, true, parent);
+		
+			this.setDamage(80);
+			this.setDescription("Targets a single enemy with a slashing attack");
+		}
+		
+		@Override
+		protected void runAnimation(CombatEntity target) {
+			Point targetDestination = new Point((int)
+					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
+					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
+			
+			//targetDestination = Window.scalePoint(targetDestination);
+			
+			Point[] destinations = {targetDestination, null, this.getParent().sprite.getLocation()};
+			int[] framesToTake = {24, 28, 22};
+			Keyframe[] keyframes = new Keyframe[24 + 28 + 22];
+			
+			Image[] images = AnimationPlayerModule.createIconsFromFolder("Resources/Animations/NewSlashingAnimation");
+			
+			
+			JLabel animationLabel = new JLabel();
+			animationLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
+			Window.scaleComponent(animationLabel);
+
+			int index = 24;
+			for (int i = 0; i < images.length; i++) {
+				final int fi = i;
+				Runnable method = () -> {
+					int offSet = Window.scaleInt(200);
+					Image image;
+					if (this.getParent().facingLeft == 1) {
+						image = AnimationPlayerModule.createMirror(images[fi]);
+						offSet += animationLabel.getWidth() - this.getParent().sprite.getWidth();
+					} else {
+						image = images[fi];
+					}
+					
+					image = Window.scaleImage((int)(550 * 1.2), (int)(400 * 1.2), image);
+					
+					animationLabel.setIcon(new ImageIcon(image));
+					Point spriteLocation = new Point(
+							this.getParent().sprite.getLocation().x + offSet * this.getParent().facingLeft, 
+							this.getParent().sprite.getLocation().y + this.getParent().sprite.getHeight()
+							- animationLabel.getHeight() + Window.scaleInt(100));
+					
+					Point location = new Point(spriteLocation.x, spriteLocation.y);
+					animationLabel.setLocation(location);
+					if (fi == 0) {
+						CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
+					} else if (fi == 1) {
+						AnimationPlayerModule.shakeAnimation(target);
+						target.updateHealthBar();
+					}
+					System.out.println("method played");
+				};
+				
+				Keyframe keyframe = new Keyframe(method);
+				keyframes[i + index] = keyframe;
+				index += 1;
+				System.out.println("made key");
+			}
+			
+			Runnable method = () -> {
+				CombatInterface.layerOnePane.remove(animationLabel);
+			};
+			
+			keyframes[index + 2] = new Keyframe(method);
+			
+			
+			Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
+			animation.keyframes = keyframes;
+			
+			AnimationPlayerModule.addAnimation(animation);
+		}
+	}
 }
+
+

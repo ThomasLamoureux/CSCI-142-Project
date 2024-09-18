@@ -139,6 +139,9 @@ public class CombatEntity implements Cloneable {
 		return fieldPosition;
 	}
 	
+	public void automatedTurn2(CombatEntity[] team, CombatEntity[] enemyTeam) {
+		
+	}
 	
 	public void automatedTurn(CombatEntity[] team, CombatEntity[] enemyTeam) {
 		Random randomGenerator = new Random();
@@ -148,7 +151,8 @@ public class CombatEntity implements Cloneable {
 		if (this.moveSet.length == 1) {
 			randomMove = 0;
 		} else {
-			randomMove = randomGenerator.nextInt(0, this.moveSet.length - 1);
+			randomMove = randomGenerator.nextInt(0, this.moveSet.length);
+			System.out.println(randomMove);
 		}
 		
 		Move move = moveSet[randomMove];

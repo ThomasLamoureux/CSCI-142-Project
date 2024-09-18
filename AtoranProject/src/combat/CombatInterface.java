@@ -339,6 +339,8 @@ public class CombatInterface {
 		selectedTarget = target;
 		
 		selectTargetButtonsPanel.removeAll();
+		moveMenu.removeAll();
+		moveMenu.setVisible(false);
 		
 		confirmTurn();
 	}
@@ -410,7 +412,7 @@ public class CombatInterface {
 	
 	private static void selectMove(Move move) {
 		selectedMove = move;
-		moveMenu.setVisible(false);
+		//moveMenu.setVisible(false);
 		
 		createTargetSelection(move);
 	}
@@ -471,8 +473,6 @@ public class CombatInterface {
 			moveButton.setForeground(Color.WHITE);
 			
 			Window.scaleComponent(moveButton);
-			
-			System.out.println(moveButton.getWidth());
 			
 			// For some reason this requires that all methods are overridden
 			moveButton.addMouseListener(new MouseListener() {

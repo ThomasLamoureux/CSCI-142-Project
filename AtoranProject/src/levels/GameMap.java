@@ -7,6 +7,7 @@ import combat.Combat;
 import combat.CombatEntity;
 import combat.Wave;
 import combat.EntitiesAndMoves.SlimeEntity;
+import combat.EntitiesAndMoves.SamohtEntity;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,9 +21,9 @@ public class GameMap {
 
     public GameMap() {
     	// Defining enemies for the waves using CombatEntity classes
-		CombatEntity[] enemies = {new SlimeEntity(), new SlimeEntity()};
+		CombatEntity[] enemies = {new SamohtEntity(), new SlimeEntity()};
 		CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
-		CombatEntity[] enemiesThree = {new SlimeEntity()};
+		CombatEntity[] enemiesThree = {new SamohtEntity()};
 		
 		// Defining waves
 		Wave wave = new Wave(enemies);
