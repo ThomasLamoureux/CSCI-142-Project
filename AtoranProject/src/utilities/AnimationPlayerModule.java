@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import animations.Animation;
+import animations.Animation.MovementAnimation;
 import combat.CombatEntity;
 import main.Window;
 
@@ -97,7 +98,7 @@ public class AnimationPlayerModule {
 		destinations[5] = targetLocation;
 		framesToTake[5] = 4;
 		
-		Animation animation = new Animation(target.sprite, destinations, framesToTake, "easeInOutSine");
+		MovementAnimation animation = new MovementAnimation(target.sprite, destinations, framesToTake, "easeInOutSine");
 		
 		addAnimation(animation);
 	}
