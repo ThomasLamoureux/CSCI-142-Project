@@ -6,6 +6,7 @@ import main.Window;
 import combat.Combat;
 import combat.CombatEntity;
 import combat.Wave;
+import datastore.Datastore;
 import combat.EntitiesAndMoves.SlimeEntity;
 
 import java.awt.*;
@@ -39,6 +40,16 @@ public class GameMap {
         levels.add(new Level(3, "Cave", "Dragon", false, waves)); // Third level is locked
         levels.add(new Level(4, "Mountains", "Wizard", false, waves)); // Fourth level is locked
         
+        if (Datastore.readData("level2") == "1") {
+        	levels.get(2).unlock();
+        }
+        if (Datastore.readData("level3") == "1") {
+        	levels.get(3).unlock();
+        }
+        if (Datastore.readData("level4") == "1") {
+        	levels.get(4).unlock();
+        }
+            
         // Setting the current map to this instance
         currentMap = this;
         
