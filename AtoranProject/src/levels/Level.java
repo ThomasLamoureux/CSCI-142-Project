@@ -1,7 +1,5 @@
 package levels;
 
-import java.util.List;
-
 import combat.Wave;
 
 public class Level {
