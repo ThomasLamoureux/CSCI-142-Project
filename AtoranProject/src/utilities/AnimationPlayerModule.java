@@ -13,6 +13,7 @@ import javax.swing.ImageIcon;
 
 import animations.Animation;
 import animations.Animation.MovementAnimation;
+import animations.Animation.CombinedAnimation;
 import combat.CombatEntity;
 import main.Window;
 
@@ -28,6 +29,8 @@ public class AnimationPlayerModule {
 	}
 	
 	public static void playAnimations() {
+		ArrayList<Integer> removals = new ArrayList<Integer>();
+		
 		for (int i = 0; i < animations.size(); i++) {
 			if (i >= animations.size()) {
 				break;
@@ -35,9 +38,14 @@ public class AnimationPlayerModule {
 			boolean complete = playFrame(animations.get(i));
 			
 			if (complete == true) {
-				animations.remove(i);
-				i -= 1;
+				removals.add(i);
 			}
+		}
+		
+		
+		for (int i = 0; i < removals.size(); i++) {
+			System.out.println("removing");
+			animations.remove(removals.get(i) - i);
 		}
 	}
 	
@@ -82,25 +90,20 @@ public class AnimationPlayerModule {
 		Point destinationOne = new Point(targetLocation.x + Window.scaleInt(4), targetLocation.y + Window.scaleInt(5));
 		Point destinationTwo = new Point(targetLocation.x - Window.scaleInt(4), targetLocation.y - Window.scaleInt(5));
 		
-		Point[] destinations = new Point[6];
-		int[] framesToTake = new int[6];
+		ArrayList<Animation> animationsList = new ArrayList<Animation>();
 		
 		for (int i = 0; i < 5; i++) {
 			if (i % 2 == 1) {
-				destinations[i] = destinationTwo;
+				animationsList.add(new MovementAnimation(target.sprite, 4, "easeInOutSine", destinationTwo, null));
 			} else {
-				destinations[i] = destinationOne;
+				animationsList.add(new MovementAnimation(target.sprite, 4, "easeInOutSine", destinationOne, null));
 			}
-			
-			framesToTake[i] = 3;
 		}
 		
-		destinations[5] = targetLocation;
-		framesToTake[5] = 4;
+		animationsList.add(new MovementAnimation(target.sprite, 4, "easeInOutSine", targetLocation, null));
+		Animation CombinedAnimation = new CombinedAnimation(4 * 6, animationsList, new int[] {0, 4, 8, 12, 16, 20});
 		
-		MovementAnimation animation = new MovementAnimation(target.sprite, destinations, framesToTake, "easeInOutSine");
-		
-		addAnimation(animation);
+		addAnimation(CombinedAnimation);
 	}
 	
 	

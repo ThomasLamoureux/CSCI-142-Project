@@ -73,9 +73,9 @@ public class Move {
 		Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
 		int[] framesToTake = {30, 38};
 		
-		Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
+		//Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
 		
-		AnimationPlayerModule.addAnimation(animation);
+		//AnimationPlayerModule.addAnimation(animation);
 	}
 	
 	// Overrided

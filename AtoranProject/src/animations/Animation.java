@@ -2,12 +2,16 @@ package animations;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 
+import combat.CombatInterface;
 import main.Window;
 import utilities.AnimationPlayerModule;
 
@@ -26,7 +30,7 @@ public class Animation {
 	}
 	
 	
-	public double chooseEasingFunction(String style, double x) {
+	protected double chooseEasingFunction(String style, double x) {
 		if (style == "easeOutQuart") {
 			return (1 - Math.pow(1 - x, 4));
 		} else if (style == "linear") {
@@ -34,13 +38,24 @@ public class Animation {
 		} else if (style == "easeInOutSine"){ 
 			return -(Math.cos(Math.PI * x) - 1) / 2;
 		}
-		
+
 		return 0.0;
 	}
 	
 	
 	public boolean playFrame() {
 		return false;
+	}
+	
+	protected void playKeyframe() {
+		if (this.keyframes != null) {
+
+			if (this.keyframes[this.currentKeyframe] != null) {
+				this.keyframes[this.currentKeyframe].playKeyframe();
+			}
+		}
+		
+		this.currentKeyframe += 1;
 	}
 	
 	
@@ -52,32 +67,34 @@ public class Animation {
 		public int xIncrement;
 		public int yIncrement;
 		public JLabel sprite;
-		public int currentPoint = 0;
-		public int currentDestination = 0;
-		public Point[] destinations;
+		public Point destination;
 		public Point startingLocation;
 
-		public MovementAnimation(JLabel sprite, Point[] destinations, int frameCount, String easingStyle) {
+		public MovementAnimation(JLabel sprite, int frameCount, String easingStyle, Point destination, Point startingLocation) {
 			super(frameCount, easingStyle);
 			
 			this.sprite = sprite;
-			this.destinations = destinations;
+			this.destination = destination;
 			
 			
-			this.xIncrement = (this.destinations[currentDestination].x - sprite.getLocation().x) / frameCount[currentDestination];
-			this.yIncrement = (this.destinations[currentDestination].y - sprite.getLocation().y) / frameCount[currentDestination];
+			if (startingLocation == null) {
+				this.startingLocation = sprite.getLocation();
+			} else {
+				this.startingLocation = startingLocation;
+			}
+			
+			
+			this.xIncrement = (this.destination.x - sprite.getLocation().x) / this.frameCount;
+			this.yIncrement = (this.destination.y - sprite.getLocation().y) / this.frameCount;
 		}
 		
 		public void moveSprite() {
-			if (destinations[currentDestination] == null) {
-				return;
-			}
-			double x = (double)currentPoint/(double)frameCount;
+			double x = (double)this.currentKeyframe/(double)this.frameCount;
 			
 			double amount = this.chooseEasingFunction(this.easingStyle, x);
 			
-			int xPosition = (int)(this.startingLocation.x + ((destinations[currentDestination].x - this.startingLocation.x) * amount));
-			int yPosition = (int)(this.startingLocation.y + ((destinations[currentDestination].y - this.startingLocation.y) * amount));
+			int xPosition = (int)(this.startingLocation.x + ((destination.x - this.startingLocation.x) * amount));
+			int yPosition = (int)(this.startingLocation.y + ((destination.y - this.startingLocation.y) * amount));
 			
 			Point newSport = new Point(xPosition, yPosition);
 			
@@ -87,44 +104,18 @@ public class Animation {
 		@Override
 		public boolean playFrame() {
 			moveSprite();
+			playKeyframe();
 			
-			if (this.keyframes != null) {
-
-				if (this.keyframes[this.currentKeyframe] != null) {
-					this.keyframes[this.currentKeyframe].playKeyframe();
-				}
-			}
-
-			//this.sprite.setLocation(new Point(this.startingLocation.x + xIncrement * (currentPoint + 1), this.startingLocation.y + yIncrement * (currentPoint + 1)));
-			currentKeyframe += 1;
-			currentPoint += 1;
+			System.out.println("move");
 			
-			if (currentPoint == frameCount) {
-				if (currentDestination == destinations.length - 1) {
-					if (destinations[currentDestination] != null) {
-						sprite.setLocation(destinations[currentDestination]);
-					}
-					
-					return true;
-				} else {
-					if (destinations[currentDestination] != null) {
-						sprite.setLocation(destinations[currentDestination]);
-					}
-					
-					currentPoint = 0;
-					currentDestination += 1;
-					
-					if (destinations[currentDestination] != null) {
-						
-						this.startingLocation = this.sprite.getLocation();
-
-						xIncrement = (this.destinations[currentDestination].x - sprite.getLocation().x) / frameCount[currentDestination];
-						yIncrement = (this.destinations[currentDestination].y - sprite.getLocation().y) / frameCount[currentDestination];
-					}
-					
-					return false;
-				}
+			if (this.currentKeyframe == this.frameCount) {
+				sprite.setLocation(this.destination);
+				
+				return true;
 			} else {
+				xIncrement = (this.destination.x - sprite.getLocation().x) / frameCount;
+				yIncrement = (this.destination.y - sprite.getLocation().y) / frameCount;
+				
 				return false;
 			}
 		}
@@ -163,7 +154,9 @@ public class Animation {
 			this.sprite.setBackground(new Color(sprite.getBackground().getRed(),
 					sprite.getBackground().getGreen(),
 					sprite.getBackground().getBlue(),
-					(int)((double)this.endingValue * increment)));
+					(int)((double)this.startingValue - ((this.startingValue - this.endingValue) * increment))));
+			
+			playKeyframe();
 			
 			// End
 			if (this.currentKeyframe == this.frameCount) {
@@ -182,14 +175,46 @@ public class Animation {
 	
 	public static class GraphicAnimation extends Animation {
 		private Image[] images;
+		private int skip; // frames that should be skipped;
+		private int frameRate;
+		private JLabel animationSprite;
+		private boolean flipImage;
+		
 
-		public GraphicAnimation(JLabel sprites, int frameCount, String easingStyle, String folderPath, int skip, int frameRate) {
-			super(frameCount, easingStyle);
+		public GraphicAnimation(JLabel sprite, int frameCount, String folderPath, int skip, int frameRate, boolean flipImage) {
+			super(frameCount, null);
 			// TODO Auto-generated constructor stub
 			
+			this.animationSprite = sprite;
 			this.images = AnimationPlayerModule.createIconsFromFolder(folderPath);
+			this.flipImage = flipImage;
 		}
 		
+		@Override
+		public boolean playFrame() {
+			//if (this.currentKeyframe % this.frameRate == 0) {
+			JLabel animationLabel = this.animationSprite;
+
+			Image image;
+			if (this.flipImage == true) {
+				image = AnimationPlayerModule.createMirror(this.images[this.currentKeyframe]);
+			} else {
+				image = this.images[this.currentKeyframe];
+			}
+			
+			image = Window.scaleImage(animationLabel.getWidth(), animationLabel.getHeight(), image);
+			
+			animationLabel.setIcon(new ImageIcon(image));
+			//}
+			
+			playKeyframe();
+			
+			if (this.currentKeyframe == this.frameCount) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 	
 	
@@ -198,23 +223,30 @@ public class Animation {
 		private Dimension originalSize;
 		private String anchor; // topLeft, bottomLeft, topRight, bottomRight, middle : how the image will scale
 		private JLabel sprite;
-
-		public ResizeAnimation(JLabel sprite, int frameCount, String easingStyle, Dimension targetSize, String anchor) {
+		private int scaleFont;
+		
+		public ResizeAnimation(JLabel sprite, int frameCount, String easingStyle, Dimension targetSize, String anchor, int scaleFont) {
 			super(frameCount, easingStyle);
 			// TODO Auto-generated constructor stub
 			
 			this.targetSize = targetSize;
 			this.anchor = anchor;
 			this.sprite = sprite;
+			this.scaleFont = scaleFont;
 			
 			this.originalSize = sprite.getSize();
+			
+			System.out.println("created");
 		}
 		
 		@Override
 		public boolean playFrame() {
-			double increment = (double)this.currentKeyframe/(double)this.frameCount;
+			//System.out.println("Played");
+			double increment = ((double)this.currentKeyframe)/((double)this.frameCount);
 			increment = chooseEasingFunction(this.easingStyle, increment);
 			
+			//System.out.println(increment);
+			Dimension currentSize = this.sprite.getSize();
 			Dimension increase = new Dimension(this.targetSize.width - this.originalSize.width,
 					this.targetSize.height - this.originalSize.height);
 			
@@ -223,16 +255,30 @@ public class Animation {
 					this.originalSize.height +
 					(int)(increment * (double)increase.height));
 			
+			//System.out.println(totalIncrement.width);
+			
 			// Resize
 			this.sprite.setSize(totalIncrement);
 			
+			if (this.scaleFont > 0) {
+				Font font = this.sprite.getFont();
+				
+				Font newFont = font.deriveFont((float) ((double)this.scaleFont * increment));
+				
+				this.sprite.setFont(newFont);
+			}
+			
+			System.out.println(this.sprite.getWidth() - currentSize.getWidth());
+			
 			// Positioning to account for resize
 			if (this.anchor == "middle") {
-				Point newLocation = new Point(this.sprite.getLocation().x + (int)(increment * (double)increase.width),
-						this.sprite.getLocation().y + (int)(increment * (double)increase.height));
+				Point newLocation = new Point(this.sprite.getLocation().x -  (int)((this.sprite.getWidth() - currentSize.getWidth())/2),
+						this.sprite.getLocation().y - (int)((this.sprite.getWidth() - currentSize.getWidth()))/2);
 				this.sprite.setLocation(newLocation);
 			}
 			// Else do nothing (anchor == topLeft)
+			
+			playKeyframe();
 			
 			// End
 			if (this.currentKeyframe == this.frameCount) {
@@ -251,8 +297,8 @@ public class Animation {
 		private ArrayList<Animation> animations = new ArrayList<Animation>();
 		private int[] startingFrames;
 
-		public CombinedAnimation(int frameCount, String easingStyle, ArrayList<Animation> animations, int[] startingFrames) {
-			super(frameCount, easingStyle);
+		public CombinedAnimation(int frameCount, ArrayList<Animation> animations, int[] startingFrames) {
+			super(frameCount, null);
 			// TODO Auto-generated constructor stub
 			
 			this.animations = animations;
@@ -261,17 +307,26 @@ public class Animation {
 		
 		@Override
 		public boolean playFrame() {
+			ArrayList<Integer> removals = new ArrayList<Integer>();
+			
 			for (int i = 0; i < this.animations.size(); i++) {
-				if (this.startingFrames[i] >= this.currentKeyframe) {
+				if (this.startingFrames[i] <= this.currentKeyframe) {
 					boolean complete = animations.get(i).playFrame();
 					
 					if (complete == true) {
-						this.animations.remove(i);
-						i -= 1;
+						this.animations.set(i, null);
+						removals.add(i);
 					}
 				}
 			}
 			
+			for (int i = 0; i < removals.size(); i++) {
+				this.animations.remove(removals.get(i) - i);
+			}
+			
+			playKeyframe();
+			
+			//System.out.println(this.currentKeyframe);
 			
 			if (this.currentKeyframe == this.frameCount) {
 				return true;
