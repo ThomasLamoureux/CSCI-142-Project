@@ -1,6 +1,7 @@
 package levels;
 
 import combat.Wave;
+import cutscenes.Cutscene;
 
 public class Level {
 	// Поля класса - Class fields
@@ -10,6 +11,9 @@ public class Level {
     private Wave[] waves;
     private boolean isUnlocked;
     private boolean isCompleted;
+    private Cutscene startingCutscene;
+    private Cutscene endingCutscene;
+    
 
     // Constructor for the Level class
     public Level(int levelNumber, String location, String enemy, boolean isUnlocked, Wave[] waves) {
@@ -25,6 +29,25 @@ public class Level {
     // Геттеры и сеттеры - Getters and Setters 
     public int getLevelNumber() {
         return levelNumber;
+    }
+    
+    public void playStartingCutscene() {
+    	System.out.println("started");
+    	if (this.startingCutscene != null) {
+    		System.out.println("computed");
+    		this.startingCutscene.start();
+    		
+    	}
+    }
+    
+    public void playEndingCutscene() {
+    	if (this.endingCutscene != null) {
+    		this.endingCutscene.start();
+    	}
+    }
+    
+    public void setStartingCutscene(Cutscene cutscene) {
+    	this.startingCutscene = cutscene;
     }
 
     public String getLocation() {
