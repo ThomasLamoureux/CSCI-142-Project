@@ -29,6 +29,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import animations.Animation;
+import animations.Animation.MovementAnimation;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -150,19 +151,20 @@ public class CombatInterface {
 	
 	
 	public static void expandInfoPanel() {		
-		Point[] destination = new Point[1];
+		Point destination;
 		
 		if (infoPanelExpanded == true) {
-			destination[0] = Window.scalePoint(new Point(0, -453));
+			destination = Window.scalePoint(new Point(0, -453));
 			expandButton.setLocation(Window.scalePoint(new Point(875, 0)));
 			infoPanelExpanded = false;
 		} else {
-			destination[0] = Window.scalePoint(new Point(0, 0));
+			destination = Window.scalePoint(new Point(0, 0));
 			expandButton.setLocation(Window.scalePoint(new Point(875, 450)));
 			infoPanelExpanded = true;
 		}
 		
-		Animation animation = new Animation(infoLabel, destination, new int[] {15}, "easeInOutSine");
+		//Animation animation = new Animation(infoLabel, destination, new int[] {15}, "easeInOutSine");
+		MovementAnimation animation = new MovementAnimation(infoLabel, 15, "easeInOutSine", destination, null);
 		
 		AnimationPlayerModule.addAnimation(animation);
 	}

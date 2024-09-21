@@ -76,6 +76,8 @@ public class Combat {
 	
 	public void initializeCombat() {
 		CombatInterface.openCombatScreen();
+		new Tutorial();
+		System.out.println("tste");
 		loadWave();
 		
 		Engine.toggleFps(true);

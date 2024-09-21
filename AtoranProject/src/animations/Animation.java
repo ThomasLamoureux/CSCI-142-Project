@@ -150,13 +150,28 @@ public class Animation {
 						this.startingValue));
 			}
 			
+			if (this.currentKeyframe == 0) {
+				this.sprite.setForeground(new Color(sprite.getForeground().getRed(),
+						sprite.getForeground().getGreen(),
+						sprite.getForeground().getBlue(),
+						this.startingValue));
+			}
+			
 			// Fade
 			this.sprite.setBackground(new Color(sprite.getBackground().getRed(),
 					sprite.getBackground().getGreen(),
 					sprite.getBackground().getBlue(),
 					(int)((double)this.startingValue - ((this.startingValue - this.endingValue) * increment))));
+			System.out.println(sprite.getBackground().getAlpha());
+			this.sprite.setForeground(new Color(sprite.getForeground().getRed(),
+					sprite.getForeground().getGreen(),
+					sprite.getForeground().getBlue(),
+					(int)((double)this.startingValue - ((this.startingValue - this.endingValue) * increment))));
 			
 			playKeyframe();
+			
+			sprite.repaint();
+			sprite.revalidate();
 			
 			// End
 			if (this.currentKeyframe == this.frameCount) {
@@ -164,6 +179,10 @@ public class Animation {
 				this.sprite.setBackground(new Color(sprite.getBackground().getRed(),
 						sprite.getBackground().getGreen(),
 						sprite.getBackground().getBlue(),
+						this.endingValue));
+				this.sprite.setForeground(new Color(sprite.getForeground().getRed(),
+						sprite.getForeground().getGreen(),
+						sprite.getForeground().getBlue(),
 						this.endingValue));
 				return true;
 			} else {
@@ -224,6 +243,7 @@ public class Animation {
 		private String anchor; // topLeft, bottomLeft, topRight, bottomRight, middle : how the image will scale
 		private JLabel sprite;
 		private int scaleFont;
+		private int fontSize;
 		
 		public ResizeAnimation(JLabel sprite, int frameCount, String easingStyle, Dimension targetSize, String anchor, int scaleFont) {
 			super(frameCount, easingStyle);
@@ -233,6 +253,7 @@ public class Animation {
 			this.anchor = anchor;
 			this.sprite = sprite;
 			this.scaleFont = scaleFont;
+			this.fontSize = sprite.getFont().getSize();
 			
 			this.originalSize = sprite.getSize();
 			
@@ -259,11 +280,12 @@ public class Animation {
 			
 			// Resize
 			this.sprite.setSize(totalIncrement);
+			System.out.println(totalIncrement.width);
 			
-			if (this.scaleFont > 0) {
+			if (this.scaleFont != 0) {
 				Font font = this.sprite.getFont();
-				
-				Font newFont = font.deriveFont((float) ((double)this.scaleFont * increment));
+
+				Font newFont = font.deriveFont((float) (this.fontSize + ((double)this.scaleFont * increment)));
 				
 				this.sprite.setFont(newFont);
 			}
@@ -272,8 +294,17 @@ public class Animation {
 			
 			// Positioning to account for resize
 			if (this.anchor == "middle") {
-				Point newLocation = new Point(this.sprite.getLocation().x -  (int)((this.sprite.getWidth() - currentSize.getWidth())/2),
-						this.sprite.getLocation().y - (int)((this.sprite.getWidth() - currentSize.getWidth()))/2);
+				Point newLocation = new Point(this.sprite.getLocation().x - (int)(((this.sprite.getWidth() - currentSize.getWidth())/2)),
+						this.sprite.getLocation().y - (int)((this.sprite.getHeight() - currentSize.getHeight())/2));
+				
+				Point test = new Point(this.sprite.getLocation().x + (int)((increment * increase.width)/2),
+				this.sprite.getLocation().y + (int)((increment * increase.width)/2));
+				
+				
+				
+				Point newLocation2 = new Point(this.sprite.getLocation().x + (int)(increment * (double)increase.width),
+						this.sprite.getLocation().y + (int)(increment * (double)increase.height));
+				
 				this.sprite.setLocation(newLocation);
 			}
 			// Else do nothing (anchor == topLeft)
@@ -295,14 +326,16 @@ public class Animation {
 	
 	public static class CombinedAnimation extends Animation {
 		private ArrayList<Animation> animations = new ArrayList<Animation>();
-		private int[] startingFrames;
+		private ArrayList<Integer> startingFrames = new ArrayList<Integer>();
 
 		public CombinedAnimation(int frameCount, ArrayList<Animation> animations, int[] startingFrames) {
 			super(frameCount, null);
 			// TODO Auto-generated constructor stub
 			
+			for (int i = 0; i < startingFrames.length; i++) {
+				this.startingFrames.add(startingFrames[i]);
+			}
 			this.animations = animations;
-			this.startingFrames = startingFrames;
 		}
 		
 		@Override
@@ -310,7 +343,7 @@ public class Animation {
 			ArrayList<Integer> removals = new ArrayList<Integer>();
 			
 			for (int i = 0; i < this.animations.size(); i++) {
-				if (this.startingFrames[i] <= this.currentKeyframe) {
+				if (this.startingFrames.get(i) <= this.currentKeyframe) {
 					boolean complete = animations.get(i).playFrame();
 					
 					if (complete == true) {
@@ -322,6 +355,7 @@ public class Animation {
 			
 			for (int i = 0; i < removals.size(); i++) {
 				this.animations.remove(removals.get(i) - i);
+				this.startingFrames.remove(removals.get(i) - i);
 			}
 			
 			playKeyframe();
