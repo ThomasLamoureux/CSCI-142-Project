@@ -37,9 +37,11 @@ public class Animation {
 			return x;
 		} else if (style == "easeInOutSine"){ 
 			return -(Math.cos(Math.PI * x) - 1) / 2;
+		} else if (style == "easeInQuad") {
+			return x * x;
 		}
 
-		return 0.0;
+		return x;
 	}
 	
 	
@@ -198,7 +200,9 @@ public class Animation {
 		private int frameRate;
 		private JLabel animationSprite;
 		private boolean flipImage;
-		
+		private boolean looped;
+		private int loopCount = -1;
+		private int loopingIndex = 0;
 
 		public GraphicAnimation(JLabel sprite, int frameCount, String folderPath, int skip, int frameRate, boolean flipImage) {
 			super(frameCount, null);
@@ -207,18 +211,58 @@ public class Animation {
 			this.animationSprite = sprite;
 			this.images = AnimationPlayerModule.createIconsFromFolder(folderPath);
 			this.flipImage = flipImage;
+			
+			if (frameRate == 0) {
+				this.frameRate = 1;
+			} else {
+				this.frameRate = frameRate;
+			}
+		}
+		
+		
+		public void setLooped(boolean looped) {
+			if (looped == true) {
+				this.looped = true;
+			} else {
+				this.looped = false;
+			}
+		}
+		
+		public void setLooped(int loopCount) {
+			this.looped = true;
+			this.loopCount = loopCount;
+		}
+		
+		public void setLoopStartIndex(int index) {
+			this.loopingIndex = index;
 		}
 		
 		@Override
 		public boolean playFrame() {
 			//if (this.currentKeyframe % this.frameRate == 0) {
 			JLabel animationLabel = this.animationSprite;
+			
+			if (this.frameRate > 1) {
+				if (this.currentKeyframe % this.frameRate != 0 && this.currentKeyframe != 0) {
+					playKeyframe();
+					return false;
+				}
+			}
+			
+			if (this.currentKeyframe == this.frameCount) {
+				if (this.looped == true) {
+					this.currentKeyframe = this.loopingIndex;
+					return false;
+				} else {
+					return true;
+				}
+			}
 
 			Image image;
 			if (this.flipImage == true) {
-				image = AnimationPlayerModule.createMirror(this.images[this.currentKeyframe]);
+				image = AnimationPlayerModule.createMirror(this.images[this.currentKeyframe / this.frameRate]);
 			} else {
-				image = this.images[this.currentKeyframe];
+				image = this.images[this.currentKeyframe / this.frameRate];
 			}
 			
 			image = Window.scaleImage(animationLabel.getWidth(), animationLabel.getHeight(), image);
@@ -229,7 +273,12 @@ public class Animation {
 			playKeyframe();
 			
 			if (this.currentKeyframe == this.frameCount) {
-				return true;
+				if (this.looped == true) {
+					this.currentKeyframe = this.loopingIndex;
+					return false;
+				} else {
+					return true;
+				}
 			} else {
 				return false;
 			}
