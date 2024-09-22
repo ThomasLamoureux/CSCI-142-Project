@@ -97,7 +97,6 @@ public class GameMap {
 
     private void startLevel(Level level) {
         // Вызов класса с логикой боя
-    	
         System.out.println("Starting Level " + level.getLevelNumber() + " in location: " + level.getLocation() + " against " + level.getEnemy());
         // Здесь добавить вызов класса combat
     	new Combat(level);
