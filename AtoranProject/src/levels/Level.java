@@ -1,6 +1,8 @@
 package levels;
 
 import combat.Wave;
+import cutscenes.Cutscene;
+import datastore.Datastore;
 
 public class Level {
 	// Поля класса - Class fields
@@ -10,6 +12,9 @@ public class Level {
     private Wave[] waves;
     private boolean isUnlocked;
     private boolean isCompleted;
+    private Cutscene startingCutscene;
+    private Cutscene endingCutscene;
+    
 
     // Constructor for the Level class
     public Level(int levelNumber, String location, String enemy, boolean isUnlocked, Wave[] waves) {
@@ -26,6 +31,25 @@ public class Level {
     public int getLevelNumber() {
         return levelNumber;
     }
+    
+    public void playStartingCutscene() {
+    	System.out.println("started");
+    	if (this.startingCutscene != null) {
+    		System.out.println("computed");
+    		this.startingCutscene.start();
+    		
+    	}
+    }
+    
+    public void playEndingCutscene() {
+    	if (this.endingCutscene != null) {
+    		this.endingCutscene.start();
+    	}
+    }
+    
+    public void setStartingCutscene(Cutscene cutscene) {
+    	this.startingCutscene = cutscene;
+    }
 
     public String getLocation() {
         return location;
@@ -37,6 +61,10 @@ public class Level {
 
     public boolean isUnlocked() {
         return isUnlocked;
+        Object levels;
+		Datastore.writeData("level2", levels.get(1).isUnlocked() ? "1" : "0");
+        Datastore.writeData("level3", levels.get(2).isUnlocked() ? "1" : "0");
+        Datastore.writeData("level4", levels.get(3).isUnlocked() ? "1" : "0");
     }
 
     public boolean isCompleted() {
@@ -45,6 +73,7 @@ public class Level {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
+        
     }
 
     public void unlock() {

@@ -25,13 +25,15 @@ public class Cutscene {
         Window window = Window.getWindow();
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(window.getSize());
+        
+        System.out.println(window.getSize());
 
         // Add existing components to the bottom layer
-        Component[] components = window.getContentPane().getComponents();
+        /*Component[] components = window.getContentPane().getComponents();
         for (Component component : components) {
             layeredPane.add(component, JLayeredPane.DEFAULT_LAYER);
             component.setBounds(0, 0, window.getWidth(), window.getHeight());
-        }
+        }*/
 
         // Create and add cutscene components
         imageLabel = new JLabel();
@@ -54,8 +56,11 @@ public class Cutscene {
             }
         });
         layeredPane.add(nextButton, JLayeredPane.PALETTE_LAYER);
+        
+        Window.scaleComponent(layeredPane);
 
-        window.setContentPane(layeredPane);
+        //window.setContentPane(layeredPane);
+        window.add(layeredPane);
         window.revalidate();
         window.repaint();
 

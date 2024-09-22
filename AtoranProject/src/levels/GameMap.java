@@ -6,7 +6,10 @@ import main.Window;
 import combat.Combat;
 import combat.CombatEntity;
 import combat.Wave;
+import datastore.Datastore;
 import combat.EntitiesAndMoves.SlimeEntity;
+import cutscenes.Cutscene;
+import cutscenes.Dialogue;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -38,7 +41,28 @@ public class GameMap {
         levels.add(new Level(2, "Forest", "Bear", false, wavesTwo)); // Second level is locked
         levels.add(new Level(3, "Cave", "Dragon", false, waves)); // Third level is locked
         levels.add(new Level(4, "Mountains", "Wizard", false, waves)); // Fourth level is locked
+
+        Level levelOne = levels.get(0);
         
+        List<Dialogue> dialogues = new ArrayList<>();
+        
+        dialogues.add(new Dialogue("Hiiii"));
+        dialogues.add(new Dialogue("Bye"));
+        
+        Cutscene levelOneCutscene = new Cutscene(dialogues);
+        
+        levelOne.setStartingCutscene(levelOneCutscene);
+        
+        if (Datastore.readData("level2") == "1") {
+        	levels.get(2).unlock();
+        }
+        if (Datastore.readData("level3") == "1") {
+        	levels.get(3).unlock();
+        }
+        if (Datastore.readData("level4") == "1") {
+        	levels.get(4).unlock();
+        }
+
         // Setting the current map to this instance
         currentMap = this;
         
@@ -52,6 +76,7 @@ public class GameMap {
         Window window = Window.getWindow();
         // 4 columns, 1 row
         window.setLayout(new GridLayout(4, 1)); // Сетка для кнопок уровней
+        //window.setLayout(null);
         
         // Loop through all levels and create a button for each
         for (Level level : levels) {
@@ -79,6 +104,7 @@ public class GameMap {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (level.isUnlocked()) {
+            	//level.playStartingCutscene();
                 // Логика перехода на уровень
                 startLevel(level);
 
