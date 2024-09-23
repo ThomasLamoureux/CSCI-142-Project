@@ -36,14 +36,13 @@ public class Level {
     	System.out.println("started");
     	if (this.startingCutscene != null) {
     		System.out.println("computed");
-    		this.startingCutscene.start();
-    		
+    		this.startingCutscene.start(this);
     	}
     }
     
     public void playEndingCutscene() {
     	if (this.endingCutscene != null) {
-    		this.endingCutscene.start();
+    		this.endingCutscene.start(this);
     	}
     }
     
@@ -61,8 +60,10 @@ public class Level {
 
     public boolean isUnlocked() {
         return isUnlocked;
- 
-     
+        /*Object levels;
+		Datastore.writeData("level2", levels.get(1).isUnlocked() ? "1" : "0");
+        Datastore.writeData("level3", levels.get(2).isUnlocked() ? "1" : "0");
+        Datastore.writeData("level4", levels.get(3).isUnlocked() ? "1" : "0");*/
     }
 
     public boolean isCompleted() {
