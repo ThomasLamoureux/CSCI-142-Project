@@ -2,6 +2,11 @@ package cutscenes;
 
 import main.Window;
 import javax.swing.*;
+
+import combat.Combat;
+import levels.GameMap;
+import levels.Level;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,16 +20,22 @@ public class Cutscene {
     private JLabel imageLabel;
     private JTextArea textArea;
     private JButton nextButton;
+    private Level level;
 
     public Cutscene(List<Dialogue> dialogues) {
         this.dialogues = dialogues;
         this.currentDialogueIndex = 0;
     }
 
-    public void start() {
+    public void start(Level level) {
+    	this.level = level;
+    	
         Window window = Window.getWindow();
+        //window.clearFrame();
         layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(window.getSize());
+        layeredPane.setSize(window.getSize());
+        layeredPane.setLocation(new Point(0, 0));
+        //layeredPane.setLayout(new GridLayout());
         
         System.out.println(window.getSize());
 
@@ -45,6 +56,7 @@ public class Cutscene {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setBounds(50, window.getHeight() - 190, window.getWidth() - 100, 150);
+        textArea.setSize(new Dimension(400, 500));
         layeredPane.add(textArea, JLayeredPane.PALETTE_LAYER);
 
         nextButton = new JButton("Next");
@@ -56,14 +68,25 @@ public class Cutscene {
             }
         });
         layeredPane.add(nextButton, JLayeredPane.PALETTE_LAYER);
+        layeredPane.setBackground(Color.red);
+        layeredPane.setOpaque(true);
+        layeredPane.setVisible(true);
         
         Window.scaleComponent(layeredPane);
+        
+        
+        JLabel testLabel = new JLabel("TESTING");
+        testLabel.setSize(new Dimension(200, 200));
+        testLabel.setLocation(new Point(200, 200));
+        window.add(testLabel);
 
-        //window.setContentPane(layeredPane);
-        window.add(layeredPane);
+        GameMap.currentMap.gameMapPane.add(layeredPane, JLayeredPane.PALETTE_LAYER);
         window.revalidate();
         window.repaint();
+        window.refresh();
 
+        System.out.println("Made it to the end : Cutscene line 73");
+        
         showCurrentDialogue();
     }
 
@@ -88,12 +111,15 @@ public class Cutscene {
 
     private void end() {
         Window window = Window.getWindow();
-        window.setContentPane(new JPanel());
+        
+        GameMap.currentMap.gameMapPane.remove(layeredPane);
+
         for (Component component : layeredPane.getComponentsInLayer(JLayeredPane.DEFAULT_LAYER)) {
             window.add(component);
         }
-        window.revalidate();
-        window.repaint();
+        window.refresh();
+        
+        new Combat(level);
     }
 
 }

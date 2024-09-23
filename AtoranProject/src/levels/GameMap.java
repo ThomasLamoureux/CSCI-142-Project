@@ -20,8 +20,15 @@ import java.util.List;
 public class GameMap {
 	public static GameMap currentMap;
     private List<Level> levels;
+    public JLayeredPane gameMapPane;
 
     public GameMap() {
+    	Window window = Window.getWindow();
+    	
+    	gameMapPane = new JLayeredPane();
+    	gameMapPane.setSize(window.getSize());
+    	gameMapPane.setLocation(new Point(0, 0));
+    	
     	// Defining enemies for the waves using CombatEntity classes
 		CombatEntity[] enemies = {new SlimeEntity(), new SlimeEntity()};
 		CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
@@ -76,16 +83,24 @@ public class GameMap {
         Window window = Window.getWindow();
         // 4 columns, 1 row
         window.setLayout(new GridLayout(4, 1)); // Сетка для кнопок уровней
-        //window.setLayout(null);
+        window.setLayout(null);
+        
+        window.add(gameMapPane);
         
         // Loop through all levels and create a button for each
+        int i = 0;
+        
         for (Level level : levels) {
             JButton levelButton = new JButton("Level " + level.getLevelNumber());
             // Enable the button if the level is unlocked
             levelButton.setEnabled(level.isUnlocked());
             // Add an action listener to the button that will start the level
             levelButton.addActionListener(new LevelButtonActionListener(level));
-            window.add(levelButton);
+            levelButton.setLocation(new Point(0, i));
+            levelButton.setSize(new Dimension(400, 200));
+            i += 200;
+            
+            gameMapPane.add(levelButton, JLayeredPane.DEFAULT_LAYER);
         }
 
         // Refresh the window
@@ -104,9 +119,9 @@ public class GameMap {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (level.isUnlocked()) {
-            	//level.playStartingCutscene();
+            	level.playStartingCutscene();
                 // Логика перехода на уровень
-                startLevel(level);
+                //startLevel(level);
 
                 // Если уровень завершен, разблокировать следующий
                 /*if (level.isCompleted() && level.getLevelNumber() < levels.size()) {
