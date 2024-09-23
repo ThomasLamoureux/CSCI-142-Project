@@ -61,10 +61,8 @@ public class Level {
 
     public boolean isUnlocked() {
         return isUnlocked;
-        Object levels;
-		Datastore.writeData("level2", levels.get(1).isUnlocked() ? "1" : "0");
-        Datastore.writeData("level3", levels.get(2).isUnlocked() ? "1" : "0");
-        Datastore.writeData("level4", levels.get(3).isUnlocked() ? "1" : "0");
+ 
+     
     }
 
     public boolean isCompleted() {
@@ -73,7 +71,7 @@ public class Level {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
-        
+        Datastore.writeData("level" + this.levelNumber, "1");
     }
 
     public void unlock() {
