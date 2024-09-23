@@ -59,7 +59,7 @@ public class Combat {
 		AtoranEntity atoran2 = new AtoranEntity();
 		AtoranEntity atoran3 = new AtoranEntity();
 		
-		teams[0].members = new CombatEntity[] {atoran};
+		teams[0].members = new CombatEntity[] {atoran, atoran2, atoran3};
 
 		currentTeam = teams[0];
 		notCurrentTeam = teams[1];

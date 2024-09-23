@@ -108,8 +108,6 @@ public class Animation {
 			moveSprite();
 			playKeyframe();
 			
-			System.out.println("move");
-			
 			if (this.currentKeyframe == this.frameCount) {
 				sprite.setLocation(this.destination);
 				
@@ -164,7 +162,7 @@ public class Animation {
 					sprite.getBackground().getGreen(),
 					sprite.getBackground().getBlue(),
 					(int)((double)this.startingValue - ((this.startingValue - this.endingValue) * increment))));
-			System.out.println(sprite.getBackground().getAlpha());
+
 			this.sprite.setForeground(new Color(sprite.getForeground().getRed(),
 					sprite.getForeground().getGreen(),
 					sprite.getForeground().getBlue(),
@@ -305,17 +303,14 @@ public class Animation {
 			this.fontSize = sprite.getFont().getSize();
 			
 			this.originalSize = sprite.getSize();
-			
-			System.out.println("created");
 		}
 		
 		@Override
 		public boolean playFrame() {
-			//System.out.println("Played");
 			double increment = ((double)this.currentKeyframe)/((double)this.frameCount);
 			increment = chooseEasingFunction(this.easingStyle, increment);
 			
-			//System.out.println(increment);
+
 			Dimension currentSize = this.sprite.getSize();
 			Dimension increase = new Dimension(this.targetSize.width - this.originalSize.width,
 					this.targetSize.height - this.originalSize.height);
@@ -325,11 +320,10 @@ public class Animation {
 					this.originalSize.height +
 					(int)(increment * (double)increase.height));
 			
-			//System.out.println(totalIncrement.width);
 			
 			// Resize
 			this.sprite.setSize(totalIncrement);
-			System.out.println(totalIncrement.width);
+			
 			
 			if (this.scaleFont != 0) {
 				Font font = this.sprite.getFont();
@@ -339,7 +333,6 @@ public class Animation {
 				this.sprite.setFont(newFont);
 			}
 			
-			System.out.println(this.sprite.getWidth() - currentSize.getWidth());
 			
 			// Positioning to account for resize
 			if (this.anchor == "middle") {
@@ -408,8 +401,6 @@ public class Animation {
 			}
 			
 			playKeyframe();
-			
-			//System.out.println(this.currentKeyframe);
 			
 			if (this.currentKeyframe == this.frameCount) {
 				return true;

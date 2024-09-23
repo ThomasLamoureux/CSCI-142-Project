@@ -21,14 +21,10 @@ public class Main {
 		    public void run() {
 		      try {
 		        Clip clip = AudioSystem.getClip();
-		        System.out.println("1");
 		        File file = new File("Resources/Sounds/testingsound.wav");
 		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(file);
-		        System.out.println("2");
 		        clip.open(inputStream);
-		        System.out.println("3");
 		        clip.start(); 
-		        System.out.println("4");
 		      } catch (Exception e) {
 		    	System.out.println(e);
 		        System.err.println(e.getMessage());

@@ -44,7 +44,6 @@ public class AnimationPlayerModule {
 		
 		
 		for (int i = 0; i < removals.size(); i++) {
-			System.out.println("removing");
 			animations.remove(removals.get(i) - i);
 		}
 	}
@@ -61,10 +60,8 @@ public class AnimationPlayerModule {
 		Image[] icons = new Image[content.length];
 		
 		if (content != null) {
-			System.out.println("test");
 			for (int i = 0; i < icons.length; i++) {
 				File file = content[i];
-				System.out.println(file.getName());
 				
 				BufferedImage image = null;
 				try {
@@ -133,7 +130,6 @@ public class AnimationPlayerModule {
     }
 	
 	/*public static void main(String[] args) {
-		System.out.println("ran");
 		createIconsFromFolder("Resources\\Animations\\SlashingAnimation");
 	}*/
 }
