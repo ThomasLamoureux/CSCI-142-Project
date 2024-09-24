@@ -20,6 +20,7 @@ import combat.CombatInterface;
 import combat.Move;
 import main.Window;
 import utilities.AnimationPlayerModule;
+import utilities.AnimationsPreloader;
 
 public class Samoht extends CombatEntity {
 	public static JLabel getSamohtSprite() {
@@ -31,15 +32,15 @@ public class Samoht extends CombatEntity {
 		return sprite;
 	}
 	
-	public Samoht() {
-		super("Samoht", 250, null, getSamohtSprite());
+	public Samoht(boolean flipImages) {
+		super("Samoht", 250, null, getSamohtSprite(), flipImages);
 		
 		File targetFile = new File("Resources/Images/DralyaDragonForm.png");
 		this.setImageFile(targetFile);
 		
 		this.flipIfFacingLeft = false;
 		
-		Move[] moveSet = {new Multihit(this)};
+		Move[] moveSet = {new MagicBullet(this), new TrapSpell(this), new Multihit(this)};
 		this.setMoveSet(moveSet);
 	}	
 	
@@ -51,8 +52,16 @@ public class Samoht extends CombatEntity {
 		
 			this.setDamage(60);
 			this.setDescription("Fires a magic bullet at the enemy");
+			
+			this.preLoadAnimations();
 		}
 		
+		@Override
+		protected void preLoadAnimations() {
+			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/MagicBullet", new Dimension(400, 400), !this.getParent().flipImages),
+					AnimationsPreloader.loadImages("Resources/Animations/SideWaysPortal", new Dimension(300, 300), !this.getParent().flipImages),
+					};
+		}
 		
 
 		@Override
@@ -79,7 +88,7 @@ public class Samoht extends CombatEntity {
 	
 			String portalPath = "Resources/Animations/SideWaysPortal";
 			
-			GraphicAnimation portalGraphics = new GraphicAnimation(portalLabel, 25, portalPath, 0, 5, flipImage);
+			GraphicAnimation portalGraphics = new GraphicAnimation(portalLabel, 25, this.uniqueIndex[1], 0, 5);
 			portalGraphics.setLooped(true);
 			portalGraphics.setLoopStartIndex(5);
 			
@@ -110,7 +119,7 @@ public class Samoht extends CombatEntity {
 			System.out.println(bulletTargetDestination.y);
 			
 			
-			GraphicAnimation bulletGraphics = new GraphicAnimation(bulletLabel, 4, bulletPath, 0, 1, flipImage);
+			GraphicAnimation bulletGraphics = new GraphicAnimation(bulletLabel, 4, this.uniqueIndex[0], 0, 1);
 			MovementAnimation bulletMovement = new MovementAnimation(bulletLabel, 12, "easeInQuad", bulletTargetDestination, bulletStartingLocation);
 			
 			
@@ -153,6 +162,8 @@ public class Samoht extends CombatEntity {
 		
 			this.setDamage(30);
 			this.setDescription("Targets all enemies on the field with a sweeping attack");
+			
+			this.preLoadAnimations();
 		}
 		
 		@Override
@@ -164,6 +175,13 @@ public class Samoht extends CombatEntity {
 			}
 			
 			runAnimation(target);
+		}
+		
+		@Override
+		protected void preLoadAnimations() {
+			this.uniqueIndex = new int[] {AnimationsPreloader.loadImages("Resources/Animations/Portal", new Dimension(400, 400), !this.getParent().flipImages),
+					AnimationsPreloader.loadImages("Resources/Animations/SamohtMultiHit", new Dimension(400, 400), false),
+					};
 		}
 		
 		
@@ -188,7 +206,7 @@ public class Samoht extends CombatEntity {
 				
 				String portalPath = "Resources/Animations/Portal";
 				
-				GraphicAnimation portalOpenGraphic = new GraphicAnimation(portalLabel, 25, portalPath, 0, 5, flipImage);
+				GraphicAnimation portalOpenGraphic = new GraphicAnimation(portalLabel, 25, this.uniqueIndex[0], 0, 5);
 				portalOpenGraphic.setLooped(true);
 				portalOpenGraphic.setLoopStartIndex(1);
 				
@@ -218,7 +236,7 @@ public class Samoht extends CombatEntity {
 				
 				String attackPath = "Resources/Animations/SamohtMultiHit";
 				
-				GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 30, attackPath, 0, 2, flipImage);
+				GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 30, this.uniqueIndex[1], 0, 2);
 				
 				
 				Runnable addAttackLabel = () -> {
@@ -252,4 +270,67 @@ public class Samoht extends CombatEntity {
 		}
 	}
 	
+	
+	public static class TrapSpell extends Move {
+
+		public TrapSpell(CombatEntity parent) {
+			super("Death from Above", false, true, parent);
+		
+			this.setDamage(0);
+			this.setDescription("Targets all enemies, increasing damage taken by 50% and decresing damage dealt by 50% until spell is cleansed");
+			
+			this.preLoadAnimations();
+		}
+		
+		@Override
+		public void useMove(CombatEntity target) {
+			runAnimation(target);
+		}
+		
+		
+		@Override
+		protected void preLoadAnimations() {
+			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/TrapSpell", new Dimension(300, 300), false)};
+		}
+		
+		
+		@Override
+		protected void runAnimation(CombatEntity blank) {
+			boolean flipImage = false;
+			
+			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {				
+				JLabel targetSprite = target.sprite;
+				
+				JLabel attackLabel = new JLabel();
+				attackLabel.setSize(new Dimension((int)(300), (int)(300)));
+				Window.scaleComponent(attackLabel);
+				
+				int attackOffset = (attackLabel.getWidth() - targetSprite.getWidth())/2;
+				Point attackLocation = new Point(
+						targetSprite.getX() - attackOffset,
+						targetSprite.getY() - Window.scaleInt(15)
+						);
+				attackLabel.setLocation(attackLocation);
+				
+				
+				String attackPath = "Resources/Animations/TrapSpell";
+				
+				GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 50, this.uniqueIndex[0], 0, 2);
+				attackGraphic.setLooped(true);
+				attackGraphic.setLoopStartIndex(46);
+				
+				Runnable addAttackLabel = () -> {
+					CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
+				};
+				attackGraphic.keyframes[0] = new Keyframe(addAttackLabel);
+				
+				
+				Runnable removeAttackLabel = () -> {
+					CombatInterface.layerOnePane.remove(attackLabel);
+				};
+				
+				AnimationPlayerModule.addAnimation(attackGraphic);
+			}
+		}
+	}
 }

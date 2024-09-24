@@ -23,22 +23,22 @@ public class GameMap {
 
     public GameMap() {
     	// Defining enemies for the waves using CombatEntity classes
-		CombatEntity[] enemies = {new Samoht(), new SlimeEntity()};
-		CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
-		CombatEntity[] enemiesThree = {new SamohtEntity()};
+		CombatEntity[] enemies = {new Samoht(true)};
+		//CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
+		//CombatEntity[] enemiesThree = {new SamohtEntity()};
 		
 		// Defining waves
 		Wave wave = new Wave(enemies);
-		Wave waveTwo = new Wave(enemiesTwo);
-		Wave[] waves = {wave, waveTwo}; // First level has two waves
+		//Wave waveTwo = new Wave(enemiesTwo);
+		Wave[] waves = {wave}; // First level has two waves
 		
-		Wave waveThree = new Wave(enemiesThree);
-		Wave[] wavesTwo = {waveThree}; // Second level has one wave
+		//Wave waveThree = new Wave(enemiesThree);
+		//Wave[] wavesTwo = {waveThree}; // Second level has one wave
 		
 		// Defining levels
         levels = new ArrayList<>();
         levels.add(new Level(1, "Village", "Slime", true, waves));  // First level is unlocked by default
-        levels.add(new Level(2, "Forest", "Bear", false, wavesTwo)); // Second level is locked
+        levels.add(new Level(2, "Forest", "Bear", false, waves)); // Second level is locked
         levels.add(new Level(3, "Cave", "Dragon", false, waves)); // Third level is locked
         levels.add(new Level(4, "Mountains", "Wizard", false, waves)); // Fourth level is locked
         

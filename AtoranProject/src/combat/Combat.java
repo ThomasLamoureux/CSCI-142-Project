@@ -11,6 +11,7 @@ import javax.swing.SwingUtilities;
 
 import combat.EntitiesAndMoves.AtoranEntity;
 import combat.EntitiesAndMoves.SlimeEntity;
+import combatEntities.Samoht;
 import engine.Engine;
 import levels.GameMap;
 import levels.Level;
@@ -46,7 +47,7 @@ public class Combat {
 		
 		teamTurn = 0;
 		teams = new Team[2];
-		boolean fighting = true;
+		fighting = true;
 		currentWave = 0;
 		currentEntityTurn = null;
 
@@ -55,11 +56,11 @@ public class Combat {
 		
 		teams[0] = new Team();
 		
-		AtoranEntity atoran = new AtoranEntity();
-		AtoranEntity atoran2 = new AtoranEntity();
-		AtoranEntity atoran3 = new AtoranEntity();
+		Samoht atoran = new Samoht(false);
+		//AtoranEntity atoran2 = new AtoranEntity();
+		//AtoranEntity atoran3 = new AtoranEntity();
 		
-		teams[0].members = new CombatEntity[] {atoran, atoran2, atoran3};
+		teams[0].members = new CombatEntity[] {atoran};
 
 		currentTeam = teams[0];
 		notCurrentTeam = teams[1];
@@ -219,7 +220,6 @@ public class Combat {
 		System.out.println("else");
 		
 		if (entity.dead == true) {
-			//Window.resizeWindow(new Dimension(1, 1));
 			turn();
 			return;
 		}

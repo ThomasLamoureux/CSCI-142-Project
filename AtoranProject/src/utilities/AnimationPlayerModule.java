@@ -1,5 +1,6 @@
 package utilities;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -52,18 +53,20 @@ public class AnimationPlayerModule {
 		animations.add(animation);
 	}
 	
-	public static Image[] createIconsFromFolder(String path) {
+	public static ImageIcon[] createIconsFromFolder(String path, Dimension size, boolean flip) {
 		
 		File folder = new File(path);
 		File[] content = folder.listFiles();
 		
-		Image[] icons = new Image[content.length];
+		Image[] images = new Image[content.length];
+		ImageIcon[] icons = new ImageIcon[content.length];
 		
 		if (content != null) {
 			for (int i = 0; i < icons.length; i++) {
 				File file = content[i];
 				
 				BufferedImage image = null;
+				
 				try {
 					image = ImageIO.read(file);
 				} catch (IOException e) {
@@ -71,8 +74,14 @@ public class AnimationPlayerModule {
 					e.printStackTrace();
 				}
 				
+				if (flip) {
+					image = createMirror(image);
+				}
 				
-				icons[i] = image;
+				Window.scaleImage(size.width, size.height, image);
+				
+				
+				icons[i] = new ImageIcon(image);
 			}
 		}
 		

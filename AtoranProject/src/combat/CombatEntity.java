@@ -31,12 +31,14 @@ public class CombatEntity implements Cloneable {
 	public int facingLeft;
 	public boolean flipIfFacingLeft;
 	private File imageFile;
+	public boolean flipImages;
 	
-	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite) {
+	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite, boolean flipImages) {
 		this.health = health;
 		this.moveSet = moveSet;
 		this.name = name; // Temporarys
 		this.maxHealth = health;
+		this.flipImages = flipImages;
 		
 		if (sprite == null) {
 			JLabel defaultSprite = new JLabel(this.getName());

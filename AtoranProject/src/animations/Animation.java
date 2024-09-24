@@ -14,6 +14,7 @@ import javax.swing.JLayeredPane;
 import combat.CombatInterface;
 import main.Window;
 import utilities.AnimationPlayerModule;
+import utilities.AnimationsPreloader;
 
 public class Animation {
 	public int frameCount;
@@ -193,22 +194,20 @@ public class Animation {
 	
 	
 	public static class GraphicAnimation extends Animation {
-		private Image[] images;
+		private ImageIcon[] images;
 		private int skip; // frames that should be skipped;
 		private int frameRate;
 		private JLabel animationSprite;
-		private boolean flipImage;
 		private boolean looped;
 		private int loopCount = -1;
 		private int loopingIndex = 0;
 
-		public GraphicAnimation(JLabel sprite, int frameCount, String folderPath, int skip, int frameRate, boolean flipImage) {
+		public GraphicAnimation(JLabel sprite, int frameCount, int uniqueIndex, int skip, int frameRate) {
 			super(frameCount, null);
 			// TODO Auto-generated constructor stub
 			
 			this.animationSprite = sprite;
-			this.images = AnimationPlayerModule.createIconsFromFolder(folderPath);
-			this.flipImage = flipImage;
+			this.images = AnimationsPreloader.getIconArray(uniqueIndex);
 			
 			if (frameRate == 0) {
 				this.frameRate = 1;
@@ -256,16 +255,16 @@ public class Animation {
 				}
 			}
 
-			Image image;
-			if (this.flipImage == true) {
+			//Image image;
+			/*if (this.flipImage == true) {
 				image = AnimationPlayerModule.createMirror(this.images[this.currentKeyframe / this.frameRate]);
 			} else {
 				image = this.images[this.currentKeyframe / this.frameRate];
 			}
 			
-			image = Window.scaleImage(animationLabel.getWidth(), animationLabel.getHeight(), image);
+			image = Window.scaleImage(animationLabel.getWidth(), animationLabel.getHeight(), image);*/
 			
-			animationLabel.setIcon(new ImageIcon(image));
+			animationLabel.setIcon(this.images[this.currentKeyframe / this.frameRate]);
 			//}
 			
 			playKeyframe();
