@@ -119,29 +119,28 @@ public class GameMap {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (level.isUnlocked()) {
-            	level.playStartingCutscene();
-                // Логика перехода на уровень
-                //startLevel(level);
-
-                // Если уровень завершен, разблокировать следующий
-                /*if (level.isCompleted() && level.getLevelNumber() < levels.size()) {
-                    Level nextLevel = levels.get(level.getLevelNumber());
-                    nextLevel.unlock();
-                    updateMap();
-                }*/
-                // I commented this out because whenever you tried to replay a level it would break and this was the cause
+                level.playStartingCutscene();
+                //startLevel(level);  // Uncomment this line
             } else {
-                JOptionPane.showMessageDialog(null, "Этот уровень заблокирован!");
+                JOptionPane.showMessageDialog(null, "This level is locked!");
             }
         }
     }
 
-    private void startLevel(Level level) {
-        // Вызов класса с логикой боя
+    public void startLevel(Level level) {
         System.out.println("Starting Level " + level.getLevelNumber() + " in location: " + level.getLocation() + " against " + level.getEnemy());
-        // Здесь добавить вызов класса combat
-    	new Combat(level);
-        // После завершения боя установить уровень как пройденный
+        Combat combat = new Combat(level);
+        
+        // After combat is finished, mark the level as completed and unlock the next level
+        if (combat.currentLevel.isCompleted()) {  // Assuming Combat class has a method to check if it's completed
+            level.setCompleted(true);  // Assuming Level class has a method to set completion status
+            int nextLevelIndex = level.getLevelNumber();
+            if (nextLevelIndex < levels.size()) {
+                Level nextLevel = levels.get(nextLevelIndex);
+                nextLevel.unlock();
+            }
+            updateMap();  // Update the game map UI
+        }
     }
 
     // Method to update the game map UI when a level is completed

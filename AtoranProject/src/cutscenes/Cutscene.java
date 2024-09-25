@@ -60,15 +60,17 @@ public class Cutscene {
         layeredPane.add(textArea, JLayeredPane.PALETTE_LAYER);
 
         nextButton = new JButton("Next");
-        nextButton.setBounds(window.getWidth() - 150, window.getHeight() - 50, 100, 30);
+        nextButton.setLocation(new Point(500, 500));
+        nextButton.setSize(new Dimension(100, 30));
+        //nextButton.setBounds(window.getWidth() - 150, window.getHeight() - 50, 100, 30);
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 showNextDialogue();
             }
         });
-        layeredPane.add(nextButton, JLayeredPane.PALETTE_LAYER);
-        layeredPane.setBackground(Color.red);
+        layeredPane.add(nextButton, JLayeredPane.MODAL_LAYER);
+        layeredPane.setBackground(Color.black);
         layeredPane.setOpaque(true);
         layeredPane.setVisible(true);
         
@@ -119,7 +121,7 @@ public class Cutscene {
         }
         window.refresh();
         
-        new Combat(level);
+        GameMap.currentMap.startLevel(this.level);;
     }
 
 }
