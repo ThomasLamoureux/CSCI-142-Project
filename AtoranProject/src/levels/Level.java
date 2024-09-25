@@ -72,7 +72,7 @@ public class Level {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
-        
+        Datastore.writeData("level" + this.levelNumber, "1");
     }
 
     public void unlock() {
