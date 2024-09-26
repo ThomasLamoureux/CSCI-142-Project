@@ -18,7 +18,7 @@ import utilities.AnimationPlayerModule;
 
 public class IntroScreen {
 	public static void main(String[] args) {
-		Window window = Window.getWindow();
+		/*Window window = Window.getWindow();
 		window.setDefaultCloseOperation(Window.EXIT_ON_CLOSE);
 		
 		JLayeredPane pane = new JLayeredPane();
@@ -61,6 +61,6 @@ public class IntroScreen {
 		window.setVisible(true);
 		
 		Engine.toggleFps(true);
-		AnimationPlayerModule.addAnimation(finalAnimation);
+		AnimationPlayerModule.addAnimation(finalAnimation);*/
 	}
 }

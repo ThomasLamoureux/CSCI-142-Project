@@ -27,7 +27,7 @@ public class AnimationsPreloader {
 		ImageIcon[] images = AnimationPlayerModule.createIconsFromFolder(filePath, size, flip);
 		
 		imageList.add(images);
-		
+		System.out.println("AnimationsPreloader 30: Loaded asset " + id);
 		return id;
 	}
 }

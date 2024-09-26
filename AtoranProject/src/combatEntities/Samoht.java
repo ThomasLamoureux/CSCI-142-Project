@@ -58,7 +58,7 @@ public class Samoht extends CombatEntity {
 		
 		@Override
 		protected void preLoadAnimations() {
-			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/MagicBullet", new Dimension(400, 400), !this.getParent().flipImages),
+			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/MagicBullet", new Dimension(300, 300), !this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/SideWaysPortal", new Dimension(300, 300), !this.getParent().flipImages),
 					};
 		}

@@ -78,10 +78,9 @@ public class AnimationPlayerModule {
 					image = createMirror(image);
 				}
 				
-				Window.scaleImage(size.width, size.height, image);
+				Image reSizedImage = Window.scaleImage(size.width, size.height, image);
 				
-				
-				icons[i] = new ImageIcon(image);
+				icons[i] = new ImageIcon(reSizedImage);
 			}
 		}
 		

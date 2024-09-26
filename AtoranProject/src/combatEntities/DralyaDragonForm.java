@@ -19,6 +19,7 @@ import combat.CombatInterface;
 import combat.Move;
 import main.Window;
 import utilities.AnimationPlayerModule;
+import utilities.AnimationsPreloader;
 
 public class DralyaDragonForm extends CombatEntity {
 	
@@ -32,7 +33,7 @@ public class DralyaDragonForm extends CombatEntity {
 		return sprite;
 	}
 	
-	public static GraphicAnimation teleportIn(JLabel animationLabel, JLabel sprite, Point destination, Point location, boolean flipImage) {
+	public static GraphicAnimation teleportIn(JLabel animationLabel, JLabel sprite, Point destination, Point location, int index) {
 		animationLabel.setSize(new Dimension((int)(300), (int)(300)));
 		Window.scaleComponent(animationLabel);
 		
@@ -49,7 +50,7 @@ public class DralyaDragonForm extends CombatEntity {
 		String TeleportOutIn = "Resources/Animations/DragonTeleportIn";
 		
 		
-		GraphicAnimation teleportInAnimation = new GraphicAnimation(animationLabel, 7, TeleportOutIn, 0, 1, flipImage);
+		GraphicAnimation teleportInAnimation = new GraphicAnimation(animationLabel, 7, index, 0, 1);
 		
 		Runnable addLabel = () -> {
 			CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
@@ -67,7 +68,7 @@ public class DralyaDragonForm extends CombatEntity {
 		return teleportInAnimation;
 	}
 	
-	public static GraphicAnimation teleportOut(JLabel animationLabel, JLabel sprite, Point destination, Point location, boolean flipImage) {
+	public static GraphicAnimation teleportOut(JLabel animationLabel, JLabel sprite, Point destination, Point location, int index) {
 		animationLabel.setSize(new Dimension((int)(300), (int)(300)));
 		Window.scaleComponent(animationLabel);
 		
@@ -84,7 +85,7 @@ public class DralyaDragonForm extends CombatEntity {
 		String TeleportOutPath = "Resources/Animations/DragonTeleportOut";
 		
 		
-		GraphicAnimation teleportOutAnimation = new GraphicAnimation(animationLabel, 6, TeleportOutPath, 0, 1, flipImage);
+		GraphicAnimation teleportOutAnimation = new GraphicAnimation(animationLabel, 6, index, 0, 1);
 		
 		Runnable addLabel = () -> {
 			CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
@@ -104,8 +105,8 @@ public class DralyaDragonForm extends CombatEntity {
 		return teleportOutAnimation;
 	}
 	
-	public DralyaDragonForm() {
-		super("Dralya", 250, null, getDralyaDragonSprite());
+	public DralyaDragonForm(boolean flip) {
+		super("Dralya", 250, null, getDralyaDragonSprite(), flip);
 		
 		File targetFile = new File("Resources/Images/DralyaDragonForm.png");
 		this.setImageFile(targetFile);
@@ -125,7 +126,18 @@ public class DralyaDragonForm extends CombatEntity {
 		
 			this.setDamage(100);
 			this.setDescription("Targets a single enemy with a slashing attack");
+			
+			preLoadAnimations();
 		}
+		
+		@Override
+		protected void preLoadAnimations() {
+			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/DragonSlash", new Dimension(500, 500), !this.getParent().flipImages),
+					AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportIn", new Dimension(300, 300), !this.getParent().flipImages),
+					AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportOut", new Dimension(300, 300), !this.getParent().flipImages),
+					};
+		}
+		
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
@@ -158,7 +170,7 @@ public class DralyaDragonForm extends CombatEntity {
 
 			String slashPath = "Resources/Animations/DragonSlash";
 			
-			Animation slashGraphics = new GraphicAnimation(animationLabelOne, 11, slashPath, 0, 1, flipImage);
+			Animation slashGraphics = new GraphicAnimation(animationLabelOne, 11, this.uniqueIndex[0], 0, 1);
 			
 			Runnable removeLabel = () -> {
 				CombatInterface.layerOnePane.remove(animationLabelOne);
@@ -179,16 +191,16 @@ public class DralyaDragonForm extends CombatEntity {
 			
 			
 			JLabel animationLabelTwo = new JLabel();
-			GraphicAnimation teleportOutAnimation = teleportOut(animationLabelTwo, sprite, targetDestination, sprite.getLocation(), flipImage);		
+			GraphicAnimation teleportOutAnimation = teleportOut(animationLabelTwo, sprite, targetDestination, sprite.getLocation(), this.uniqueIndex[2]);		
 			
 			JLabel animationLabelThree = new JLabel();
-			GraphicAnimation teleportInAnimation = teleportIn(animationLabelThree, sprite, sprite.getLocation(), targetDestination, flipImage);
+			GraphicAnimation teleportInAnimation = teleportIn(animationLabelThree, sprite, sprite.getLocation(), targetDestination, this.uniqueIndex[1]);
 
 			JLabel animationLabelFour = new JLabel();
-			GraphicAnimation teleportOutAnimationTwo = teleportOut(animationLabelFour, sprite, sprite.getLocation(), targetDestination, flipImage);		
+			GraphicAnimation teleportOutAnimationTwo = teleportOut(animationLabelFour, sprite, sprite.getLocation(), targetDestination, this.uniqueIndex[2]);		
 			
 			JLabel animationLabelFive = new JLabel();
-			GraphicAnimation teleportInAnimationTwo = teleportIn(animationLabelFive, sprite, targetDestination, sprite.getLocation(), flipImage);
+			GraphicAnimation teleportInAnimationTwo = teleportIn(animationLabelFive, sprite, targetDestination, sprite.getLocation(), this.uniqueIndex[1]);
 			
 			
 			Runnable removeLabelTwo = () -> {
@@ -234,7 +246,19 @@ public class DralyaDragonForm extends CombatEntity {
 		
 			this.setDamage(150);
 			this.setDescription("Targets a single enemy with a slashing attack");
+			
+			preLoadAnimations();
 		}
+		
+		
+		@Override
+		protected void preLoadAnimations() {
+			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/DragonPowerfulSlash", new Dimension(500, 500), !this.getParent().flipImages),
+					AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportIn", new Dimension(300, 300), !this.getParent().flipImages),
+					AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportOut", new Dimension(300, 300), !this.getParent().flipImages),
+					};
+		}
+		
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
@@ -267,7 +291,7 @@ public class DralyaDragonForm extends CombatEntity {
 
 			String slashPath = "Resources/Animations/DragonPowerfulSlash";
 			
-			Animation slashGraphics = new GraphicAnimation(animationLabelOne, 25, slashPath, 0, 1, flipImage);
+			Animation slashGraphics = new GraphicAnimation(animationLabelOne, 25, this.uniqueIndex[0], 0, 1);
 			
 			Runnable removeLabel = () -> {
 				CombatInterface.layerOnePane.remove(animationLabelOne);
@@ -288,16 +312,16 @@ public class DralyaDragonForm extends CombatEntity {
 			
 			
 			JLabel animationLabelTwo = new JLabel();
-			GraphicAnimation teleportOutAnimation = teleportOut(animationLabelTwo, sprite, targetDestination, sprite.getLocation(), flipImage);		
+			GraphicAnimation teleportOutAnimation = teleportOut(animationLabelTwo, sprite, targetDestination, sprite.getLocation(), this.uniqueIndex[2]);		
 			
 			JLabel animationLabelThree = new JLabel();
-			GraphicAnimation teleportInAnimation = teleportIn(animationLabelThree, sprite, sprite.getLocation(), targetDestination, flipImage);
+			GraphicAnimation teleportInAnimation = teleportIn(animationLabelThree, sprite, sprite.getLocation(), targetDestination, this.uniqueIndex[1]);
 
 			JLabel animationLabelFour = new JLabel();
-			GraphicAnimation teleportOutAnimationTwo = teleportOut(animationLabelFour, sprite, sprite.getLocation(), targetDestination, flipImage);		
+			GraphicAnimation teleportOutAnimationTwo = teleportOut(animationLabelFour, sprite, sprite.getLocation(), targetDestination, this.uniqueIndex[2]);		
 			
 			JLabel animationLabelFive = new JLabel();
-			GraphicAnimation teleportInAnimationTwo = teleportIn(animationLabelFive, sprite, targetDestination, sprite.getLocation(), flipImage);
+			GraphicAnimation teleportInAnimationTwo = teleportIn(animationLabelFive, sprite, targetDestination, sprite.getLocation(), this.uniqueIndex[1]);
 			
 			
 			Runnable removeLabelTwo = () -> {

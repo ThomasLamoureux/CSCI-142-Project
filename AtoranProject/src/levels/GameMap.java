@@ -20,10 +20,14 @@ import java.util.List;
 public class GameMap {
 	public static GameMap currentMap;
     private List<Level> levels;
+    
+    public static void loadLevels() {
+    	
+    }
 
     public GameMap() {
     	// Defining enemies for the waves using CombatEntity classes
-		CombatEntity[] enemies = {new Samoht(true)};
+		CombatEntity[] enemies = {new DralyaDragonForm(true)};
 		//CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
 		//CombatEntity[] enemiesThree = {new SamohtEntity()};
 		
@@ -44,9 +48,6 @@ public class GameMap {
         
         // Setting the current map to this instance
         currentMap = this;
-        
-        // Opening the game map UI
-        this.openGameMap();
     }
     
     // Method to display the game map UI with level buttons
