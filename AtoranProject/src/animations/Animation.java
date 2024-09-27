@@ -371,7 +371,6 @@ public class Animation {
 
 		public CombinedAnimation(int frameCount, ArrayList<Animation> animations, int[] startingFrames) {
 			super(frameCount, null);
-			// TODO Auto-generated constructor stub
 			
 			for (int i = 0; i < startingFrames.length; i++) {
 				this.startingFrames.add(startingFrames[i]);

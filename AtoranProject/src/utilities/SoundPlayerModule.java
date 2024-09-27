@@ -6,21 +6,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
-import levels.GameMap;
 
 public class SoundPlayerModule {
-	
-	/*public static void main(String[] args) {
-		GameSound y = new GameSound();
-		
-		System.out.println(y.clip);
-		y.setLooped(true);
-		y.play();
-
-		y.stop();
-		
-		new GameMap();
-	}*/
 	
 	public static class GameSound {
 		private Clip clip;
@@ -30,17 +17,14 @@ public class SoundPlayerModule {
 			createSound(path);
 		}
 		
-		public void setLooped(int loopCount) {
-			this.clip.loop(loopCount);
+		
+		public void playLooped() {
+			this.clip.loop(Clip.LOOP_CONTINUOUSLY);
 		}
 		
 		
-		public void setLooped(boolean onOff) {
-			if (onOff == true) {
-				this.clip.loop(Clip.LOOP_CONTINUOUSLY);
-			} else {
-				
-			}
+		public void playLooped(int loopCount) {
+			this.clip.loop(loopCount);
 		}
 		
 		

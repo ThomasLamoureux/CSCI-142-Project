@@ -85,7 +85,7 @@ public class Move {
 	
 	// Overrided
 	public void useMove(CombatEntity target) {
-		target.recieveDamage(damage);
+		target.recieveDamage((int)(damage * this.getParent().damageMultiplier));
 	
 		runAnimation(target);
 	}

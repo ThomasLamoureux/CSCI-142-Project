@@ -49,10 +49,76 @@ public class Atoran extends CombatEntity {
 		
 		this.flipIfFacingLeft = true;
 		
-		Move[] moveSet = {new SlashMove(this), new SweepMove(this), new SweepMove(this),
-				new SlashMove(this), new SweepMove(this), new SweepMove(this)};
+		Move[] moveSet = {new SlashMove(this), new SweepMove(this), new EmpowererMove(this)};
 		this.setMoveSet(moveSet);
 	}	
+	
+	
+	protected void setEmpowered(boolean flip) {
+		if (flip == true) {
+			this.empowered = true;
+			this.damageMultiplier += 2.0;
+		} else {
+			this.empowered = false;
+			this.damageMultiplier -= 2.0;
+		}
+	}
+	
+	
+	public static class EmpowererMove extends Move{
+		
+		public EmpowererMove(CombatEntity parent) {
+			super("Empowerer", false, true, parent);
+			
+			this.setDamage(0);
+			this.setDescription("Empowerer yourself, increasing the ");
+			
+			preLoadAnimations();
+		}
+		
+		@Override
+		protected void preLoadAnimations() {
+			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/EmpowerAnimation", new Dimension(225, 225), false)};
+		}
+		
+		
+		@Override
+		public void useMove(CombatEntity target) {
+			Atoran atoran = (Atoran) this.getParent();
+			atoran.setEmpowered(true);
+			
+			this.runAnimation(target);
+		}
+		
+		@Override
+		protected void runAnimation(CombatEntity target) {
+			JLabel label = new JLabel();
+			label.setSize(new Dimension(225, 225));
+			Window.scaleComponent(label);
+			label.setLocation(this.getParent().sprite.getLocation());
+			
+			GraphicAnimation graphic = new GraphicAnimation(label, 8, this.uniqueIndex[0], 0, 2);
+			
+			Runnable addLabel = () -> {
+				CombatInterface.layerOnePane.add(label, JLayeredPane.MODAL_LAYER);
+			};
+			graphic.keyframes[0] = new Keyframe(addLabel);
+			
+			
+			Runnable removeLabel = () -> {
+				CombatInterface.layerOnePane.remove(label);
+			};
+		
+			
+			ArrayList<Animation> animationsList = new ArrayList<>();
+			animationsList.add(graphic);
+			
+			Animation finalAnimation = new CombinedAnimation(29, animationsList, new int[]{20});
+			finalAnimation.keyframes[28] = new Keyframe(removeLabel);
+			
+			AnimationPlayerModule.addAnimation(finalAnimation);
+		}
+	}
 
 	
 	public static class SlashMove extends Move {
@@ -67,86 +133,87 @@ public class Atoran extends CombatEntity {
 		}
 		
 		
-		private void empoweredSlash(CombatEntity target) {
+		private void slashAnimation(CombatEntity target) {
+			JLabel targetSprite = target.sprite;
 			
-		}
-		
-		private void slash(CombatEntity target) {
+			JLabel attackLabel = new JLabel();
+			attackLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
+			Window.scaleComponent(attackLabel);
 			
-		}
-		
-		
-		@Override
-		public void useMove(CombatEntity target) {
-			target.recieveDamage(damage);
+			GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 6, this.uniqueIndex[0], 0, 1);
 			
-			if (this.getParent().empowered == true) {
-				
-			}
-			runAnimation(target);
-		}
-		
-		
-		@Override
-		protected void preLoadAnimations() {
-			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/NewSlashingAnimation", new Dimension(500, 500), !this.getParent().flipImages),
-					AnimationsPreloader.loadImages("Resources/Animations/SweepAnimation", new Dimension(300, 300), !this.getParent().flipImages),
-					};
-		}
-		
-		
-		@Override
-		protected void runAnimation(CombatEntity target) {
-			boolean flipImage = false;
-			if (this.getParent().facingLeft == 1) {
-				flipImage = true;
-			}
+			Runnable addAttackLabel = () -> {
+				CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
+			};
+			attackGraphic.keyframes[0] = new Keyframe(addAttackLabel);
 			
-			JLabel animationLabel = new JLabel();
-			animationLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
-			Window.scaleComponent(animationLabel);
+			
+			Runnable removeAttackLabel = () -> {
+				CombatInterface.layerOnePane.remove(attackLabel);
+			};
+			
+
+			Runnable shakeAnimation = () -> {
+				AnimationPlayerModule.shakeAnimation(target);
+				target.updateHealthBar();
+			};
+			attackGraphic.keyframes[1] = new Keyframe(shakeAnimation);
+			
+			
 			
 			Point targetDestination = new Point((int)
 					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
 					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
 			
-			animationLabel.setLocation(new Point(targetDestination.x - 100, targetDestination.y - this.getParent().sprite.getHeight()/2));
+			attackLabel.setLocation(targetDestination);
+			
+			MovementAnimation moveToTarget = new MovementAnimation(this.getParent().sprite, 24, "easeOutQuart", targetDestination, null);
+			MovementAnimation moveBack = new MovementAnimation(this.getParent().sprite, 22, "easeOutQuart", this.getParent().sprite.getLocation(), targetDestination);
 
-			Animation moveToTarget = new MovementAnimation(this.getParent().sprite, 24, "easeOutQuart", targetDestination, null);
-			Animation moveBack = new MovementAnimation(this.getParent().sprite, 22, "easeOutQuart", this.getParent().sprite.getLocation(), targetDestination);
-
-			String folderPath = "Resources/Animations/NewSlashingAnimation";
-			
-			Animation graphics = new GraphicAnimation(animationLabel, 6, folderPath, 0, 1, flipImage);
-			
-			Runnable removeLabel = () -> {
-				CombatInterface.layerOnePane.remove(animationLabel);
-			};
-			
-			Runnable addLabel = () -> {
-				CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
-			};
-			graphics.keyframes[0] = new Keyframe(addLabel);
-			
-			Runnable shakeAnimation = () -> {
-				AnimationPlayerModule.shakeAnimation(target);
-				target.updateHealthBar();
-			};
-			graphics.keyframes[1] = new Keyframe(shakeAnimation);
 			
 			
 			ArrayList<Animation> animationsList = new ArrayList<>();
 			animationsList.add(moveToTarget);
-			animationsList.add(graphics);
+			animationsList.add(attackGraphic);
 			animationsList.add(moveBack);
 			
 			Animation finalAnimation = new CombinedAnimation(72, animationsList, new int[]{0, 30, 50});
-			finalAnimation.keyframes[37] = new Keyframe(removeLabel);
+			finalAnimation.keyframes[37] = new Keyframe(removeAttackLabel);
 			
 			AnimationPlayerModule.addAnimation(finalAnimation);
 		}
+		
+		
+		private void empoweredSlash(CombatEntity target) {
+			target.recieveDamage((int)(this.getDamage() * this.getParent().damageMultiplier));
+		}
+		
+		private void slash(CombatEntity target) {
+			target.recieveDamage(this.getDamage());
+			
+			slashAnimation(target);
+		}
+		
+		
+		@Override
+		public void useMove(CombatEntity target) {
+			Atoran atoran = (Atoran) this.getParent();
+			
+			if (atoran.empowered == true) {
+				empoweredSlash(target);
+				atoran.setEmpowered(false);
+			} else {
+				slash(target);
+			}
+		}
+		
+		
+		@Override
+		protected void preLoadAnimations() {
+			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/NewSlashingAnimation", new Dimension((int)(550 * 1.2), (int)(400 * 1.2)), this.getParent().flipImages)};
+		}
 	}
-\
+
 	
 	public static class SweepMove extends Move {
 
@@ -155,43 +222,45 @@ public class Atoran extends CombatEntity {
 		
 			this.setDamage(50);
 			this.setDescription("Targets all enemies on the field with a sweeping attack");
+			
+			this.preLoadAnimations();
 		}
 		
-		@Override
-		public void useMove(CombatEntity target) {
+		
+		private void empoweredSweep() {
 			CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
 			
 			for (int i = 0; i < enemies.length; i++) {
-				enemies[i].recieveDamage(this.getDamage());
+				enemies[i].recieveDamage((int)(this.getDamage() * this.getParent().damageMultiplier));
 			}
 			
-			runAnimation(target);
+
+		}
+		
+		private void sweep() {
+			CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
+			
+			for (int i = 0; i < enemies.length; i++) {
+				enemies[i].recieveDamage((int)(this.getDamage() * this.getParent().damageMultiplier));
+			}
+			
+			sweepAnimation();
 		}
 		
 		
-		@Override
-		protected void runAnimation(CombatEntity target) {
-			boolean flipImage = false;
-			if (this.getParent().facingLeft == 1) {
-				flipImage = true;
-			}
-			
+		private void sweepAnimation() {
 			JLabel animationLabel = new JLabel();
 			animationLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
 			Window.scaleComponent(animationLabel);
 			
-			Point targetDestination = new Point((int)
-					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
-					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
+			Point targetDestination = new Point(Window.scaleInt(960) + Window.scaleInt(100) * this.getParent().facingLeft, Window.scaleInt(675));
 			
 			animationLabel.setLocation(new Point(targetDestination.x - Window.scaleInt(85), targetDestination.y - this.getParent().sprite.getHeight()/2));
 
 			Animation moveToTarget = new MovementAnimation(this.getParent().sprite, 24, "easeOutQuart", targetDestination, null);
 			Animation moveBack = new MovementAnimation(this.getParent().sprite, 22, "easeOutQuart", this.getParent().sprite.getLocation(), targetDestination);
-
-			String folderPath = "Resources/Animations/SweepAnimation";
 			
-			Animation graphics = new GraphicAnimation(animationLabel, 7, folderPath, 0, 1, flipImage);
+			Animation graphics = new GraphicAnimation(animationLabel, 6, this.uniqueIndex[0], 0, 1);
 			
 			Runnable removeLabel = () -> {
 				CombatInterface.layerOnePane.remove(animationLabel);
@@ -219,9 +288,29 @@ public class Atoran extends CombatEntity {
 			animationsList.add(graphics);
 			animationsList.add(moveBack);
 			
-			Animation finalAnimation = new CombinedAnimation(68, animationsList, new int[]{0, 31, 46});
+			Animation finalAnimation = new CombinedAnimation(72, animationsList, new int[]{0, 30, 50});
+			finalAnimation.keyframes[36] = new Keyframe(removeLabel);
 			
 			AnimationPlayerModule.addAnimation(finalAnimation);
+		}
+		
+		
+		@Override
+		protected void preLoadAnimations() {
+			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/SweepAnimation", new Dimension((int)(550 * 1.2), (int)(400 * 1.2)), this.getParent().flipImages)};
+		}
+		
+		
+		@Override
+		public void useMove(CombatEntity target) {
+			Atoran atoran = (Atoran) this.getParent();
+			
+			if (atoran.empowered == true) {
+				empoweredSweep();
+				atoran.setEmpowered(false);
+			} else {
+				sweep();
+			}
 		}
 	}
 }

@@ -38,7 +38,7 @@ public class Window extends JFrame {
 	}
 	
 	public static Image scaleImage(int x, int y, Image image) {
-		return image.getScaledInstance((int)(x * windowScale), (int)(y * windowScale), Image.SCALE_DEFAULT);
+		return image.getScaledInstance((int)(x * windowScale), (int)(y * windowScale), Image.SCALE_SMOOTH);
 	}
 	
 	public static Point scalePoint(Point point) {
@@ -81,7 +81,6 @@ public class Window extends JFrame {
 	
 	public void clearFrame() {
 		this.getContentPane().removeAll();
-		this.getContentPane().repaint();
 	}
 	
 	public void refresh() {

@@ -22,7 +22,7 @@ public class CombatEntity implements Cloneable {
 	private double damageResistence = 0.0;
 	public int health = 0;
 	public boolean dead = false;
-	private double damageMultiplier = 1.0;
+	public double damageMultiplier = 1.0;
 	private Point fieldPosition;
 	private String name;
 	public JLabel sprite;

@@ -391,6 +391,9 @@ public class CombatInterface {
 	
 	private static void createTargetSelection(Move move) {
 		Team[] teams = Combat.currentCombatInstance.teams;
+		if (selectTargetButtonsPanel != null) {
+			selectTargetButtonsPanel.removeAll();
+		}
 		
 		selectTargetButtonsPanel = new JPanel();
 		selectTargetButtonsPanel.setPreferredSize(new Dimension(1920, 1080));

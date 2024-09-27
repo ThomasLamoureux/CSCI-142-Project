@@ -36,10 +36,14 @@ public class Menu {
 	private static JButton playButton;
 	private static JLayeredPane pane;
 	private static GameSound menuMusic;
+	private static int introIndex;
+	
+	public static void loadIntroScreen() {
+		introIndex = AnimationsPreloader.loadImages("Resources/Animations/SigmaStudiosIntro", Window.getWindow().getSize(), false);
+	}
 	
 	public static void introScreen() {
 		Window window = Window.getWindow();
-		window.setDefaultCloseOperation(Window.EXIT_ON_CLOSE);
 		
 		titleLabel.setSize(new Dimension(1920, 350));
 		
@@ -47,6 +51,7 @@ public class Menu {
 		animationLabel.setSize(window.getSize());
 		animationLabel.setLocation(new Point(0, 0));
 		animationLabel.setOpaque(true);
+		animationLabel.setBackground(Color.black);
 		
 		pane.add(animationLabel, JLayeredPane.MODAL_LAYER);
 		
@@ -55,18 +60,17 @@ public class Menu {
 		ResizeAnimation titleResize = new ResizeAnimation(titleLabel, 50, "linear", targetSize, "middle", Window.scaleInt(-200));
 		MovementAnimation titleMove = new MovementAnimation(titleLabel, 50, "linear", new Point(0, 200), null);
 		
-		int index = AnimationsPreloader.loadImages("Resources/Animations/SigmaStudiosIntro", window.getSize(), false);
 		
-		GraphicAnimation logoAnimation = new GraphicAnimation(animationLabel, 85 * 4, index, 0, 4);
+		GraphicAnimation logoAnimation = new GraphicAnimation(animationLabel, 85 * 4, introIndex, 0, 4);
 		
-		menuMusic = new GameSound("Resources/Sounds/bridgevideo.wav");
+		menuMusic = new GameSound("Resources/Sounds/MenuSoundtrack.wav");
 		//menuMusic.setLooped(true);
 		Runnable removeLogoAnimation = () -> {
 			animationLabel.setVisible(false);
 		};
 		
 		Runnable playMenuMusic = () -> {
-			menuMusic.setLooped(true);
+			menuMusic.playLooped();
 		};
 		
 		Runnable setPlayButtonVisible = () -> {
@@ -90,13 +94,7 @@ public class Menu {
         // Creating a window
         Window window = Window.getWindow();
         window.clearFrame();
-
-        // Throws an error if window cannot open
-
-        // Properties for the window
-        window.setDefaultCloseOperation(Window.EXIT_ON_CLOSE);
-        window.setLayout(null);
-		
+        
 		pane = new JLayeredPane();
 		pane.setSize(window.getSize());
 		pane.setLayout(null);

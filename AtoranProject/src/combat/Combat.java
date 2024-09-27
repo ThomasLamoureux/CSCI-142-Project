@@ -11,6 +11,9 @@ import javax.swing.SwingUtilities;
 
 import combat.EntitiesAndMoves.AtoranEntity;
 import combat.EntitiesAndMoves.SlimeEntity;
+import combatEntities.Atoran;
+import combatEntities.DralyaHumanForm;
+import combatEntities.Knight;
 import combatEntities.Samoht;
 import engine.Engine;
 import levels.GameMap;
@@ -57,10 +60,10 @@ public class Combat {
 		teams[0] = new Team();
 		
 		Samoht atoran = new Samoht(false);
-		//AtoranEntity atoran2 = new AtoranEntity();
+		Atoran atoran2 = new Atoran(false);
 		//AtoranEntity atoran3 = new AtoranEntity();
 		
-		teams[0].members = new CombatEntity[] {atoran};
+		teams[0].members = new CombatEntity[] {atoran2, new DralyaHumanForm(false), new Knight(false)};
 
 		currentTeam = teams[0];
 		notCurrentTeam = teams[1];

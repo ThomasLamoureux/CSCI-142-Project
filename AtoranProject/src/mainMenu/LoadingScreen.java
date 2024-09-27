@@ -16,7 +16,7 @@ import levels.GameMap;
 import main.Window;
 
 public class LoadingScreen {
-	public static void main(String[] args) {
+	public static void load() {
 	    // Creating a window
 	    Window window = Window.getWindow();
 
@@ -37,6 +37,7 @@ public class LoadingScreen {
 	    window.setVisible(true);
 	    
 	    new GameMap();
+	    Menu.loadIntroScreen();
 	    Menu.start();
 	    
 	    Engine.toggleFps(true);
