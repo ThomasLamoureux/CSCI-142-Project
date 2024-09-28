@@ -39,7 +39,7 @@ public class Menu {
 	private static int introIndex;
 	
 	public static void loadIntroScreen() {
-		introIndex = AnimationsPreloader.loadImages("Resources/Animations/SigmaStudiosIntro", Window.getWindow().getSize(), false);
+		introIndex = AnimationsPreloader.loadImages("Resources/Animations/SigmaStudiosIntro", new Dimension(1920, 1080), false);
 	}
 	
 	public static void introScreen() {
@@ -48,10 +48,11 @@ public class Menu {
 		titleLabel.setSize(new Dimension(1920, 350));
 		
 		JLabel animationLabel = new JLabel();
-		animationLabel.setSize(window.getSize());
+		animationLabel.setSize(new Dimension(1920, 1080));
 		animationLabel.setLocation(new Point(0, 0));
 		animationLabel.setOpaque(true);
 		animationLabel.setBackground(Color.black);
+		Window.scaleComponent(animationLabel);
 		
 		pane.add(animationLabel, JLayeredPane.MODAL_LAYER);
 		

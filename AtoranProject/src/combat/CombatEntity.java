@@ -36,7 +36,7 @@ public class CombatEntity implements Cloneable {
 	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite, boolean flipImages) {
 		this.health = health;
 		this.moveSet = moveSet;
-		this.name = name; // Temporarys
+		this.name = name; 
 		this.maxHealth = health;
 		this.flipImages = flipImages;
 		
@@ -99,9 +99,11 @@ public class CombatEntity implements Cloneable {
 	
 	
 	public void updateHealthBar() {
-		int healthBarPercent = (int)((double)this.health/(double)this.maxHealth * this.maxHealth);
-		this.healthBar.setPreferredSize(new Dimension(healthBarPercent, Window.scaleInt(15) ));
-		this.healthBar.setSize(new Dimension(healthBarPercent, Window.scaleInt(15) ));
+		double healthBarPercent = ((double)this.health/(double)this.maxHealth);
+		int healthBarLength = Window.scaleInt((int)(healthBarPercent * 200.0));
+		
+		this.healthBar.setText("" + this.health + "/" + this.maxHealth);
+		this.healthBar.setSize(new Dimension(healthBarLength, Window.scaleInt(15)));
 	}
 	
 	

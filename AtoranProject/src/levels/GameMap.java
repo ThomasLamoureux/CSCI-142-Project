@@ -10,8 +10,7 @@ import combatEntities.DralyaDragonForm;
 import combatEntities.Knight;
 import combatEntities.Samoht;
 import combatEntities.Slime;
-import combat.EntitiesAndMoves.SlimeEntity;
-import combat.EntitiesAndMoves.SamohtEntity;
+import combatEntities.Spider;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -29,7 +28,7 @@ public class GameMap {
 
     public GameMap() {
     	// Defining enemies for the waves using CombatEntity classes
-		CombatEntity[] enemies = {new DralyaDragonForm(true), new Slime(true)};
+		CombatEntity[] enemies = {new Samoht(true)};
 		//CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
 		//CombatEntity[] enemiesThree = {new SamohtEntity()};
 		

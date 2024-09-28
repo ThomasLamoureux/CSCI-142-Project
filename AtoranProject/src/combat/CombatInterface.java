@@ -36,7 +36,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 public class CombatInterface {
-	private static JPanel moveMenu;// = new JPanel();
+	public static JPanel moveMenu;// = new JPanel();
 	private static JPanel selectTargetButtonsPanel;// = new JPanel();
 	private static Move selectedMove;
 	private static CombatEntity selectedTarget;
@@ -250,11 +250,12 @@ public class CombatInterface {
 	
 	
 	
-	public static JLabel createHealthBar(int Size) {
-		JLabel healthBar = new JLabel();
+	public static JLabel createHealthBar(int size) {
+		JLabel healthBar = new JLabel("" + size + "/" + size);
 		
-		healthBar.setPreferredSize(new Dimension(Size, 15));
-		healthBar.setSize(new Dimension(Size, 15));
+		healthBar.setSize(new Dimension(200, 15));
+		healthBar.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		healthBar.setForeground(Color.white);
 		healthBar.setBackground(new Color(150, 0, 0));
 		healthBar.setOpaque(true);
 		
@@ -302,9 +303,14 @@ public class CombatInterface {
 					member.getFieldPosition().y + sprite.getWidth()));
 			
 			Window.scaleComponent(healthBar);
+			if (i == 1) {
+				layerOnePane.add(sprite, Integer.valueOf(130));
+			} else if (i == 2) {
+				layerOnePane.add(sprite, Integer.valueOf(110));
+			} else {
+				layerOnePane.add(sprite, Integer.valueOf(120));
+			}
 			
-			
-			layerOnePane.add(sprite, JLayeredPane.PALETTE_LAYER);
 			layerOnePane.add(healthBar, JLayeredPane.PALETTE_LAYER);
 		}	
 	}

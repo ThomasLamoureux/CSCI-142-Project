@@ -33,7 +33,7 @@ public class Samoht extends CombatEntity {
 	}
 	
 	public Samoht(boolean flipImages) {
-		super("Samoht", 250, null, getSamohtSprite(), flipImages);
+		super("Samoht", 1200, null, getSamohtSprite(), flipImages);
 		
 		File targetFile = new File("Resources/Images/DralyaDragonForm.png");
 		this.setImageFile(targetFile);

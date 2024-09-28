@@ -9,8 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import combat.EntitiesAndMoves.AtoranEntity;
-import combat.EntitiesAndMoves.SlimeEntity;
 import combatEntities.Atoran;
 import combatEntities.DralyaHumanForm;
 import combatEntities.Knight;
@@ -59,20 +57,15 @@ public class Combat {
 		
 		teams[0] = new Team();
 		
-		Samoht atoran = new Samoht(false);
-		Atoran atoran2 = new Atoran(false);
-		//AtoranEntity atoran3 = new AtoranEntity();
-		
-		teams[0].members = new CombatEntity[] {atoran2, new DralyaHumanForm(false), new Knight(false)};
-
+		if (level.getLevelNumber() > 5) {
+			teams[0].members = new CombatEntity[] {new Atoran(false), new DralyaHumanForm(false)};
+		} else {
+			teams[0].members = new CombatEntity[] {new Atoran(false)};
+		}
 		currentTeam = teams[0];
 		notCurrentTeam = teams[1];
 
-		
-		waves = level.getWaves().clone();
-		System.out.println(waves);
-		
-		//waves = new Wave[] {new Wave(new CombatEntity[] {new SlimeEntity()})};
+		waves = level.getWaves();
 		
 		initializeCombat();
 	}
@@ -80,7 +73,7 @@ public class Combat {
 	
 	public void initializeCombat() {
 		CombatInterface.openCombatScreen();
-		new Tutorial();
+		
 		System.out.println("tste");
 		loadWave();
 		
@@ -88,7 +81,12 @@ public class Combat {
 		
 		fighting = true;
 		
-		turn();
+		
+		if (this.currentLevel.getLevelNumber() == 1 && this.currentLevel.isCompleted() == false) {
+			new Tutorial();
+		} else {
+			turn();
+		}
 	}
 	
 	
