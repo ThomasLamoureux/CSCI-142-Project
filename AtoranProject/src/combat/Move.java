@@ -16,6 +16,7 @@ public class Move {
 	private double critDamage = 1.4;
 	private CombatEntity parent;
 	private String description;
+	protected int[] uniqueIndex;
 
 	public Move(String name, boolean team, boolean enemies, CombatEntity parent) {
 		this.name = name;
@@ -24,6 +25,10 @@ public class Move {
 		validTargets.put("enemies", enemies);
 	}
 	
+	
+	protected void preLoadAnimations() {
+		
+	}
 	
 	public void setDamage(int damage) {
 		this.damage = damage;
@@ -73,14 +78,14 @@ public class Move {
 		Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
 		int[] framesToTake = {30, 38};
 		
-		Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
+		//Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
 		
-		AnimationPlayerModule.addAnimation(animation);
+		//AnimationPlayerModule.addAnimation(animation);
 	}
 	
 	// Overrided
 	public void useMove(CombatEntity target) {
-		target.recieveDamage(damage);
+		target.recieveDamage((int)(damage * this.getParent().damageMultiplier));
 	
 		runAnimation(target);
 	}

@@ -18,13 +18,11 @@ public class Engine {
 	private static int frameMilliseconds = 10;
 	
 	
-	public static void main(String[] args) {
-		toggleFps(true);
-	}
-	
-	
 	public static void toggleFps(boolean toggle) {
 		if (toggle == true) {
+			if (running == true) {
+				return;
+			}
 			running = true;
 			
 			Runnable fpsMethod = () -> {
@@ -58,7 +56,7 @@ public class Engine {
 		System.out.println("frame");
 	}*/
 	
-	class FPSCounter extends Thread{
+	/*class FPSCounter extends Thread{
 	    private long lastTime;
 	    private double fps; //could be int or long for integer values
 
@@ -77,7 +75,7 @@ public class Engine {
 	    public double fps(){
 	        return fps;
 	    } 
-	}
+	}*/
 	
 	private static void runFps() {
 		while (running == true) {

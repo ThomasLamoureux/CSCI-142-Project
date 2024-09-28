@@ -1,5 +1,6 @@
 package utilities;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -12,6 +13,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import animations.Animation;
+import animations.Animation.MovementAnimation;
+import animations.Animation.CombinedAnimation;
 import combat.CombatEntity;
 import main.Window;
 
@@ -27,6 +30,8 @@ public class AnimationPlayerModule {
 	}
 	
 	public static void playAnimations() {
+		ArrayList<Integer> removals = new ArrayList<Integer>();
+		
 		for (int i = 0; i < animations.size(); i++) {
 			if (i >= animations.size()) {
 				break;
@@ -34,9 +39,13 @@ public class AnimationPlayerModule {
 			boolean complete = playFrame(animations.get(i));
 			
 			if (complete == true) {
-				animations.remove(i);
-				i -= 1;
+				removals.add(i);
 			}
+		}
+		
+		
+		for (int i = 0; i < removals.size(); i++) {
+			animations.remove(removals.get(i) - i);
 		}
 	}
 	
@@ -44,20 +53,20 @@ public class AnimationPlayerModule {
 		animations.add(animation);
 	}
 	
-	public static Image[] createIconsFromFolder(String path) {
+	public static ImageIcon[] createIconsFromFolder(String path, Dimension size, boolean flip) {
 		
 		File folder = new File(path);
 		File[] content = folder.listFiles();
 		
-		Image[] icons = new Image[content.length];
+		Image[] images = new Image[content.length];
+		ImageIcon[] icons = new ImageIcon[content.length];
 		
 		if (content != null) {
-			System.out.println("test");
 			for (int i = 0; i < icons.length; i++) {
 				File file = content[i];
-				System.out.println(file.getName());
 				
 				BufferedImage image = null;
+				
 				try {
 					image = ImageIO.read(file);
 				} catch (IOException e) {
@@ -65,8 +74,13 @@ public class AnimationPlayerModule {
 					e.printStackTrace();
 				}
 				
+				if (flip) {
+					image = createMirror(image);
+				}
 				
-				icons[i] = image;
+				Image reSizedImage = Window.scaleImage(size.width, size.height, image);
+				
+				icons[i] = new ImageIcon(reSizedImage);
 			}
 		}
 		
@@ -81,25 +95,20 @@ public class AnimationPlayerModule {
 		Point destinationOne = new Point(targetLocation.x + Window.scaleInt(4), targetLocation.y + Window.scaleInt(5));
 		Point destinationTwo = new Point(targetLocation.x - Window.scaleInt(4), targetLocation.y - Window.scaleInt(5));
 		
-		Point[] destinations = new Point[6];
-		int[] framesToTake = new int[6];
+		ArrayList<Animation> animationsList = new ArrayList<Animation>();
 		
 		for (int i = 0; i < 5; i++) {
 			if (i % 2 == 1) {
-				destinations[i] = destinationTwo;
+				animationsList.add(new MovementAnimation(target.sprite, 4, "easeInOutSine", destinationTwo, null));
 			} else {
-				destinations[i] = destinationOne;
+				animationsList.add(new MovementAnimation(target.sprite, 4, "easeInOutSine", destinationOne, null));
 			}
-			
-			framesToTake[i] = 3;
 		}
 		
-		destinations[5] = targetLocation;
-		framesToTake[5] = 4;
+		animationsList.add(new MovementAnimation(target.sprite, 4, "easeInOutSine", targetLocation, null));
+		Animation CombinedAnimation = new CombinedAnimation(4 * 6, animationsList, new int[] {0, 4, 8, 12, 16, 20});
 		
-		Animation animation = new Animation(target.sprite, destinations, framesToTake, "easeInOutSine");
-		
-		addAnimation(animation);
+		addAnimation(CombinedAnimation);
 	}
 	
 	
@@ -129,7 +138,6 @@ public class AnimationPlayerModule {
     }
 	
 	/*public static void main(String[] args) {
-		System.out.println("ran");
 		createIconsFromFolder("Resources\\Animations\\SlashingAnimation");
 	}*/
 }

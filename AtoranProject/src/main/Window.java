@@ -38,7 +38,7 @@ public class Window extends JFrame {
 	}
 	
 	public static Image scaleImage(int x, int y, Image image) {
-		return image.getScaledInstance((int)(x * windowScale), (int)(y * windowScale), Image.SCALE_DEFAULT);
+		return image.getScaledInstance((int)(x * windowScale), (int)(y * windowScale), Image.SCALE_SMOOTH);
 	}
 	
 	public static Point scalePoint(Point point) {
@@ -56,14 +56,12 @@ public class Window extends JFrame {
 	private static Window createWindow() {
 		MainWindow = new Window();
 		double screenScale = (double)java.awt.Toolkit.getDefaultToolkit().getScreenResolution() / 96.0;
-		System.out.println(screenScale);
+
 		int xWidth = (int)((double)GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getWidth() / screenScale);
-		System.out.println(xWidth);
-		System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice());
+
 		if (xWindowDefaultSize != xWidth) {
 			windowScale = ((double)xWidth / (double)xWindowDefaultSize);
 			
-			System.out.println(windowScale);
 		}
 		
 		MainWindow.setSize((int)(windowScale * (double)xWindowDefaultSize), (int)(windowScale * (double)yWindowDefaultSize));
@@ -83,7 +81,6 @@ public class Window extends JFrame {
 	
 	public void clearFrame() {
 		this.getContentPane().removeAll();
-		this.getContentPane().repaint();
 	}
 	
 	public void refresh() {
