@@ -23,10 +23,10 @@ public class Combat {
 	public byte teamTurn = 0; // 0 = player team, 1 = enemy team
 	public Team[] teams = new Team[2];
 	public boolean fighting; // Loop variable for fighting until all enemies or player is dead
-	public int currentWave = 0;
+	public int currentWave = 0; // Tracks waves
 	public Wave[] waves;
 	public CombatEntity currentEntityTurn;
-	public int currentEntityTurnIndex = 0;
+	public int currentEntityTurnIndex = 0; // The index of the entity currently performing their turn in their team class
 	public Team currentTeam;
 	public Team notCurrentTeam;
 	public Level currentLevel;
@@ -40,7 +40,7 @@ public class Combat {
 	}
 
 	
-	
+	// Creates a teams, waves, etc from the information passed through the Level object
 	public void createLevelFromInfo(Level level) {
 		Window.getWindow().clearFrame();
 		
@@ -57,6 +57,7 @@ public class Combat {
 		
 		teams[0] = new Team();
 		
+		// Level 6 and 7 will have Dralya on the player's team
 		if (level.getLevelNumber() > 5) {
 			teams[0].members = new CombatEntity[] {new Atoran(false), new DralyaHumanForm(false)};
 		} else {
@@ -67,39 +68,38 @@ public class Combat {
 
 		waves = level.getWaves();
 		
-		initializeCombat();
+		initializeCombat(); // Starts the combat
 	}
 	
 	
 	public void initializeCombat() {
-		CombatInterface.openCombatScreen();
+		CombatInterface.openCombatScreen(); // Opens the GUI interface for the player
 		
-		System.out.println("tste");
-		loadWave();
+		loadWave(); // Loads the first wave
 		
 		Engine.toggleFps(true);
-		
 		fighting = true;
 		
-		
+		// Checks if the current level is the first one and it has not been completed
 		if (this.currentLevel.getLevelNumber() == 1 && this.currentLevel.isCompleted() == false) {
-			new Tutorial();
+			new Tutorial(); // Level 1 tutorial
 		} else {
 			turn();
 		}
 	}
 	
-	
+	// Sets the next wave as the enemy teams members and loads the GUI
 	public void loadWave() {
 		teams[1].members = waves[currentWave].enemies;
 		
-		CombatInterface.loadEntityImagesOfTeam(teams[1], false);
+		CombatInterface.loadEntityImagesOfTeam(teams[1], false); // Loads enemy GUI
 	}
 	
-	
+	// Checks if a team is dead
 	private boolean checkIfTeamIsDead(Team team) {
 		boolean foundAlive = false;
 		
+		// Loops to check for any living members
 		for (int i = 0; i < team.members.length; i++) {
 			CombatEntity entity = team.members[i];
 			
@@ -110,69 +110,66 @@ public class Combat {
 		}
 		
 		if (foundAlive == true) {
-			return false;
+			return false; // The team is still alive
 		} else {
-			return true;
+			return true; // The team is dead
 		}
 	}
 	
-	
+	// Method to be called when the level is completed
 	public void levelComplete() {
 		CombatInterface.announcementText.setText("LEVEL BEAT");
 		CombatInterface.announcementText.setVisible(true);
 		
+		
 		currentLevel.setCompleted(true);
 		
-		
-		
 		List<Level> levels = GameMap.getLevels();
-        Level nextLevel = levels.get(currentLevel.getLevelNumber());
-        nextLevel.unlock();
-        //GameMap.currentMap.updateMap();
+        Level nextLevel = levels.get(currentLevel.getLevelNumber()); /* Gets the next level, (levels are numbered 1-7, 
+        										indexes are 0-6 so the current level number will return the next level*/
+        nextLevel.unlock(); // Unlocks the next level
         
-		Runnable turnWait = () -> {
+        // Adds a delay before returning to gamemap
+		Runnable wait = () -> {
 			try {
 				TimeUnit.MILLISECONDS.sleep(3000);
-				Engine.toggleFps(false);
-				
 				Window.getWindow().clearFrame();
 				GameMap.currentMap.openGameMap();
 			} catch (InterruptedException err) {
 				err.printStackTrace();
 			}
 		};
-		
-		Thread turnWaitThread = new Thread(turnWait);
-		turnWaitThread.start();
+		Thread waitThread = new Thread(wait);
+		waitThread.start();
 	}
 	
-
+	// Method to be called when the level is lost
 	public void levelLost() {
 		CombatInterface.announcementText.setText("LEVEL LOST");
 		CombatInterface.announcementText.setVisible(true);
 	}
 	
-	
+	// Method to be called when the current wave has been defeated
 	public void waveComplete() {
 		int waveCount = waves.length;
-		System.out.println("WAVE COMPLETED");
+
 		CombatInterface.announcementText.setText("WAVE COMPLETE");
 		CombatInterface.announcementText.setVisible(true);
 		
-		if (currentWave == waveCount - 1) {
-			System.out.println("LEVEL COMPLETED");
+		if (currentWave == waveCount - 1) { // Checks if it was the last wave
+			// Level is complete
 			fighting = false;
-			
 			levelComplete();
-		} else {
+		} else { // Starts the second wave
 			currentWave++;
-			
+			// Resets
 			currentEntityTurnIndex = 0;
 			teamTurn = 0;
 			currentTeam = teams[0];
 			notCurrentTeam = teams[1];
 			
-			Runnable turnWait = () -> {
+			// Adds a delay before starting the next wave
+			Runnable wait = () -> {
 				try {
 					TimeUnit.MILLISECONDS.sleep(3000);
 					CombatInterface.announcementText.setVisible(false);
@@ -183,24 +180,27 @@ public class Combat {
 				}
 			};
 			
-			Thread turnWaitThread = new Thread(turnWait);
-			turnWaitThread.start();
+			Thread waitThread = new Thread(wait);
+			waitThread.start();
 		}
 	}
 	
-	
+	// Gets the turn of the entities
 	public void turn() {
-		
+		// Runs check to see if the enemy team is dead
 		if (checkIfTeamIsDead(teams[1]) == true) {
+			// Completed the wave
 			waveComplete();
 			return;
 		}
-		
+		// Runs check to see if the player team is dead
 		if (checkIfTeamIsDead(teams[0]) == true) {
+			// Lost the level
 			levelLost();
 			return;
 		}
 		
+		// Checks to see if every member of the current team has performed the turn
 		if (currentEntityTurnIndex == currentTeam.members.length) { 
 			// Switches team 
 			if (teamTurn == 0) {
@@ -215,11 +215,11 @@ public class Combat {
 			currentTeam = teams[teamTurn];
 		}
 		
-		CombatEntity entity = currentTeam.members[currentEntityTurnIndex];
+		CombatEntity entity = currentTeam.members[currentEntityTurnIndex]; // Gets entity
 		currentEntityTurn = entity;
 		currentEntityTurnIndex++;
-		System.out.println("else");
 		
+		// Entities are not removed when they die, instead they are set as dead and skipped
 		if (entity.dead == true) {
 			turn();
 			return;
