@@ -29,13 +29,14 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import animations.Animation;
+import animations.Animation.MovementAnimation;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 public class CombatInterface {
-	private static JPanel moveMenu;// = new JPanel();
+	public static JPanel moveMenu;// = new JPanel();
 	private static JPanel selectTargetButtonsPanel;// = new JPanel();
 	private static Move selectedMove;
 	private static CombatEntity selectedTarget;
@@ -150,19 +151,20 @@ public class CombatInterface {
 	
 	
 	public static void expandInfoPanel() {		
-		Point[] destination = new Point[1];
+		Point destination;
 		
 		if (infoPanelExpanded == true) {
-			destination[0] = Window.scalePoint(new Point(0, -453));
+			destination = Window.scalePoint(new Point(0, -453));
 			expandButton.setLocation(Window.scalePoint(new Point(875, 0)));
 			infoPanelExpanded = false;
 		} else {
-			destination[0] = Window.scalePoint(new Point(0, 0));
+			destination = Window.scalePoint(new Point(0, 0));
 			expandButton.setLocation(Window.scalePoint(new Point(875, 450)));
 			infoPanelExpanded = true;
 		}
 		
-		Animation animation = new Animation(infoLabel, destination, new int[] {15}, "easeInOutSine");
+		//Animation animation = new Animation(infoLabel, destination, new int[] {15}, "easeInOutSine");
+		MovementAnimation animation = new MovementAnimation(infoLabel, 15, "easeInOutSine", destination, null);
 		
 		AnimationPlayerModule.addAnimation(animation);
 	}
@@ -248,11 +250,12 @@ public class CombatInterface {
 	
 	
 	
-	public static JLabel createHealthBar(int Size) {
-		JLabel healthBar = new JLabel();
+	public static JLabel createHealthBar(int size) {
+		JLabel healthBar = new JLabel("" + size + "/" + size);
 		
-		healthBar.setPreferredSize(new Dimension(Size, 15));
-		healthBar.setSize(new Dimension(Size, 15));
+		healthBar.setSize(new Dimension(200, 15));
+		healthBar.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(15)));
+		healthBar.setForeground(Color.white);
 		healthBar.setBackground(new Color(150, 0, 0));
 		healthBar.setOpaque(true);
 		
@@ -300,9 +303,14 @@ public class CombatInterface {
 					member.getFieldPosition().y + sprite.getWidth()));
 			
 			Window.scaleComponent(healthBar);
+			if (i == 1) {
+				layerOnePane.add(sprite, Integer.valueOf(130));
+			} else if (i == 2) {
+				layerOnePane.add(sprite, Integer.valueOf(110));
+			} else {
+				layerOnePane.add(sprite, Integer.valueOf(120));
+			}
 			
-			
-			layerOnePane.add(sprite, JLayeredPane.PALETTE_LAYER);
 			layerOnePane.add(healthBar, JLayeredPane.PALETTE_LAYER);
 		}	
 	}
@@ -339,6 +347,8 @@ public class CombatInterface {
 		selectedTarget = target;
 		
 		selectTargetButtonsPanel.removeAll();
+		moveMenu.removeAll();
+		moveMenu.setVisible(false);
 		
 		confirmTurn();
 	}
@@ -387,6 +397,9 @@ public class CombatInterface {
 	
 	private static void createTargetSelection(Move move) {
 		Team[] teams = Combat.currentCombatInstance.teams;
+		if (selectTargetButtonsPanel != null) {
+			selectTargetButtonsPanel.removeAll();
+		}
 		
 		selectTargetButtonsPanel = new JPanel();
 		selectTargetButtonsPanel.setPreferredSize(new Dimension(1920, 1080));
@@ -410,7 +423,7 @@ public class CombatInterface {
 	
 	private static void selectMove(Move move) {
 		selectedMove = move;
-		moveMenu.setVisible(false);
+		//moveMenu.setVisible(false);
 		
 		createTargetSelection(move);
 	}
@@ -471,8 +484,6 @@ public class CombatInterface {
 			moveButton.setForeground(Color.WHITE);
 			
 			Window.scaleComponent(moveButton);
-			
-			System.out.println(moveButton.getWidth());
 			
 			// For some reason this requires that all methods are overridden
 			moveButton.addMouseListener(new MouseListener() {

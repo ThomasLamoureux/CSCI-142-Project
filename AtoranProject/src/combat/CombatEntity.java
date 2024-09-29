@@ -22,7 +22,7 @@ public class CombatEntity implements Cloneable {
 	private double damageResistence = 0.0;
 	public int health = 0;
 	public boolean dead = false;
-	private double damageMultiplier = 1.0;
+	public double damageMultiplier = 1.0;
 	private Point fieldPosition;
 	private String name;
 	public JLabel sprite;
@@ -31,12 +31,14 @@ public class CombatEntity implements Cloneable {
 	public int facingLeft;
 	public boolean flipIfFacingLeft;
 	private File imageFile;
+	public boolean flipImages;
 	
-	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite) {
+	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite, boolean flipImages) {
 		this.health = health;
 		this.moveSet = moveSet;
-		this.name = name; // Temporarys
+		this.name = name; 
 		this.maxHealth = health;
+		this.flipImages = flipImages;
 		
 		if (sprite == null) {
 			JLabel defaultSprite = new JLabel(this.getName());
@@ -97,9 +99,11 @@ public class CombatEntity implements Cloneable {
 	
 	
 	public void updateHealthBar() {
-		int healthBarPercent = (int)((double)this.health/(double)this.maxHealth * this.maxHealth);
-		this.healthBar.setPreferredSize(new Dimension(healthBarPercent, Window.scaleInt(15) ));
-		this.healthBar.setSize(new Dimension(healthBarPercent, Window.scaleInt(15) ));
+		double healthBarPercent = ((double)this.health/(double)this.maxHealth);
+		int healthBarLength = Window.scaleInt((int)(healthBarPercent * 200.0));
+		
+		this.healthBar.setText("" + this.health + "/" + this.maxHealth);
+		this.healthBar.setSize(new Dimension(healthBarLength, Window.scaleInt(15)));
 	}
 	
 	
@@ -139,6 +143,9 @@ public class CombatEntity implements Cloneable {
 		return fieldPosition;
 	}
 	
+	public void automatedTurn2(CombatEntity[] team, CombatEntity[] enemyTeam) {
+		
+	}
 	
 	public void automatedTurn(CombatEntity[] team, CombatEntity[] enemyTeam) {
 		Random randomGenerator = new Random();
@@ -148,7 +155,8 @@ public class CombatEntity implements Cloneable {
 		if (this.moveSet.length == 1) {
 			randomMove = 0;
 		} else {
-			randomMove = randomGenerator.nextInt(0, this.moveSet.length - 1);
+			randomMove = randomGenerator.nextInt(0, this.moveSet.length);
+			System.out.println(randomMove);
 		}
 		
 		Move move = moveSet[randomMove];
