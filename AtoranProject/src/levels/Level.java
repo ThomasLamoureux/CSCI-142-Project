@@ -36,14 +36,14 @@ public class Level {
     	System.out.println("started");
     	if (this.startingCutscene != null) {
     		System.out.println("computed");
-    		// this.startingCutscene.start();
+    		this.startingCutscene.start(this);
     		
     	}
     }
     
     public void playEndingCutscene() {
     	if (this.endingCutscene != null) {
-    		// this.endingCutscene.start();
+    		this.endingCutscene.start(this);
     	}
     }
     
@@ -73,7 +73,7 @@ public class Level {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
-        
+        Datastore.writeData("level" + this.levelNumber, "1");
     }
 
     public void unlock() {

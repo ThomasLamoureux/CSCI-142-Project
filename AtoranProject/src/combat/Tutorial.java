@@ -87,7 +87,7 @@ public class Tutorial {
 		
 		switch(currentStep) {
 			case 0:
-				setDialogue("Welcome to Atoran.<br/>I am Jonald Deckerson, a.k.a, God.");
+				setDialogue("Welcome to Atoran.<br/>I am A.J. Scarlato, a.k.a, God.");
 				currentStep++;
 				break;
 			case 1:

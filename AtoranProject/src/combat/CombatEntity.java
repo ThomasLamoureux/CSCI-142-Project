@@ -17,9 +17,9 @@ import javax.swing.JLabel;
 import main.Window;
 import utilities.AnimationPlayerModule;
 
-public class CombatEntity implements Cloneable {
+public class CombatEntity {
 	private Move[] moveSet = {};
-	private double damageResistence = 0.0;
+	public double damageResistence = 0.0;
 	public int health = 0;
 	public boolean dead = false;
 	public double damageMultiplier = 1.0;
@@ -61,6 +61,14 @@ public class CombatEntity implements Cloneable {
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	
+	public void reset() {
+		this.health = this.maxHealth;
+		this.damageMultiplier = 1.0;
+		this.damageResistence = 0.0;
+		this.dead = false;
 	}
 	
 	
@@ -123,7 +131,7 @@ public class CombatEntity implements Cloneable {
 		
 		Runnable removeSprite = () -> {
 			try {
-				TimeUnit.MILLISECONDS.sleep(1000);
+				TimeUnit.MILLISECONDS.sleep(2000);
 				this.sprite.setVisible(false);
 			} catch (InterruptedException err) {
 				err.printStackTrace();
@@ -197,7 +205,7 @@ public class CombatEntity implements Cloneable {
 		performTurn(move, target);
 		Runnable fpsMethod = () -> {
 			try {
-				TimeUnit.MILLISECONDS.sleep(1500);
+				TimeUnit.MILLISECONDS.sleep(2000);
 				Combat.currentCombatInstance.turn();
 			} catch (InterruptedException err) {
 				err.printStackTrace();
@@ -217,9 +225,4 @@ public class CombatEntity implements Cloneable {
 			CombatInterface.getTurn(moveSet);
 		}
 	}
-	
-	 @Override
-	 public Object clone() throws CloneNotSupportedException {
-		 return super.clone();
-	 }
 }

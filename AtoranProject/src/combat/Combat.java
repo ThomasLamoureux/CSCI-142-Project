@@ -92,6 +92,11 @@ public class Combat {
 	public void loadWave() {
 		teams[1].members = waves[currentWave].enemies;
 		
+		// Resets health and other things of the enemy
+		for (CombatEntity entity : teams[1].members) {
+			entity.reset();
+		}
+		
 		CombatInterface.loadEntityImagesOfTeam(teams[1], false); // Loads enemy GUI
 	}
 	
@@ -147,6 +152,19 @@ public class Combat {
 	public void levelLost() {
 		CombatInterface.announcementText.setText("LEVEL LOST");
 		CombatInterface.announcementText.setVisible(true);
+		
+        // Adds a delay before returning to gamemap
+		Runnable wait = () -> {
+			try {
+				TimeUnit.MILLISECONDS.sleep(3000);
+				Window.getWindow().clearFrame();
+				GameMap.currentMap.openGameMap();
+			} catch (InterruptedException err) {
+				err.printStackTrace();
+			}
+		};
+		Thread waitThread = new Thread(wait);
+		waitThread.start();
 	}
 	
 	// Method to be called when the current wave has been defeated

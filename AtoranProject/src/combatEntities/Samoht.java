@@ -65,15 +65,7 @@ public class Samoht extends CombatEntity {
 		
 
 		@Override
-		protected void runAnimation(CombatEntity target) {
-			boolean flipImage = false;
-			if (this.getParent().facingLeft == -1) {
-				flipImage = true;
-			}
-			
-			JLabel sprite = this.getParent().sprite;
-			
-			
+		protected void runAnimation(CombatEntity target) {			
 			JLabel portalLabel = new JLabel();
 			portalLabel.setSize(new Dimension((int)(300), (int)(300)));
 			Window.scaleComponent(portalLabel);
@@ -85,8 +77,6 @@ public class Samoht extends CombatEntity {
 					);
 			
 			portalLabel.setLocation(portalLocation);		
-	
-			String portalPath = "Resources/Animations/SideWaysPortal";
 			
 			GraphicAnimation portalGraphics = new GraphicAnimation(portalLabel, 25, this.uniqueIndex[1], 0, 5);
 			portalGraphics.setLooped(true);
@@ -111,13 +101,7 @@ public class Samoht extends CombatEntity {
 			Point bulletStartingLocation = portalLabel.getLocation();
 			Point bulletTargetDestination = new Point(target.sprite.getLocation().x, bulletStartingLocation.y);
 			
-			bulletLabel.setLocation(bulletStartingLocation);
-			
-			String bulletPath = "Resources/Animations/MagicBullet";
-			
-			System.out.println(bulletStartingLocation.y);
-			System.out.println(bulletTargetDestination.y);
-			
+			bulletLabel.setLocation(bulletStartingLocation);			
 			
 			GraphicAnimation bulletGraphics = new GraphicAnimation(bulletLabel, 4, this.uniqueIndex[0], 0, 1);
 			MovementAnimation bulletMovement = new MovementAnimation(bulletLabel, 12, "easeInQuad", bulletTargetDestination, bulletStartingLocation);
@@ -233,9 +217,6 @@ public class Samoht extends CombatEntity {
 						);
 				attackLabel.setLocation(attackLocation);
 				
-				
-				String attackPath = "Resources/Animations/SamohtMultiHit";
-				
 				GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 30, this.uniqueIndex[1], 0, 2);
 				
 				
@@ -296,8 +277,6 @@ public class Samoht extends CombatEntity {
 		
 		@Override
 		protected void runAnimation(CombatEntity blank) {
-			boolean flipImage = false;
-			
 			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {				
 				JLabel targetSprite = target.sprite;
 				
@@ -311,9 +290,6 @@ public class Samoht extends CombatEntity {
 						targetSprite.getY() - Window.scaleInt(15)
 						);
 				attackLabel.setLocation(attackLocation);
-				
-				
-				String attackPath = "Resources/Animations/TrapSpell";
 				
 				GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 50, this.uniqueIndex[0], 0, 2);
 				attackGraphic.setLooped(true);

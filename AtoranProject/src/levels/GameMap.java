@@ -1,8 +1,9 @@
 package levels;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import main.Window;
-
+import utilities.AnimationPlayerModule;
 import combat.Combat;
 import combat.CombatEntity;
 import combat.Wave;
@@ -18,6 +19,8 @@ import combatEntities.Spider;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +41,7 @@ public class GameMap {
     	gameMapPane.setLocation(new Point(0, 0));
     	
     	// Defining enemies for the waves using CombatEntity classes
-		CombatEntity[] enemies = {new Samoht(true)};
+		CombatEntity[] enemies = {new DralyaDragonForm(true)};
 		//CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
 		//CombatEntity[] enemiesThree = {new SamohtEntity()};
 		
@@ -56,6 +59,10 @@ public class GameMap {
         levels.add(new Level(2, "Forest", "Bear", false, waves)); // Second level is locked
         levels.add(new Level(3, "Cave", "Dragon", false, waves)); // Third level is locked
         levels.add(new Level(4, "Mountains", "Wizard", false, waves)); // Fourth level is locked
+        levels.add(new Level(5, "Mountains", "Wizard", false, waves));
+        levels.add(new Level(6, "Mountains", "Wizard", false, waves));
+        levels.add(new Level(7, "Mountains", "Wizard", false, waves));
+        
 
         Level levelOne = levels.get(0);
         
@@ -93,19 +100,52 @@ public class GameMap {
         window.add(gameMapPane);
         
         // Loop through all levels and create a button for each
-        int i = 0;
         
-        for (Level level : levels) {
+        JLabel background = new JLabel();
+        background.setSize(new Dimension(1920, 1080));
+        background.setLocation(new Point(0, 0));
+        
+        Window.scaleComponent(background);
+        
+		File targetFile = new File("Resources/Images/MapBackground.png");
+		Image image = null;
+		try {
+			image = ImageIO.read(targetFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		image = Window.scaleImage(1920, 1080, image);
+		
+		ImageIcon icon = new ImageIcon(image);
+		background.setIcon(icon);
+		
+		gameMapPane.add(background, JLayeredPane.DEFAULT_LAYER);
+        
+        
+        Point[] buttonLocations = {
+        	new Point(140, 540),
+        	new Point(550, 575),
+        	new Point(840, 615),
+        	new Point(1000, 375),
+        	new Point(1340, 290),
+        	new Point(1540, 605),
+        	new Point(1640, 885)
+        };
+
+        for (int i = 0; i < levels.size(); i++) {
+        	Level level = levels.get(i);
+        	
             JButton levelButton = new JButton("Level " + level.getLevelNumber());
             // Enable the button if the level is unlocked
             levelButton.setEnabled(level.isUnlocked());
             // Add an action listener to the button that will start the level
             levelButton.addActionListener(new LevelButtonActionListener(level));
-            levelButton.setLocation(new Point(0, i));
-            levelButton.setSize(new Dimension(400, 200));
-            i += 200;
+            levelButton.setLocation(buttonLocations[i]);
+            levelButton.setSize(new Dimension(100, 50));
             
-            gameMapPane.add(levelButton, JLayeredPane.DEFAULT_LAYER);
+            gameMapPane.add(levelButton, JLayeredPane.PALETTE_LAYER);
         }
 
         // Refresh the window
