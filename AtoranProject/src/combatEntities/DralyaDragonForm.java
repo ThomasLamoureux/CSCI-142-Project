@@ -126,7 +126,7 @@ public class DralyaDragonForm extends CombatEntity {
 	public static class DragonSlash extends Move {
 
 		public DragonSlash(CombatEntity parent) {
-			super("Dragon Slash", false, true, parent);
+			super("Dragon Slash", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(100);
 			this.setDescription("Targets a single enemy with a slashing attack");
@@ -243,7 +243,7 @@ public class DralyaDragonForm extends CombatEntity {
 	public static class PowerfulDragonSlash extends Move {
 
 		public PowerfulDragonSlash(CombatEntity parent) {
-			super("Empowered Dragon Slash", false, true, parent);
+			super("Empowered Dragon Slash", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(150);
 			this.setDescription("Targets a single enemy with a slashing attack");
@@ -364,7 +364,7 @@ public class DralyaDragonForm extends CombatEntity {
 	public static class FireLances extends Move {
 
 		public FireLances(CombatEntity parent) {
-			super("Fire Lances", false, true, parent);
+			super("Fire Lances", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(125);
 			this.setDescription("Targets a single enemy with a slashing attack");

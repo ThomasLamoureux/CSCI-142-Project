@@ -48,7 +48,7 @@ public class Samoht extends CombatEntity {
 	public static class MagicBullet extends Move {
 
 		public MagicBullet(CombatEntity parent) {
-			super("Dragon Slash", false, true, parent);
+			super("Dragon Slash", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(60);
 			this.setDescription("Fires a magic bullet at the enemy");
@@ -142,7 +142,7 @@ public class Samoht extends CombatEntity {
 	public static class Multihit extends Move {
 
 		public Multihit(CombatEntity parent) {
-			super("Death from Above", false, true, parent);
+			super("Death from Above", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(30);
 			this.setDescription("Targets all enemies on the field with a sweeping attack");
@@ -255,7 +255,7 @@ public class Samoht extends CombatEntity {
 	public static class TrapSpell extends Move {
 
 		public TrapSpell(CombatEntity parent) {
-			super("Death from Above", false, true, parent);
+			super("Death from Above", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(0);
 			this.setDescription("Targets all enemies, increasing damage taken by 50% and decresing damage dealt by 50% until spell is cleansed");

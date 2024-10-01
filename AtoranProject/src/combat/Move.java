@@ -9,7 +9,7 @@ import animations.Animation;
 import utilities.AnimationPlayerModule;
 
 public class Move {
-	public String name = "default";
+	public String name;
 	private Map<String, Boolean> validTargets = new HashMap<String, Boolean>(); //team, enemies
 	private int damage;
 	private int critChance = 20;
@@ -18,11 +18,12 @@ public class Move {
 	private String description;
 	protected int[] uniqueIndex;
 
-	public Move(String name, boolean team, boolean enemies, CombatEntity parent) {
+	public Move(String name, boolean[] targets, CombatEntity parent) {
 		this.name = name;
 		this.parent = parent;
-		validTargets.put("team", team);
-		validTargets.put("enemies", enemies);
+		validTargets.put("enemies", targets[0]);
+		validTargets.put("team", targets[1]);
+		validTargets.put("self", targets[2]);
 	}
 	
 	
@@ -74,13 +75,6 @@ public class Move {
 	
 	protected void runAnimation(CombatEntity target) {
 		target.updateHealthBar();
-		
-		Point[] destinations = {target.sprite.getLocation(), this.getParent().sprite.getLocation()};
-		int[] framesToTake = {30, 38};
-		
-		//Animation animation = new Animation(this.getParent().sprite, destinations, framesToTake, "easeOutQuart");
-		
-		//AnimationPlayerModule.addAnimation(animation);
 	}
 	
 	// Overrided

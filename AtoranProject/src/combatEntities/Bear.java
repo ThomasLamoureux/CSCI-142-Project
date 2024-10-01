@@ -27,7 +27,7 @@ import utilities.AnimationsPreloader;
 
 public class Bear extends CombatEntity{
 	public static JLabel getAtoranSprite() {
-		JLabel atoranSprite = new JLabel("Atoran");
+		JLabel atoranSprite = new JLabel();
 		atoranSprite.setPreferredSize(new Dimension(300, 300));
 		atoranSprite.setSize(new Dimension(300, 300));
 		atoranSprite.setBackground(new Color(20, 0, 255));
@@ -52,7 +52,7 @@ public class Bear extends CombatEntity{
 	public static class BearClawMove extends Move {
 
 		public BearClawMove(CombatEntity parent) {
-			super("Bear Claw", false, true, parent);
+			super("Bear Claw", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(80);
 			this.setDescription("Targets a single enemy with a slashing attack");
@@ -66,7 +66,7 @@ public class Bear extends CombatEntity{
 			JLabel targetSprite = target.sprite;
 			
 			JLabel attackLabel = new JLabel();
-			attackLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
+			attackLabel.setSize(new Dimension(500, 500));
 			Window.scaleComponent(attackLabel);
 			
 			attackLabel.setLocation(
@@ -74,7 +74,7 @@ public class Bear extends CombatEntity{
 					targetSprite.getY() - (attackLabel.getHeight() - targetSprite.getHeight())/2
 				);
 			
-			GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 20, this.uniqueIndex[1], 0, 1);
+			GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 12, this.uniqueIndex[0], 0, 2);
 			
 			Runnable addAttackLabel = () -> {
 				CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
@@ -111,7 +111,7 @@ public class Bear extends CombatEntity{
 			animationsList.add(moveBack);
 			
 			Animation finalAnimation = new CombinedAnimation(87, animationsList, new int[]{0, 30, 65});
-			finalAnimation.keyframes[50] = new Keyframe(removeAttackLabel);
+			finalAnimation.keyframes[42] = new Keyframe(removeAttackLabel);
 			
 			AnimationPlayerModule.addAnimation(finalAnimation);
 		}
@@ -127,8 +127,7 @@ public class Bear extends CombatEntity{
 		
 		@Override
 		protected void preLoadAnimations() {
-			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/BearClaw", new Dimension((int)(550 * 1.2), (int)(400 * 1.2)), this.getParent().flipImages),
-					AnimationsPreloader.loadImages("Resources/Animations/EmpoweredSlash", new Dimension((int)(550 * 1.2), (int)(400 * 1.2)), this.getParent().flipImages)};
+			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/BearClaw", new Dimension(500, 500), !this.getParent().flipImages)};
 		}
 	}
 }

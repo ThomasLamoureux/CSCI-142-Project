@@ -101,6 +101,17 @@ public class CombatEntity {
 	}
 	
 	
+	public void heal(int amount) {
+		if (this.health + amount > this.maxHealth) {
+			this.health = this.maxHealth;
+		} else {
+			this.health += amount;
+		}
+		
+		this.updateHealthBar();
+	}
+	
+	
 	public void performTurn(Move move, CombatEntity target) {
 		move.useMove(target);
 	}
@@ -122,6 +133,11 @@ public class CombatEntity {
 		
 		if (this.health <= 0 ) {
 			this.death();
+		}
+		
+		// You can only have a shield for one hit, this removes it after being hit
+		if (this.damageResistence > 0.0) {
+			this.damageResistence = 0.0;
 		}
 	}
 	
@@ -151,9 +167,6 @@ public class CombatEntity {
 		return fieldPosition;
 	}
 	
-	public void automatedTurn2(CombatEntity[] team, CombatEntity[] enemyTeam) {
-		
-	}
 	
 	public void automatedTurn(CombatEntity[] team, CombatEntity[] enemyTeam) {
 		Random randomGenerator = new Random();

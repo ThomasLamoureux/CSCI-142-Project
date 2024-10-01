@@ -1,6 +1,7 @@
 package animations;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -70,11 +71,11 @@ public class Animation {
 	public static class MovementAnimation extends Animation {
 		public int xIncrement;
 		public int yIncrement;
-		public JLabel sprite;
+		public Component sprite;
 		public Point destination;
 		public Point startingLocation;
 
-		public MovementAnimation(JLabel sprite, int frameCount, String easingStyle, Point destination, Point startingLocation) {
+		public MovementAnimation(Component sprite, int frameCount, String easingStyle, Point destination, Point startingLocation) {
 			super(frameCount, easingStyle);
 			
 			this.sprite = sprite;

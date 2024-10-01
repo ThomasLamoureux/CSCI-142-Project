@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
@@ -27,9 +28,11 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import animations.Animation;
 import animations.Animation.MovementAnimation;
+import inventory.Item;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -121,9 +124,7 @@ public class CombatInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
-		//image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
 		image = Window.scaleImage(1920, 1080, image);
 		
 		ImageIcon backgroundIcon = new ImageIcon(image);
@@ -145,28 +146,85 @@ public class CombatInterface {
 		
 		layerOnePane.add(moveInfoDisplay, JLayeredPane.MODAL_LAYER);
 		
+		loadInventory();
 				
 		window.setVisible(true);
 	}
 	
 	
+	public static void loadInventory() {
+		if (Combat.currentCombatInstance.inventory == null) {
+			return;
+		}
+		inventoryPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 18, 18));
+		inventoryPanel.setLocation(76 - 18, 36 - 18 - 453);
+		inventoryPanel.setOpaque(false);
+		inventoryPanel.setSize(new Dimension(800, 500));
+		inventoryPanel.setVisible(true);
+		
+		Window.scaleComponent(inventoryPanel);
+		
+		layerOnePane.add(inventoryPanel, JLayeredPane.MODAL_LAYER);
+		
+		for (Item item : Combat.currentCombatInstance.inventory.getInventory()) {
+			JButton itemLabel = new JButton();
+			itemLabel.setSize(new Dimension(104, 104));
+			itemLabel.setPreferredSize(new Dimension(104, 104));
+			itemLabel.setBackground(Color.black);
+			itemLabel.setOpaque(false);
+			itemLabel.setBorderPainted(false);
+			
+			itemLabel.addActionListener(new ActionListener() {
+				@Override
+	            public void actionPerformed(ActionEvent event) {
+					item.useItem();
+					itemLabel.setEnabled(false);
+	            }
+	        });
+			
+			File infoFile = new File(item.imagePath);
+			
+			Image image = null;
+			try {
+				image = ImageIO.read(infoFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			image = Window.scaleImage(104, 104, image);
+			
+			ImageIcon icon = new ImageIcon(image);
+			itemLabel.setIcon(icon);
+			
+			inventoryPanel.add(itemLabel);
+		}
+	}
+	
+	
 	public static void expandInfoPanel() {		
 		Point destination;
+		Point destinationTwo;
 		
 		if (infoPanelExpanded == true) {
 			destination = Window.scalePoint(new Point(0, -453));
 			expandButton.setLocation(Window.scalePoint(new Point(875, 0)));
 			infoPanelExpanded = false;
+			
+			destinationTwo = Window.scalePoint(new Point(76 - 18, 36 - 18 - 453));
 		} else {
 			destination = Window.scalePoint(new Point(0, 0));
 			expandButton.setLocation(Window.scalePoint(new Point(875, 450)));
 			infoPanelExpanded = true;
+			
+			destinationTwo = Window.scalePoint(new Point(76 - 18, 36 - 18));
 		}
 		
 		//Animation animation = new Animation(infoLabel, destination, new int[] {15}, "easeInOutSine");
 		MovementAnimation animation = new MovementAnimation(infoLabel, 15, "easeInOutSine", destination, null);
+		MovementAnimation animationTwo = new MovementAnimation(inventoryPanel, 15, "easeInOutSine", destinationTwo, null);
 		
 		AnimationPlayerModule.addAnimation(animation);
+		AnimationPlayerModule.addAnimation(animationTwo);
 	}
 	
 	
@@ -178,7 +236,7 @@ public class CombatInterface {
 		infoPanel.setBackground(new Color(200, 200, 200, 230));
 		infoPanel.setVisible(true);
 		infoPanel.setOpaque(false);
-		//infoPanel.setLayout(null);
+
 		
 		infoLabel = new JLabel();
 		infoLabel.setLocation(0, -453);
@@ -365,7 +423,7 @@ public class CombatInterface {
             }
         });
 		//targetButton.setPreferredSize(new Dimension(100, 100));
-		targetButton.setSize(new Dimension(100, 100));
+		targetButton.setSize(new Dimension(150, 150));
 		targetButton.setBackground(null);
 		targetButton.setOpaque(false);
 		targetButton.setContentAreaFilled(false);
@@ -380,7 +438,7 @@ public class CombatInterface {
 			e.printStackTrace();
 		}
 		
-		image = Window.scaleImage(100, 100, image);
+		image = Window.scaleImage(150, 150, image);
 		
 		ImageIcon targetIcon = new ImageIcon(image);
 		targetButton.setIcon(targetIcon);
@@ -388,7 +446,13 @@ public class CombatInterface {
 		
 		selectTargetButtonsPanel.add(targetButton);
 		
-		targetButton.setLocation(target.sprite.getLocation().x - 15, target.sprite.getLocation().y - 15);
+		int offset = (targetButton.getWidth() - target.sprite.getWidth())/2;
+		Point location = new Point(
+				target.sprite.getX() - offset,
+				target.sprite.getY() - offset
+				);
+
+		targetButton.setLocation(location);
 		
 		Window.scaleComponent(targetButton);
 		//Window.getWindow().refresh();
@@ -409,12 +473,23 @@ public class CombatInterface {
 		selectTargetButtonsPanel.setOpaque(false);
 		
 		if (move.checkIfTargetIsValid("enemies")) {
-			System.out.println("ene");
 			for (int i = 0; i < teams[1].members.length; i++) {
 				if (teams[1].members[i].dead == false) { 
 					createTargetButton(teams[1].members[i]);
 				}
 			}
+		}
+		
+		if (move.checkIfTargetIsValid("team")) {
+			for (int i = 0; i < teams[0].members.length; i++) {
+				if (teams[1].members[i].dead == false) { 
+					createTargetButton(teams[1].members[i]);
+				}
+			}
+		}
+		
+		if (move.checkIfTargetIsValid("self")) {
+			createTargetButton(move.getParent());
 		}
 		
 		layerOnePane.add(selectTargetButtonsPanel, JLayeredPane.MODAL_LAYER);

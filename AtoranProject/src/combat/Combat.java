@@ -14,6 +14,9 @@ import combatEntities.DralyaHumanForm;
 import combatEntities.Knight;
 import combatEntities.Samoht;
 import engine.Engine;
+import inventory.Inventory;
+import inventory.Item.DefensePotion;
+import inventory.Item.HealthPotion;
 import levels.GameMap;
 import levels.Level;
 import main.Window;
@@ -30,6 +33,7 @@ public class Combat {
 	public Team currentTeam;
 	public Team notCurrentTeam;
 	public Level currentLevel;
+	public Inventory inventory;
 	public static Combat currentCombatInstance;
 	
 	
@@ -58,10 +62,18 @@ public class Combat {
 		teams[0] = new Team();
 		
 		// Level 6 and 7 will have Dralya on the player's team
-		if (level.getLevelNumber() > 5) {
+		if (level.getLevelNumber() > 0) {
 			teams[0].members = new CombatEntity[] {new Atoran(false), new DralyaHumanForm(false)};
 		} else {
 			teams[0].members = new CombatEntity[] {new Atoran(false)};
+		}
+		
+		if (level.getLevelNumber() > 0) {
+			this.inventory = new Inventory(2);
+			this.inventory.addItem(new HealthPotion("Health Potion", "Heals all allies on the field by 50 hp", 1));
+			this.inventory.addItem(new DefensePotion("Defense Poition", "Grants 30% damage reduction to all allies on the field for on attack", 1));
+		} else {
+			this.inventory = null;
 		}
 		currentTeam = teams[0];
 		notCurrentTeam = teams[1];

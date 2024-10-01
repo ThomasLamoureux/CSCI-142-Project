@@ -10,6 +10,7 @@ import combat.Wave;
 import datastore.Datastore;
 import cutscenes.Cutscene;
 import cutscenes.Dialogue;
+import combatEntities.Bear;
 import combatEntities.DralyaDragonForm;
 import combatEntities.Knight;
 import combatEntities.Samoht;
@@ -41,7 +42,7 @@ public class GameMap {
     	gameMapPane.setLocation(new Point(0, 0));
     	
     	// Defining enemies for the waves using CombatEntity classes
-		CombatEntity[] enemies = {new DralyaDragonForm(true)};
+		CombatEntity[] enemies = {new Bear(true)};
 		//CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
 		//CombatEntity[] enemiesThree = {new SamohtEntity()};
 		

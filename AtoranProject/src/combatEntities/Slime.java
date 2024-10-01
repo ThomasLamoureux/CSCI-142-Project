@@ -49,7 +49,7 @@ public class Slime extends CombatEntity {
 	
 	public static class BumpMove extends Move {
 		public BumpMove(CombatEntity parent) {
-			super("Bump", false, true, parent);
+			super("Bump", new boolean[]{true, false, false}, parent);
 			
 			this.setDamage(30);
 			this.setDescription("Bumps the opponent");

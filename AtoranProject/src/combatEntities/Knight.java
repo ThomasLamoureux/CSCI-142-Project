@@ -49,7 +49,7 @@ public class Knight extends CombatEntity {
 	public static class KnightSlashMove extends Move {
 		
 		public KnightSlashMove(CombatEntity parent) {
-			super("Slash", false, true, parent);
+			super("Slash", new boolean[]{true, false, false}, parent);
 			
 			this.setDamage(30);
 			this.setDescription("Targets all enemies, increasing damage taken by 50% and decresing damage dealt by 50% until spell is cleansed");

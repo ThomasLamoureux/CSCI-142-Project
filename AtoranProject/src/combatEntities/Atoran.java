@@ -63,7 +63,7 @@ public class Atoran extends CombatEntity {
 	public static class EmpowererMove extends Move{
 		
 		public EmpowererMove(CombatEntity parent) {
-			super("Empowerer", false, true, parent);
+			super("Empowerer", new boolean[]{false, false, true}, parent);
 			
 			this.setDamage(0);
 			this.setDescription("Empowerer yourself, increasing the ");
@@ -119,7 +119,7 @@ public class Atoran extends CombatEntity {
 	public static class SlashMove extends Move {
 
 		public SlashMove(CombatEntity parent) {
-			super("Slash", false, true, parent);
+			super("Slash", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(80);
 			this.setDescription("Targets a single enemy with a slashing attack");
@@ -272,7 +272,7 @@ public class Atoran extends CombatEntity {
 	public static class SweepMove extends Move {
 
 		public SweepMove(CombatEntity parent) {
-			super("Sweep", false, true, parent);
+			super("Sweep", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(50);
 			this.setDescription("Targets all enemies on the field with a sweeping attack");
