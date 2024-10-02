@@ -40,7 +40,6 @@ public class Cutscene {
         
         System.out.println(window.getSize());
 
-
         // Create and add cutscene components
         imageLabel = new JLabel();
         imageLabel.setBounds(0, 0, window.getWidth(), window.getHeight() - 200);
