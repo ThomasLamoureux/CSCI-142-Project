@@ -9,6 +9,7 @@ import combat.Combat;
 import combat.CombatEntity;
 import combat.Wave;
 import datastore.Datastore;
+import cutscenes.CreatedCutscenes;
 import cutscenes.Cutscene;
 import cutscenes.Dialogue;
 import combatEntities.Bear;
@@ -83,24 +84,35 @@ public class GameMap {
         
 
         Level levelOne = levels.get(0);
+        levelOne.setStartingCutscene(CreatedCutscenes.levelOneIntro());
         
-        List<Dialogue> dialogues = new ArrayList<>();
-        
-        dialogues.add(new Dialogue("Hiiii"));
-        dialogues.add(new Dialogue("Bye"));
-        
-        Cutscene levelOneCutscene = new Cutscene(dialogues);
-        
-        levelOne.setStartingCutscene(levelOneCutscene);
-        
-        if (Datastore.readData("level2") == "1") {
+        if (Datastore.readData("level1").equals("1")) {
+        	System.out.println("Level 2 unlocked");
+        	levels.get(0).setCompleted(true);
+        	levels.get(1).unlock();
+        }
+        if (Datastore.readData("level2").equals("1")) {
+        	levels.get(1).setCompleted(true);
         	levels.get(2).unlock();
         }
-        if (Datastore.readData("level3") == "1") {
+        if (Datastore.readData("level3").equals("1")) {
+        	levels.get(2).setCompleted(true);
         	levels.get(3).unlock();
         }
-        if (Datastore.readData("level4") == "1") {
+        if (Datastore.readData("level4").equals("1")) {
+        	levels.get(3).setCompleted(true);
         	levels.get(4).unlock();
+        }
+        if (Datastore.readData("level5").equals("1")) {
+        	levels.get(4).setCompleted(true);
+        	levels.get(5).unlock();
+        }
+        if (Datastore.readData("level6").equals("1")) {
+        	levels.get(5).setCompleted(true);
+        	levels.get(6).unlock();
+        }
+        if (Datastore.readData("level6").equals("7")) {
+        	levels.get(6).setCompleted(true);
         }
 
         // Setting the current map to this instance
@@ -202,10 +214,10 @@ public class GameMap {
             }
         }
         
-        Combat combat = new Combat(level);
+        new Combat(level);
         
         // After combat is finished, mark the level as completed and unlock the next level
-        if (combat.currentLevel.isCompleted()) {  // Assuming Combat class has a method to check if it's completed
+        /*if (combat.currentLevel.isCompleted()) {  // Assuming Combat class has a method to check if it's completed
             level.setCompleted(true);  // Assuming Level class has a method to set completion status
             int nextLevelIndex = level.getLevelNumber();
             if (nextLevelIndex < levels.size()) {
@@ -213,7 +225,7 @@ public class GameMap {
                 nextLevel.unlock();
             }
             updateMap();  // Update the game map UI
-        }
+        }*/
     }
 
     // Method to update the game map UI when a level is completed

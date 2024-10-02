@@ -10,20 +10,17 @@ import java.util.Map;
 public class BIH {
 	private Map<String, String> data = new HashMap<>();
 	private String filePath;
-	private File file;
+
 	
 	public BIH(String filePath) {
 		this.filePath = filePath;
-		this.file = new File(filePath);
 		
 		this.convertToMap();
 	}
 	
 	private void convertToBIH() {
 		try {
-			FileWriter File = new FileWriter(this.file); // Opens file using path. true = append mode on
-			// Adds task to file
-			
+			FileWriter File = new FileWriter(new File(filePath)); 
 			String toWrite = "";
 			
 	        for (Map.Entry<String, String> entry : data.entrySet()) {
@@ -37,17 +34,14 @@ public class BIH {
 			
 			File.write(toWrite);
 			
+			System.out.print(toWrite);
+			
 			File.close();
 		} catch(Exception Err) {
 			System.out.println(Err);
 		}
 	}
 	
-	public static void main(String[] args) {
-		BIH test = new BIH("Resources/data.bih");
-		
-		System.out.println(test.getIndex("monkey"));
-	}
 	
 	public void convertToMap() {
 		try {

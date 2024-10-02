@@ -146,7 +146,7 @@ public class Combat {
 		CombatInterface.announcementText.setVisible(true);
 		
 		
-		currentLevel.setCompleted(true);
+		currentLevel.completeLevel();
 		
 		List<Level> levels = GameMap.getLevels();
         Level nextLevel = levels.get(currentLevel.getLevelNumber()); /* Gets the next level, (levels are numbered 1-7, 

@@ -19,6 +19,7 @@ public class Cutscene {
     private JLayeredPane layeredPane;
     private JLabel imageLabel;
     private JTextArea textArea;
+    private JLabel namecard;
     private JButton nextButton;
     private Level level;
 
@@ -39,17 +40,11 @@ public class Cutscene {
         
         System.out.println(window.getSize());
 
-        // Add existing components to the bottom layer
-        /*Component[] components = window.getContentPane().getComponents();
-        for (Component component : components) {
-            layeredPane.add(component, JLayeredPane.DEFAULT_LAYER);
-            component.setBounds(0, 0, window.getWidth(), window.getHeight());
-        }*/
 
         // Create and add cutscene components
         imageLabel = new JLabel();
         imageLabel.setBounds(0, 0, window.getWidth(), window.getHeight() - 200);
-        layeredPane.add(imageLabel, JLayeredPane.PALETTE_LAYER);
+        layeredPane.add(imageLabel, JLayeredPane.DRAG_LAYER);
 
         textArea = new JTextArea();
         textArea.setEditable(false);
@@ -57,7 +52,7 @@ public class Cutscene {
         textArea.setWrapStyleWord(true);
         textArea.setBounds(50, window.getHeight() - 190, window.getWidth() - 100, 150);
         textArea.setSize(new Dimension(400, 500));
-        layeredPane.add(textArea, JLayeredPane.PALETTE_LAYER);
+        layeredPane.add(textArea, JLayeredPane.DRAG_LAYER);
 
         nextButton = new JButton("Next");
         nextButton.setLocation(new Point(500, 500));
@@ -69,7 +64,7 @@ public class Cutscene {
                 showNextDialogue();
             }
         });
-        layeredPane.add(nextButton, JLayeredPane.MODAL_LAYER);
+        layeredPane.add(nextButton, JLayeredPane.DRAG_LAYER);
         layeredPane.setBackground(Color.black);
         layeredPane.setOpaque(true);
         layeredPane.setVisible(true);
@@ -82,7 +77,7 @@ public class Cutscene {
         testLabel.setLocation(new Point(200, 200));
         window.add(testLabel);
 
-        GameMap.currentMap.gameMapPane.add(layeredPane, JLayeredPane.PALETTE_LAYER);
+        GameMap.currentMap.gameMapPane.add(layeredPane, JLayeredPane.DRAG_LAYER);
         window.revalidate();
         window.repaint();
         window.refresh();

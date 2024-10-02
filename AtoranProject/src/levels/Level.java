@@ -36,7 +36,11 @@ public class Level {
     	if (this.startingCutscene == null) {
     		GameMap.currentMap.startLevel(this);
     	} else {
-    		this.startingCutscene.start(this);
+    		if (this.isCompleted == true) {
+    			GameMap.currentMap.startLevel(this);
+    		} else {
+    			this.startingCutscene.start(this);
+    		}
     	}
     }
     
@@ -69,10 +73,6 @@ public class Level {
 
     public boolean isUnlocked() {
         return isUnlocked;
-       /* Select levels;
-	   Datastore.writeData("level2", levels.get(1).isUnlocked() ? "1" : "0");
-       Datastore.writeData("level3", levels.get(2).isUnlocked() ? "1" : "0");
-       Datastore.writeData("level4", levels.get(3).isUnlocked() ? "1" : "0");  */
     }
 
     public boolean isCompleted() {
@@ -81,7 +81,6 @@ public class Level {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
-        Datastore.writeData("level" + this.levelNumber, "1");
     }
 
     public void unlock() {
@@ -96,7 +95,10 @@ public class Level {
     public void completeLevel() {
         if (isUnlocked) {
             System.out.println("Level " + levelNumber + " completed!");
-            this.isCompleted = true;
+            if (isCompleted == false) {
+            	setCompleted(true);
+                Datastore.updateDataString("level" + this.levelNumber, "1");
+            }
         } else {
             System.out.println("Level " + levelNumber + " is locked.");
         }

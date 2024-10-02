@@ -6,7 +6,9 @@ public class Datastore {
     // Read a specific field from the BIH data
     public static String readData(String index) {
     	BIH bih = new BIH(dataPath);
+    	
         try {
+        	System.out.println(bih.getIndex(index));
             return bih.getIndex(index);  
         } catch (Exception e) {
             e.printStackTrace();
@@ -28,17 +30,6 @@ public class Datastore {
         bih.setIndex(index, Integer.toString(newValues));  // Convert int to string and update the value
         bih.SaveBIH();  
     }
-    
-
-
-
-	public static boolean isLevelUnlocked(BIH bih, String string) {
-		return false;
-	}
-
-	public static void writeData(String string, Object object) {
-		
-	}
 }
 
 
