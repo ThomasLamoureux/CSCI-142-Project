@@ -39,13 +39,6 @@ public class Cutscene {
         
         System.out.println(window.getSize());
 
-        // Add existing components to the bottom layer
-        /*Component[] components = window.getContentPane().getComponents();
-        for (Component component : components) {
-            layeredPane.add(component, JLayeredPane.DEFAULT_LAYER);
-            component.setBounds(0, 0, window.getWidth(), window.getHeight());
-        }*/
-
         // Create and add cutscene components
         imageLabel = new JLabel();
         imageLabel.setBounds(0, 0, window.getWidth(), window.getHeight() - 200);
