@@ -27,7 +27,7 @@ public class Move {
 	}
 	
 	
-	protected void preLoadAnimations() {
+	protected void preloadAnimations() {
 		
 	}
 	

@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import main.Window;
 import utilities.AnimationPlayerModule;
+import utilities.AnimationsPreloader;
 import combat.Combat;
 import combat.CombatEntity;
 import combat.Wave;
@@ -193,6 +194,14 @@ public class GameMap {
 
     public void startLevel(Level level) {
         System.out.println("Starting Level " + level.getLevelNumber() + " in location: " + level.getLocation() + " against " + level.getEnemy());
+        AnimationsPreloader.clearImages();
+        
+        for (Wave wave : level.getWaves()) {
+        	for (CombatEntity entity : wave.enemies) {
+            	entity.loadAnimations();
+            }
+        }
+        
         Combat combat = new Combat(level);
         
         // After combat is finished, mark the level as completed and unlock the next level

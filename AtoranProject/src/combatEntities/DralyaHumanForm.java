@@ -47,6 +47,16 @@ public class DralyaHumanForm extends CombatEntity {
 		this.setMoveSet(moveSet);
 	}	
 	
+	@Override
+	public void reset() {
+		this.health = this.maxHealth;
+		this.damageMultiplier = 1.0;
+		this.damageResistence = 0.0;
+		this.dead = false;
+		
+		this.sprite = getSprite();
+	}
+	
 	public static class Sacrifice extends Move {
 
 		public Sacrifice(CombatEntity parent) {
@@ -55,11 +65,11 @@ public class DralyaHumanForm extends CombatEntity {
 			this.setDamage(0);
 			this.setDescription("Reduces the damage taken to allies for one attack based on Dralya's current HP % in turn for reducing her health to 0");
 			
-			preLoadAnimations();
+			preloadAnimations();
 		}
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportIn", new Dimension(500, 500), !this.getParent().flipImages)};
 		}
 		

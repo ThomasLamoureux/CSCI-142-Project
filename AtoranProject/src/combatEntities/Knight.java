@@ -44,6 +44,18 @@ public class Knight extends CombatEntity {
 		Move[] moveSet = {new KnightSlashMove(this)};
 		this.setMoveSet(moveSet);
 	}
+	
+	
+	
+	@Override
+	public void reset() {
+		this.health = this.maxHealth;
+		this.damageMultiplier = 1.0;
+		this.damageResistence = 0.0;
+		this.dead = false;
+		
+		this.sprite = getSprite();
+	}
 
 	
 	public static class KnightSlashMove extends Move {
@@ -53,13 +65,11 @@ public class Knight extends CombatEntity {
 			
 			this.setDamage(30);
 			this.setDescription("Targets all enemies, increasing damage taken by 50% and decresing damage dealt by 50% until spell is cleansed");
-			
-			this.preLoadAnimations();
 		}
 		
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/NewSlashingAnimation", new Dimension((int)(550 * 1.2), (int)(400 * 1.2)), this.getParent().flipImages)};
 		}
 		

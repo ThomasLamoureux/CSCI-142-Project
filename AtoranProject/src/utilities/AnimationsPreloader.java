@@ -16,6 +16,11 @@ public class AnimationsPreloader {
 	}
 	
 	
+	public static void clearImages() {
+		imageList = new ArrayList<ImageIcon[]>();
+	}
+	
+	
 	public static ImageIcon[] getIconArray(int index) {
 		return imageList.get(index);
 	}

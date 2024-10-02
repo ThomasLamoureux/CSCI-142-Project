@@ -46,6 +46,16 @@ public class Slime extends CombatEntity {
 		this.setMoveSet(moveSet);
 	}
 	
+	@Override
+	public void reset() {
+		this.health = this.maxHealth;
+		this.damageMultiplier = 1.0;
+		this.damageResistence = 0.0;
+		this.dead = false;
+		
+		this.sprite = getSprite();
+	}
+	
 	
 	public static class BumpMove extends Move {
 		public BumpMove(CombatEntity parent) {
@@ -53,13 +63,11 @@ public class Slime extends CombatEntity {
 			
 			this.setDamage(30);
 			this.setDescription("Bumps the opponent");
-			
-			preLoadAnimations();
 		}
 		
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/HitEffect", new Dimension(250, 250), false)};
 		}
 		

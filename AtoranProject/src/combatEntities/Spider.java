@@ -22,6 +22,17 @@ public class Spider extends CombatEntity {
 	}
 	
 	
+	@Override
+	public void reset() {
+		this.health = this.maxHealth;
+		this.damageMultiplier = 1.0;
+		this.damageResistence = 0.0;
+		this.dead = false;
+		
+		this.sprite = getSprite();
+	}
+	
+	
 	public Spider(boolean flip) {
 		super("Slime", 120, null, getSprite(), flip);
 		

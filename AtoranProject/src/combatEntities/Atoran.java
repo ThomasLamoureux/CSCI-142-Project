@@ -60,6 +60,18 @@ public class Atoran extends CombatEntity {
 	}
 	
 	
+	@Override
+	public void reset() {
+		this.health = this.maxHealth;
+		this.damageMultiplier = 1.0;
+		this.damageResistence = 0.0;
+		this.dead = false;
+		
+		this.sprite = getAtoranSprite();
+		this.empowered = false;
+	}
+	
+	
 	public static class EmpowererMove extends Move{
 		
 		public EmpowererMove(CombatEntity parent) {
@@ -67,12 +79,10 @@ public class Atoran extends CombatEntity {
 			
 			this.setDamage(0);
 			this.setDescription("Empowerer yourself, increasing the ");
-			
-			preLoadAnimations();
 		}
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/EmpowerAnimation", new Dimension(225, 225), false)};
 		}
 		
@@ -123,8 +133,6 @@ public class Atoran extends CombatEntity {
 		
 			this.setDamage(80);
 			this.setDescription("Targets a single enemy with a slashing attack");
-			
-			preLoadAnimations();
 		}
 		
 		
@@ -260,7 +268,7 @@ public class Atoran extends CombatEntity {
 		
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/NewSlashingAnimation", new Dimension((int)(550 * 1.2), (int)(400 * 1.2)), this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/EmpoweredSlash", new Dimension((int)(550 * 1.2), (int)(400 * 1.2)), this.getParent().flipImages)};
 		}
@@ -275,7 +283,7 @@ public class Atoran extends CombatEntity {
 			this.setDamage(50);
 			this.setDescription("Targets all enemies on the field with a sweeping attack");
 			
-			this.preLoadAnimations();
+			this.preloadAnimations();
 		}
 		
 		
@@ -395,7 +403,7 @@ public class Atoran extends CombatEntity {
 		
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/SweepAnimation", new Dimension((int)(550 * 1.2), (int)(400 * 1.2)), this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/EmpoweredSweep", new Dimension((int)(550 * 1.8), (int)(400 * 1.8)), this.getParent().flipImages)};
 		}

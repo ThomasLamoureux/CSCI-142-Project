@@ -52,9 +52,6 @@ public class DralyaDragonForm extends CombatEntity {
 		animationLabel.setLocation(animationLocationThree);
 		
 		
-		String TeleportOutIn = "Resources/Animations/DragonTeleportIn";
-		
-		
 		GraphicAnimation teleportInAnimation = new GraphicAnimation(animationLabel, 7, index, 0, 1);
 		
 		Runnable addLabel = () -> {
@@ -84,9 +81,6 @@ public class DralyaDragonForm extends CombatEntity {
 
 		
 		animationLabel.setLocation(animationLocationTwo);
-		
-		
-		String TeleportOutPath = "Resources/Animations/DragonTeleportOut";
 		
 		
 		GraphicAnimation teleportOutAnimation = new GraphicAnimation(animationLabel, 6, index, 0, 1);
@@ -122,6 +116,17 @@ public class DralyaDragonForm extends CombatEntity {
 	}	
 	
 	
+	@Override
+	public void reset() {
+		this.health = this.maxHealth;
+		this.damageMultiplier = 1.0;
+		this.damageResistence = 0.0;
+		this.dead = false;
+		
+		this.sprite = getDralyaDragonSprite();
+	}
+	
+	
 	
 	public static class DragonSlash extends Move {
 
@@ -130,12 +135,10 @@ public class DralyaDragonForm extends CombatEntity {
 		
 			this.setDamage(100);
 			this.setDescription("Targets a single enemy with a slashing attack");
-			
-			preLoadAnimations();
 		}
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/DragonSlash", new Dimension(500, 500), !this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportIn", new Dimension(300, 300), !this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportOut", new Dimension(300, 300), !this.getParent().flipImages),
@@ -247,13 +250,11 @@ public class DralyaDragonForm extends CombatEntity {
 		
 			this.setDamage(150);
 			this.setDescription("Targets a single enemy with a slashing attack");
-			
-			preLoadAnimations();
 		}
 		
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/DragonPowerfulSlash", new Dimension(500, 500), !this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportIn", new Dimension(300, 300), !this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportOut", new Dimension(300, 300), !this.getParent().flipImages),
@@ -368,13 +369,11 @@ public class DralyaDragonForm extends CombatEntity {
 		
 			this.setDamage(125);
 			this.setDescription("Targets a single enemy with a slashing attack");
-			
-			preLoadAnimations();
 		}
 		
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/FireLance", new Dimension(300, 300), !this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/Explosion", new Dimension(300, 300), !this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/DragonTeleportIn", new Dimension(300, 300), !this.getParent().flipImages),

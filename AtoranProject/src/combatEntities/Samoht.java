@@ -30,7 +30,7 @@ public class Samoht extends CombatEntity {
 	public JLabel darkSoulLabel;
 	
 	public static JLabel getSamohtSprite() {
-		JLabel sprite = new JLabel("Dralya");
+		JLabel sprite = new JLabel();
 		sprite.setPreferredSize(new Dimension(250, 250));
 		sprite.setSize(new Dimension(250, 250));
 		sprite.setOpaque(false);
@@ -41,7 +41,7 @@ public class Samoht extends CombatEntity {
 	public Samoht(boolean flipImages) {
 		super("Samoht", 300, null, getSamohtSprite(), flipImages);
 		
-		File targetFile = new File("Resources/Images/DralyaDragonForm.png");
+		File targetFile = new File("Resources/Images/Samoht.png");
 		this.setImageFile(targetFile);
 		
 		this.flipIfFacingLeft = false;
@@ -49,6 +49,17 @@ public class Samoht extends CombatEntity {
 		Move[] moveSet = {new MagicBullet(this), new TrapSpell(this), new Multihit(this), new ChargeDarkSoul(this), new DarkSoul(this)};
 		this.setMoveSet(moveSet);
 	}	
+	
+	
+	@Override
+	public void reset() {
+		this.health = this.maxHealth;
+		this.damageMultiplier = 1.0;
+		this.damageResistence = 0.0;
+		this.dead = false;
+		
+		this.sprite = getSamohtSprite();
+	}
 	
 	
 	@Override
@@ -84,12 +95,10 @@ public class Samoht extends CombatEntity {
 		
 			this.setDamage(60);
 			this.setDescription("Fires a magic bullet at the enemy");
-			
-			this.preLoadAnimations();
 		}
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/MagicBullet", new Dimension(300, 300), !this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/SideWaysPortal", new Dimension(300, 300), !this.getParent().flipImages),
 					};
@@ -178,8 +187,6 @@ public class Samoht extends CombatEntity {
 		
 			this.setDamage(30);
 			this.setDescription("Targets all enemies on the field with a sweeping attack");
-			
-			this.preLoadAnimations();
 		}
 		
 		@Override
@@ -194,7 +201,7 @@ public class Samoht extends CombatEntity {
 		}
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[] {AnimationsPreloader.loadImages("Resources/Animations/Portal", new Dimension(400, 400), !this.getParent().flipImages),
 					AnimationsPreloader.loadImages("Resources/Animations/SamohtMultiHit", new Dimension(400, 400), false),
 					};
@@ -203,8 +210,6 @@ public class Samoht extends CombatEntity {
 		
 		@Override
 		protected void runAnimation(CombatEntity blank) {
-			boolean flipImage = false;
-			
 			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {			
 				if (target.dead == true) {
 					continue;
@@ -292,8 +297,6 @@ public class Samoht extends CombatEntity {
 		
 			this.setDamage(0);
 			this.setDescription("Targets all enemies, increasing damage taken by 50% and decresing damage dealt by 50% until spell is cleansed");
-			
-			this.preLoadAnimations();
 		}
 		
 		@Override
@@ -303,7 +306,7 @@ public class Samoht extends CombatEntity {
 		
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/TrapSpell", new Dimension(300, 300), false)};
 		}
 		
@@ -351,8 +354,6 @@ public class Samoht extends CombatEntity {
 		
 			this.setDamage(0);
 			this.setDescription("Charges the Dark Soul attack");
-			
-			this.preLoadAnimations();
 		}
 		
 		@Override
@@ -364,7 +365,7 @@ public class Samoht extends CombatEntity {
 		}
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[] {AnimationsPreloader.loadImages("Resources/Animations/DarkSoulChargeAttack", new Dimension(600, 600), !this.getParent().flipImages)};
 		}
 		
@@ -409,8 +410,6 @@ public class Samoht extends CombatEntity {
 		
 			this.setDamage(800);
 			this.setDescription("Kills everybody basically");
-			
-			this.preLoadAnimations();
 		}
 		
 		@Override
@@ -429,7 +428,7 @@ public class Samoht extends CombatEntity {
 		}
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			//this.uniqueIndex = new int[] {AnimationsPreloader.loadImages(};
 		}
 		

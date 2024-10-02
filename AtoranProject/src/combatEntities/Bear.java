@@ -26,7 +26,7 @@ import utilities.AnimationPlayerModule;
 import utilities.AnimationsPreloader;
 
 public class Bear extends CombatEntity{
-	public static JLabel getAtoranSprite() {
+	public static JLabel getSprite() {
 		JLabel atoranSprite = new JLabel();
 		atoranSprite.setPreferredSize(new Dimension(300, 300));
 		atoranSprite.setSize(new Dimension(300, 300));
@@ -38,7 +38,7 @@ public class Bear extends CombatEntity{
 
 	// Atoran entity, the main character
 	public Bear(boolean flip) {
-		super("Bell Hunter Bear", 250, null, getAtoranSprite(), flip);
+		super("Bell Hunter Bear", 250, null, getSprite(), flip);
 		
 		File targetFile = new File("Resources/Images/Bear.png");
 		this.setImageFile(targetFile);
@@ -49,6 +49,17 @@ public class Bear extends CombatEntity{
 		this.setMoveSet(moveSet);
 	}	
 	
+	
+	@Override
+	public void reset() {
+		this.health = this.maxHealth;
+		this.damageMultiplier = 1.0;
+		this.damageResistence = 0.0;
+		this.dead = false;
+		
+		this.sprite = getSprite();
+	}
+	
 	public static class BearClawMove extends Move {
 
 		public BearClawMove(CombatEntity parent) {
@@ -57,7 +68,7 @@ public class Bear extends CombatEntity{
 			this.setDamage(80);
 			this.setDescription("Targets a single enemy with a slashing attack");
 			
-			preLoadAnimations();
+			preloadAnimations();
 		}
 		
 		
@@ -126,7 +137,7 @@ public class Bear extends CombatEntity{
 		
 		
 		@Override
-		protected void preLoadAnimations() {
+		protected void preloadAnimations() {
 			this.uniqueIndex = new int[]{AnimationsPreloader.loadImages("Resources/Animations/BearClaw", new Dimension(500, 500), !this.getParent().flipImages)};
 		}
 	}

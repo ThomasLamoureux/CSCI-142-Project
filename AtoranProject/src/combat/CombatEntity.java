@@ -59,6 +59,13 @@ public class CombatEntity {
 	}
 	
 	
+	public void loadAnimations() {
+		for (Move move : this.moveSet) {
+			move.preloadAnimations();
+		}
+	}
+	
+	
 	public String getName() {
 		return this.name;
 	}

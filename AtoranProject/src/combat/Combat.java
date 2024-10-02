@@ -35,6 +35,8 @@ public class Combat {
 	public Level currentLevel;
 	public Inventory inventory;
 	public static Combat currentCombatInstance;
+	public static Atoran atoran = new Atoran(false);
+	public static DralyaHumanForm dralya = new DralyaHumanForm(false);
 	
 	
 	public Combat(Level level) {
@@ -63,9 +65,14 @@ public class Combat {
 		
 		// Level 6 and 7 will have Dralya on the player's team
 		if (level.getLevelNumber() > 0) {
-			teams[0].members = new CombatEntity[] {new Atoran(false), new DralyaHumanForm(false)};
+			atoran.reset();
+			dralya.reset();
+			atoran.loadAnimations();
+			dralya.loadAnimations();
+			teams[0].members = new CombatEntity[] {atoran, dralya};
 		} else {
-			teams[0].members = new CombatEntity[] {new Atoran(false)};
+			atoran.loadAnimations();
+			teams[0].members = new CombatEntity[] {atoran};
 		}
 		
 		if (level.getLevelNumber() > 0) {
