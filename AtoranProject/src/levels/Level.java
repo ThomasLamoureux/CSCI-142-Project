@@ -32,6 +32,14 @@ public class Level {
         return levelNumber;
     }
     
+    public void play() {
+    	if (this.startingCutscene == null) {
+    		GameMap.currentMap.startLevel(this);
+    	} else {
+    		this.startingCutscene.start(this);
+    	}
+    }
+    
     public void playStartingCutscene() {
     	System.out.println("started");
     	if (this.startingCutscene != null) {

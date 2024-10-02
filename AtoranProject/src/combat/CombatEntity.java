@@ -18,7 +18,7 @@ import main.Window;
 import utilities.AnimationPlayerModule;
 
 public class CombatEntity {
-	private Move[] moveSet = {};
+	protected Move[] moveSet = {};
 	public double damageResistence = 0.0;
 	public int health = 0;
 	public boolean dead = false;
@@ -168,7 +168,7 @@ public class CombatEntity {
 	}
 	
 	
-	public void automatedTurn(CombatEntity[] team, CombatEntity[] enemyTeam) {
+	protected Move chooseMove() {
 		Random randomGenerator = new Random();
 		
 		int randomMove;
@@ -181,6 +181,13 @@ public class CombatEntity {
 		}
 		
 		Move move = moveSet[randomMove];
+		
+		return move;
+	}
+	
+	
+	public void automatedTurn(CombatEntity[] team, CombatEntity[] enemyTeam) {
+		Move move = chooseMove();
 		
 		CombatEntity target; // Set to null to stop error
 		
@@ -205,6 +212,7 @@ public class CombatEntity {
 			}
 		}
 		
+		Random randomGenerator = new Random();
 		int arrayListSize = potentialTargets.size();
 		if (arrayListSize == 0) {
 			Combat.currentCombatInstance.turn();

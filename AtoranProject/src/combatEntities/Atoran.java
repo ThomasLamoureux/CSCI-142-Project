@@ -213,8 +213,6 @@ public class Atoran extends CombatEntity {
 			Point targetDestination = new Point((int)
 					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
 					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
-			
-			//attackLabel.setLocation(targetDestination);
 		
 			
 			MovementAnimation moveToTarget = new MovementAnimation(this.getParent().sprite, 24, "easeOutQuart", targetDestination, null);

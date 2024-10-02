@@ -13,6 +13,7 @@ import cutscenes.Dialogue;
 import combatEntities.Bear;
 import combatEntities.DralyaDragonForm;
 import combatEntities.Knight;
+import combatEntities.RedSlime;
 import combatEntities.Samoht;
 import combatEntities.Slime;
 import combatEntities.Spider;
@@ -35,34 +36,49 @@ public class GameMap {
     }
 
     public GameMap() {
-    	Window window = Window.getWindow();
     	
-    	gameMapPane = new JLayeredPane();
-    	gameMapPane.setSize(window.getSize());
-    	gameMapPane.setLocation(new Point(0, 0));
-    	
-    	// Defining enemies for the waves using CombatEntity classes
-		CombatEntity[] enemies = {new Bear(true)};
-		//CombatEntity[] enemiesTwo = {new SlimeEntity(), new SlimeEntity(), new SlimeEntity()};
-		//CombatEntity[] enemiesThree = {new SamohtEntity()};
+		Wave levelOneWaveOne = new Wave(new CombatEntity[] {new Slime(true)});
+		Wave levelOneWaveTwo = new Wave(new CombatEntity[] {new Slime(true), new Slime(true)});
+		Wave[] wavesOne = {levelOneWaveOne, levelOneWaveTwo};
 		
-		// Defining waves
-		Wave wave = new Wave(enemies);
-		//Wave waveTwo = new Wave(enemiesTwo);
-		Wave[] waves = {wave}; // First level has two waves
+		Wave levelTwoWaveOne = new Wave(new CombatEntity[] {new RedSlime(true), new Slime(true)});
+		Wave levelTwoWaveTwo = new Wave(new CombatEntity[] {new RedSlime(true), new Slime(true), new Slime(true)});
+		Wave[] wavesTwo = {levelTwoWaveOne, levelTwoWaveTwo};
 		
-		//Wave waveThree = new Wave(enemiesThree);
-		//Wave[] wavesTwo = {waveThree}; // Second level has one wave
+		Wave levelThreeWaveOne = new Wave(new CombatEntity[] {new RedSlime(true), new RedSlime(true)});
+		Wave levelThreeWaveTwo = new Wave(new CombatEntity[] {new RedSlime(true), new RedSlime(true), new Slime(true)});
+		Wave levelThreeWaveThree = new Wave(new CombatEntity[] {new Bear(true), new RedSlime(true), new Slime(true)});
+		Wave[] wavesThree = {levelThreeWaveOne, levelThreeWaveTwo, levelThreeWaveThree};
+		
+		Wave levelFourWaveOne = new Wave(new CombatEntity[] {new Spider(true), new Slime(true)}); 
+		Wave levelFourWaveTwo = new Wave(new CombatEntity[] {new Spider(true), new Spider(true), new RedSlime(true)}); 
+		Wave levelFourWaveThree = new Wave(new CombatEntity[] {new Spider(true), new Spider(true), new Spider(true)}); 
+		Wave[] wavesFour = {levelFourWaveOne, levelFourWaveTwo, levelFourWaveThree};
+		
+		Wave levelFiveWaveOne = new Wave(new CombatEntity[] {new Spider(true), new Spider(true)}); 
+		Wave levelFiveWaveTwo = new Wave(new CombatEntity[] {new Spider(true), new Spider(true), new Spider(true)}); 
+		Wave levelFiveWaveThree = new Wave(new CombatEntity[] {new DralyaDragonForm(true)}); 
+		Wave[] wavesFive = {levelFiveWaveOne, levelFiveWaveTwo, levelFiveWaveThree};
+		
+		Wave levelSixWaveOne = new Wave(new CombatEntity[] {new RedSlime(true), new RedSlime(true)}); 
+		Wave levelSixWaveTwo = new Wave(new CombatEntity[] {new Knight(true), new Knight(true)}); 
+		Wave levelSixWaveThree = new Wave(new CombatEntity[] {new Knight(true), new Knight(true), new Knight(true)}); 
+		Wave[] wavesSix = {levelSixWaveOne, levelSixWaveTwo, levelSixWaveThree};
+		
+		Wave levelSevenWaveOne = new Wave(new CombatEntity[] {new Knight(true), new Knight(true)}); 
+		Wave levelSevenMaveTwo = new Wave(new CombatEntity[] {new Knight(true), new Knight(true), new Knight(true)}); 
+		Wave levelSevenWaveThree = new Wave(new CombatEntity[] {new Samoht(true)}); 
+		Wave[] wavesSeven = {levelSevenWaveOne, levelSevenMaveTwo, levelSevenWaveThree};
 		
 		// Defining levels
         levels = new ArrayList<>();
-        levels.add(new Level(1, "Village", "Slime", true, waves));  // First level is unlocked by default
-        levels.add(new Level(2, "Forest", "Bear", false, waves)); // Second level is locked
-        levels.add(new Level(3, "Cave", "Dragon", false, waves)); // Third level is locked
-        levels.add(new Level(4, "Mountains", "Wizard", false, waves)); // Fourth level is locked
-        levels.add(new Level(5, "Mountains", "Wizard", false, waves));
-        levels.add(new Level(6, "Mountains", "Wizard", false, waves));
-        levels.add(new Level(7, "Mountains", "Wizard", false, waves));
+        levels.add(new Level(1, "Village", "Slime", true, wavesOne));  // First level is unlocked by default
+        levels.add(new Level(2, "Forest", "Bear", false, wavesTwo)); // Second level is locked
+        levels.add(new Level(3, "Cave", "Dragon", false, wavesThree)); // Third level is locked
+        levels.add(new Level(4, "Mountains", "Wizard", false, wavesFour)); // Fourth level is locked
+        levels.add(new Level(5, "Mountains", "Wizard", false, wavesFive));
+        levels.add(new Level(6, "Mountains", "Wizard", false, wavesSix));
+        levels.add(new Level(7, "Mountains", "Wizard", false, wavesSeven));
         
 
         Level levelOne = levels.get(0);
@@ -94,9 +110,10 @@ public class GameMap {
     public void openGameMap() {
     	// Fetch the game's window instance
         Window window = Window.getWindow();
-        // 4 columns, 1 row
-        window.setLayout(new GridLayout(4, 1)); // Сетка для кнопок уровней
-        window.setLayout(null);
+    	
+    	gameMapPane = new JLayeredPane();
+    	gameMapPane.setSize(window.getSize());
+    	gameMapPane.setLocation(new Point(0, 0));
         
         window.add(gameMapPane);
         
@@ -146,6 +163,8 @@ public class GameMap {
             levelButton.setLocation(buttonLocations[i]);
             levelButton.setSize(new Dimension(100, 50));
             
+            System.out.println(level.isUnlocked());
+            
             gameMapPane.add(levelButton, JLayeredPane.PALETTE_LAYER);
         }
 
@@ -165,8 +184,7 @@ public class GameMap {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (level.isUnlocked()) {
-                level.playStartingCutscene();
-                //startLevel(level);  // Uncomment this line
+                level.play();
             } else {
                 JOptionPane.showMessageDialog(null, "This level is locked!");
             }

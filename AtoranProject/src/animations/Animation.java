@@ -20,7 +20,7 @@ import utilities.AnimationsPreloader;
 public class Animation {
 	public int frameCount;
 	public Keyframe[] keyframes;
-	protected int currentKeyframe = 0;
+	public int currentKeyframe = 0;
 	public String easingStyle;
 	
 	
@@ -29,6 +29,11 @@ public class Animation {
 		this.easingStyle = easingStyle;
 		
 		this.keyframes = new Keyframe[frameCount];
+	}
+	
+	
+	public void stop() {
+		this.currentKeyframe = this.frameCount - 1;
 	}
 	
 	

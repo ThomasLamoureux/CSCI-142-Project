@@ -120,8 +120,9 @@ public class Cutscene {
             window.add(component);
         }
         window.refresh();
-        
-        GameMap.currentMap.startLevel(this.level);;
+        if (this.level != null) {
+        	GameMap.currentMap.startLevel(this.level);;
+        }
     }
 
 }

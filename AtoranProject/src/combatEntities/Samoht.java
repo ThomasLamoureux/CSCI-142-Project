@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -23,6 +24,11 @@ import utilities.AnimationPlayerModule;
 import utilities.AnimationsPreloader;
 
 public class Samoht extends CombatEntity {
+	private boolean chargingDarkSoul = false;
+	private boolean usedDarkSoul;
+	public GraphicAnimation darkSoulCharge;
+	public JLabel darkSoulLabel;
+	
 	public static JLabel getSamohtSprite() {
 		JLabel sprite = new JLabel("Dralya");
 		sprite.setPreferredSize(new Dimension(250, 250));
@@ -33,16 +39,42 @@ public class Samoht extends CombatEntity {
 	}
 	
 	public Samoht(boolean flipImages) {
-		super("Samoht", 1200, null, getSamohtSprite(), flipImages);
+		super("Samoht", 300, null, getSamohtSprite(), flipImages);
 		
 		File targetFile = new File("Resources/Images/DralyaDragonForm.png");
 		this.setImageFile(targetFile);
 		
 		this.flipIfFacingLeft = false;
 		
-		Move[] moveSet = {new MagicBullet(this), new TrapSpell(this), new Multihit(this)};
+		Move[] moveSet = {new MagicBullet(this), new TrapSpell(this), new Multihit(this), new ChargeDarkSoul(this), new DarkSoul(this)};
 		this.setMoveSet(moveSet);
 	}	
+	
+	
+	@Override
+	protected Move chooseMove() {
+		Random randomGenerator = new Random();
+		
+		int randomMove;
+		Move move;
+		
+		if (this.chargingDarkSoul == true) {
+			move = this.moveSet[4];
+		} else if (this.health <= this.maxHealth && this.usedDarkSoul == false) {
+			move = this.moveSet[3];
+		} else {
+			if (this.moveSet.length == 1) {
+				randomMove = 0;
+			} else {
+				randomMove = randomGenerator.nextInt(0, this.moveSet.length - 2);
+			}
+			
+			move = moveSet[randomMove];
+		}
+
+		
+		return move;
+	}
 	
 	
 	public static class MagicBullet extends Move {
@@ -173,7 +205,10 @@ public class Samoht extends CombatEntity {
 		protected void runAnimation(CombatEntity blank) {
 			boolean flipImage = false;
 			
-			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {				
+			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {			
+				if (target.dead == true) {
+					continue;
+				}
 				JLabel targetSprite = target.sprite;
 				
 				JLabel portalLabel = new JLabel();
@@ -187,8 +222,6 @@ public class Samoht extends CombatEntity {
 						);
 				portalLabel.setLocation(portalLocation);
 				
-				
-				String portalPath = "Resources/Animations/Portal";
 				
 				GraphicAnimation portalOpenGraphic = new GraphicAnimation(portalLabel, 25, this.uniqueIndex[0], 0, 5);
 				portalOpenGraphic.setLooped(true);
@@ -307,6 +340,162 @@ public class Samoht extends CombatEntity {
 				
 				AnimationPlayerModule.addAnimation(attackGraphic);
 			}
+		}
+	}
+	
+	
+	public static class ChargeDarkSoul extends Move {
+
+		public ChargeDarkSoul(CombatEntity parent) {
+			super("Dark Soul", new boolean[]{true, false, false}, parent);
+		
+			this.setDamage(0);
+			this.setDescription("Charges the Dark Soul attack");
+			
+			this.preLoadAnimations();
+		}
+		
+		@Override
+		public void useMove(CombatEntity target) {
+			Samoht samoht = (Samoht) this.getParent();
+			samoht.chargingDarkSoul = true;
+			
+			runAnimation(target);
+		}
+		
+		@Override
+		protected void preLoadAnimations() {
+			this.uniqueIndex = new int[] {AnimationsPreloader.loadImages("Resources/Animations/DarkSoulChargeAttack", new Dimension(600, 600), !this.getParent().flipImages)};
+		}
+		
+		
+		@Override
+		protected void runAnimation(CombatEntity blank) {	
+			JLabel attackLabel = new JLabel();
+			attackLabel.setSize(new Dimension(600, 600));
+			Window.scaleComponent(attackLabel);
+			
+			int offset = (attackLabel.getWidth() - this.getParent().sprite.getWidth())/2;
+			Point labelLocation = new Point(
+					this.getParent().sprite.getX() - offset,
+					this.getParent().sprite.getY() - Window.scaleInt(500)
+					);
+			attackLabel.setLocation(labelLocation);
+			
+			
+			GraphicAnimation attackGraphics = new GraphicAnimation(attackLabel, 45, this.uniqueIndex[0], 0, 5);
+			attackGraphics.setLooped(true);
+			attackGraphics.setLoopStartIndex(25);
+			
+			
+			Runnable addPortalLabel = () -> {
+				CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
+			};
+			attackGraphics.keyframes[0] = new Keyframe(addPortalLabel);
+			
+			AnimationPlayerModule.addAnimation(attackGraphics);
+			
+			Samoht samoht = (Samoht) this.getParent();
+			samoht.darkSoulLabel = attackLabel;
+			samoht.darkSoulCharge = attackGraphics;
+		}
+	}
+	
+	
+	public static class DarkSoul extends Move {
+
+		public DarkSoul(CombatEntity parent) {
+			super("Dark Soul", new boolean[]{true, false, false}, parent);
+		
+			this.setDamage(800);
+			this.setDescription("Kills everybody basically");
+			
+			this.preLoadAnimations();
+		}
+		
+		@Override
+		public void useMove(CombatEntity target) {
+			CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
+			
+			Samoht samoht = (Samoht) this.getParent();
+			samoht.chargingDarkSoul = false;
+			samoht.usedDarkSoul = true;
+			
+			for (int i = 0; i < enemies.length; i++) {
+				enemies[i].recieveDamage(this.getDamage());
+			}
+			
+			runAnimation(target);
+		}
+		
+		@Override
+		protected void preLoadAnimations() {
+			//this.uniqueIndex = new int[] {AnimationsPreloader.loadImages(};
+		}
+		
+		
+		@Override
+		protected void runAnimation(CombatEntity blank) {
+			Samoht samoht = (Samoht) this.getParent();
+			Point targetLocation = new Point(400, 500);
+			targetLocation = Window.scalePoint(targetLocation);
+			
+			MovementAnimation movement = new MovementAnimation(samoht.darkSoulLabel, 24, "easeOutQuart", targetLocation, null);
+			
+			
+			ArrayList<Animation> animationsList = new ArrayList<>();
+			animationsList.add(movement);
+			
+			int[] startTimes = new int[1 + Combat.currentCombatInstance.notCurrentTeam.members.length];
+			startTimes[0] = 0;
+			int index = 1;
+			
+			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {	
+				if (target.dead == true) {
+					continue;
+				}
+				JLabel targetSprite = target.sprite;
+				
+				JLabel portalLabel = new JLabel();
+				portalLabel.setSize(new Dimension((int)(400), (int)(400)));
+				Window.scaleComponent(portalLabel);
+				
+				int portalOffset = (portalLabel.getWidth() - targetSprite.getWidth())/2;
+				Point portalLocation = new Point(
+						targetSprite.getX() - portalOffset,
+						targetSprite.getY() - Window.scaleInt(350)
+						);
+				portalLabel.setLocation(portalLocation);
+				
+				
+				Runnable shakeAnimation = () -> {
+					AnimationPlayerModule.shakeAnimation(target);
+					target.updateHealthBar();
+				};				
+				
+				Animation shake = new Animation(2, "linear");
+				shake.keyframes[0] = new Keyframe(shakeAnimation);
+				
+				animationsList.add(shake);
+				startTimes[index] = 20;
+				index++;
+			}
+			
+			Animation finalAnimation = new CombinedAnimation(24, animationsList, startTimes);
+			
+			Runnable removeDarkSoul = () -> {
+				samoht.darkSoulCharge.setLooped(false);
+				samoht.darkSoulCharge.stop();
+			};
+			
+			Runnable removeDarkSoulLabel = () -> {
+				CombatInterface.layerOnePane.remove(samoht.darkSoulLabel);
+			};
+			
+			finalAnimation.keyframes[22] = new Keyframe(removeDarkSoul);
+			finalAnimation.keyframes[23] = new Keyframe(removeDarkSoulLabel);
+			
+			AnimationPlayerModule.addAnimation(finalAnimation);
 		}
 	}
 }
