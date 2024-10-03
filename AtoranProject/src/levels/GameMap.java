@@ -33,12 +33,7 @@ public class GameMap {
     private List<Level> levels;
     public JLayeredPane gameMapPane;
     
-    public static void loadLevels() {
-    	
-    }
-
-    public GameMap() {
-    	
+    public void loadLevels() {
 		Wave levelOneWaveOne = new Wave(new CombatEntity[] {new Slime(true)});
 		Wave levelOneWaveTwo = new Wave(new CombatEntity[] {new Slime(true), new Slime(true)});
 		Wave[] wavesOne = {levelOneWaveOne, levelOneWaveTwo};
@@ -68,20 +63,23 @@ public class GameMap {
 		Wave[] wavesSix = {levelSixWaveOne, levelSixWaveTwo, levelSixWaveThree};
 		
 		Wave levelSevenWaveOne = new Wave(new CombatEntity[] {new Knight(true), new Knight(true)}); 
-		Wave levelSevenMaveTwo = new Wave(new CombatEntity[] {new Knight(true), new Knight(true), new Knight(true)}); 
+		Wave levelSevenWaveTwo = new Wave(new CombatEntity[] {new Knight(true), new Knight(true), new Knight(true)}); 
 		Wave levelSevenWaveThree = new Wave(new CombatEntity[] {new Samoht(true)}); 
-		Wave[] wavesSeven = {levelSevenWaveOne, levelSevenMaveTwo, levelSevenWaveThree};
+		Wave[] wavesSeven = {levelSevenWaveOne, levelSevenWaveTwo, levelSevenWaveThree};
 		
 		// Defining levels
         levels = new ArrayList<>();
-        levels.add(new Level(1, "Village", "Slime", true, wavesOne));  // First level is unlocked by default
-        levels.add(new Level(2, "Forest", "Bear", false, wavesTwo)); // Second level is locked
-        levels.add(new Level(3, "Cave", "Dragon", false, wavesThree)); // Third level is locked
-        levels.add(new Level(4, "Mountains", "Wizard", false, wavesFour)); // Fourth level is locked
-        levels.add(new Level(5, "Mountains", "Wizard", false, wavesFive));
-        levels.add(new Level(6, "Mountains", "Wizard", false, wavesSix));
-        levels.add(new Level(7, "Mountains", "Wizard", false, wavesSeven));
-        
+        levels.add(new Level(1, "Resources/Images/TemporaryForestBackgroundCropped.png", "Resources/Sounds/ForestMusicBackground.wav", true, wavesOne));  // First level is unlocked by default
+        levels.add(new Level(2, "Resources/Images/TemporaryForestBackgroundCropped.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesTwo)); // Second level is locked
+        levels.add(new Level(3, "Resources/Images/TemporaryForestBackgroundCropped.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesThree)); // Third level is locked
+        levels.add(new Level(4, "Resources/Images/CaveBackground.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesFour)); // Fourth level is locked
+        levels.add(new Level(5, "Resources/Images/CaveBackground.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesFive));
+        levels.add(new Level(6, "Resources/Images/MountainBackground.png", "Resources/Sounds/MountainMusic.wav", false, wavesSix));
+        levels.add(new Level(7, "Resources/Images/MountainBackground.png", "Resources/Sounds/FinalBossMusic.wav", false, wavesSeven));
+    }
+
+    public GameMap() {
+        loadLevels();
 
         Level levelOne = levels.get(0);
         levelOne.setStartingCutscene(CreatedCutscenes.levelOneIntro());
@@ -215,17 +213,6 @@ public class GameMap {
         }
         
         new Combat(level);
-        
-        // After combat is finished, mark the level as completed and unlock the next level
-        /*if (combat.currentLevel.isCompleted()) {  // Assuming Combat class has a method to check if it's completed
-            level.setCompleted(true);  // Assuming Level class has a method to set completion status
-            int nextLevelIndex = level.getLevelNumber();
-            if (nextLevelIndex < levels.size()) {
-                Level nextLevel = levels.get(nextLevelIndex);
-                nextLevel.unlock();
-            }
-            updateMap();  // Update the game map UI
-        }*/
     }
 
     // Method to update the game map UI when a level is completed

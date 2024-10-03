@@ -39,7 +39,7 @@ public class Samoht extends CombatEntity {
 	}
 	
 	public Samoht(boolean flipImages) {
-		super("Samoht", 300, null, getSamohtSprite(), flipImages);
+		super("Samoht", 800, null, getSamohtSprite(), flipImages);
 		
 		File targetFile = new File("Resources/Images/Samoht.png");
 		this.setImageFile(targetFile);

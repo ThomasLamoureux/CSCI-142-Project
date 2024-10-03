@@ -115,7 +115,7 @@ public class CombatInterface {
 		background.setSize(new Dimension(1920, 1080));
 		background.setVisible(true);
 		
-		File backgroundFile = new File("Resources/Images/TemporaryForestBackgroundCropped.png");
+		File backgroundFile = new File(Combat.currentCombatInstance.currentLevel.getBackground());
 		
 		Image image = null;
 		try {
@@ -557,6 +557,10 @@ public class CombatInterface {
 			moveButton.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(20)));
 			moveButton.setBackground(new Color(0x1e1006));
 			moveButton.setForeground(Color.WHITE);
+			
+			if (move.disabled == true) {
+				moveButton.setEnabled(false);
+			}
 			
 			Window.scaleComponent(moveButton);
 			

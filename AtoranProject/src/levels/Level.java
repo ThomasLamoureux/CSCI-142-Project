@@ -14,14 +14,16 @@ public class Level {
     private boolean isCompleted;
     private Cutscene startingCutscene;
     private Cutscene endingCutscene;
+    private String musicPath;
+    private String imagePath;
     
 
     // Constructor for the Level class
-    public Level(int levelNumber, String location, String enemy, boolean isUnlocked, Wave[] waves) {
+    public Level(int levelNumber, String background, String music, boolean isUnlocked, Wave[] waves) {
     	// Инициализация полей класса - Initializing class fields
         this.levelNumber = levelNumber;
-        this.location = location;
-        this.enemy = enemy;
+        this.imagePath = background;
+        this.musicPath = music;
         this.isUnlocked = isUnlocked;
         this.isCompleted = false; // Изначально уровень не пройден - initially level is not completed
         this.waves = waves;
@@ -31,6 +33,17 @@ public class Level {
     public int getLevelNumber() {
         return levelNumber;
     }
+    
+    
+    public String getBackground() {
+    	return imagePath;
+    }
+    
+    
+    public String getMusic() {
+    	return musicPath;
+    }
+    
     
     public void play() {
     	if (this.startingCutscene == null) {

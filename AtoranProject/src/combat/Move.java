@@ -17,6 +17,7 @@ public class Move {
 	private CombatEntity parent;
 	private String description;
 	protected int[] uniqueIndex;
+	public boolean disabled = false;
 
 	public Move(String name, boolean[] targets, CombatEntity parent) {
 		this.name = name;

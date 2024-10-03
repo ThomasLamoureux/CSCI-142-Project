@@ -36,14 +36,20 @@ public class DralyaHumanForm extends CombatEntity {
 
 	// Atoran entity, the main character
 	public DralyaHumanForm(boolean flip) {
-		super("Dralya", 250, null, getSprite(), flip);
+		super("Dralya", 400, null, getSprite(), flip);
 		
 		File targetFile = new File("Resources/Images/DralyaHumanForm.png");
 		this.setImageFile(targetFile);
 		
 		this.flipIfFacingLeft = true;
 		
-		Move[] moveSet = {new DragonSlash(this), new PowerfulDragonSlash(this), new Sacrifice(this)};
+		DragonSlash move1 = new DragonSlash(this);
+		move1.setDamage(80);
+		PowerfulDragonSlash move2 = new PowerfulDragonSlash(this);
+		move2.setBloodCost(35);
+		
+		Move[] moveSet = {move1, move2, new Sacrifice(this)};
+		
 		this.setMoveSet(moveSet);
 	}	
 	

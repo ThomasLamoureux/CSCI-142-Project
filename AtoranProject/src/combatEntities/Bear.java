@@ -38,7 +38,7 @@ public class Bear extends CombatEntity{
 
 	// Atoran entity, the main character
 	public Bear(boolean flip) {
-		super("Bell Hunter Bear", 250, null, getSprite(), flip);
+		super("Bell Hunter Bear", 375, null, getSprite(), flip);
 		
 		File targetFile = new File("Resources/Images/Bear.png");
 		this.setImageFile(targetFile);
@@ -65,7 +65,7 @@ public class Bear extends CombatEntity{
 		public BearClawMove(CombatEntity parent) {
 			super("Bear Claw", new boolean[]{true, false, false}, parent);
 		
-			this.setDamage(80);
+			this.setDamage(75);
 			this.setDescription("Targets a single enemy with a slashing attack");
 			
 			preloadAnimations();

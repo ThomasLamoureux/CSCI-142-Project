@@ -21,6 +21,7 @@ import combat.Move;
 import main.Window;
 import utilities.AnimationPlayerModule;
 import utilities.AnimationsPreloader;
+import utilities.SoundPlayerModule.GameSound;
 
 public class Atoran extends CombatEntity {
 	private boolean empowered;
@@ -37,7 +38,7 @@ public class Atoran extends CombatEntity {
 
 	// Atoran entity, the main character
 	public Atoran(boolean flip) {
-		super("Atoran", 250, null, getAtoranSprite(), flip);
+		super("Atoran", 425, null, getAtoranSprite(), flip);
 		
 		File targetFile = new File("Resources/Images/AtoranStand.png");
 		this.setImageFile(targetFile);
@@ -91,6 +92,7 @@ public class Atoran extends CombatEntity {
 		public void useMove(CombatEntity target) {
 			Atoran atoran = (Atoran) this.getParent();
 			atoran.setEmpowered(true);
+			this.disabled = true;
 			
 			this.runAnimation(target);
 		}
@@ -165,8 +167,9 @@ public class Atoran extends CombatEntity {
 			Point targetDestination = new Point((int)
 					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
 					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
+
 			
-			attackLabel.setLocation(targetDestination);
+			attackLabel.setLocation(targetDestination.x - Window.scaleInt(40), targetDestination.y - Window.scaleInt(120));
 			
 			MovementAnimation moveToTarget = new MovementAnimation(this.getParent().sprite, 24, "easeOutQuart", targetDestination, null);
 			MovementAnimation moveBack = new MovementAnimation(this.getParent().sprite, 22, "easeOutQuart", this.getParent().sprite.getLocation(), targetDestination);
@@ -186,6 +189,9 @@ public class Atoran extends CombatEntity {
 		
 		
 		private void empoweredSlashAnimation(CombatEntity target) {
+			GameSound sound = new GameSound("Resources/Sounds/SwordSwing1.wav");
+
+			
 			JLabel targetSprite = target.sprite;
 			
 			JLabel attackLabel = new JLabel();
@@ -201,6 +207,7 @@ public class Atoran extends CombatEntity {
 			
 			Runnable addAttackLabel = () -> {
 				CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			attackGraphic.keyframes[0] = new Keyframe(addAttackLabel);
 			
@@ -242,7 +249,7 @@ public class Atoran extends CombatEntity {
 		
 		private void empoweredSlash(CombatEntity target) {
 			target.recieveDamage((int)(this.getDamage() * this.getParent().damageMultiplier));
-			
+			this.getParent().moveSet[2].disabled = false;
 			empoweredSlashAnimation(target);
 		}
 		
@@ -289,7 +296,7 @@ public class Atoran extends CombatEntity {
 		
 		private void empoweredSweep() {
 			CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
-			
+			this.getParent().moveSet[2].disabled = false;
 			for (int i = 0; i < enemies.length; i++) {
 				enemies[i].recieveDamage((int)(this.getDamage() * this.getParent().damageMultiplier));
 			}
@@ -309,6 +316,8 @@ public class Atoran extends CombatEntity {
 		
 		
 		private void empoweredSweepAnimation() {
+			GameSound sound = new GameSound("Resources/Sounds/SwordSwing1.wav");
+			
 			JLabel animationLabel = new JLabel();
 			animationLabel.setSize(new Dimension((int)(550 * 1.8), (int)(400 * 1.8)));
 			Window.scaleComponent(animationLabel);
@@ -329,6 +338,7 @@ public class Atoran extends CombatEntity {
 			
 			Runnable addLabel = () -> {
 				CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			graphics.keyframes[0] = new Keyframe(addLabel);
 			

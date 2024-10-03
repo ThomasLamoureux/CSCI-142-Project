@@ -5,6 +5,7 @@ import java.io.File;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
 
 public class SoundPlayerModule {
@@ -49,6 +50,11 @@ public class SoundPlayerModule {
 		
 		public void play() {
 			playSound();
+		}
+		
+		public void setVolume() {
+			FloatControl gainControl = (FloatControl) this.clip.getControl(FloatControl.Type.MASTER_GAIN); 
+			gainControl.setValue(1.0f);
 		}
 		
 		

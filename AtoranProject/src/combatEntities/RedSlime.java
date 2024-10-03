@@ -23,10 +23,10 @@ public class RedSlime extends Slime{
 	
 	public RedSlime(boolean flip) {
 		super(flip);
-		this.health = 120;
-		this.maxHealth = 120;
+		this.health = 100;
+		this.maxHealth = 100;
 		
-		File targetFile = new File("Resources/Images/BlueslimeStill.png");
+		File targetFile = new File("Resources/Images/RedSlime.png");
 		this.setImageFile(targetFile);
 		
 		this.flipIfFacingLeft = false;

@@ -42,7 +42,7 @@ public class Spider extends CombatEntity {
 		this.flipIfFacingLeft = false;
 		
 		Move[] moveSet = {new BumpMove(this)};
-		moveSet[0].setDamage(50);
+		moveSet[0].setDamage(40);
 		this.setMoveSet(moveSet);
 	}
 }

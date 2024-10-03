@@ -63,8 +63,8 @@ public class Knight extends CombatEntity {
 		public KnightSlashMove(CombatEntity parent) {
 			super("Slash", new boolean[]{true, false, false}, parent);
 			
-			this.setDamage(30);
-			this.setDescription("Targets all enemies, increasing damage taken by 50% and decresing damage dealt by 50% until spell is cleansed");
+			this.setDamage(60);
+			this.setDescription("Target enemies with a sweeping attack");
 		}
 		
 		
@@ -76,6 +76,8 @@ public class Knight extends CombatEntity {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
+			
+			
 			JLabel attackLabel = new JLabel();
 			attackLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
 			Window.scaleComponent(attackLabel);
@@ -105,7 +107,7 @@ public class Knight extends CombatEntity {
 					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
 					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
 			
-			attackLabel.setLocation(targetDestination);
+			attackLabel.setLocation(targetDestination.x - Window.scaleInt(400), targetDestination.y - Window.scaleInt(120));
 			
 			MovementAnimation moveToTarget = new MovementAnimation(this.getParent().sprite, 24, "easeOutQuart", targetDestination, null);
 			MovementAnimation moveBack = new MovementAnimation(this.getParent().sprite, 22, "easeOutQuart", this.getParent().sprite.getLocation(), targetDestination);

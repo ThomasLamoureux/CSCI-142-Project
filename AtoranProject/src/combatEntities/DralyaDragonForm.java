@@ -104,14 +104,19 @@ public class DralyaDragonForm extends CombatEntity {
 	}
 	
 	public DralyaDragonForm(boolean flip) {
-		super("Dralya", 250, null, getDralyaDragonSprite(), flip);
+		super("Dralya", 525, null, getDralyaDragonSprite(), flip);
 		
 		File targetFile = new File("Resources/Images/DralyaDragonForm.png");
 		this.setImageFile(targetFile);
 		
 		this.flipIfFacingLeft = false;
 		
-		Move[] moveSet = {new FireLances(this)};
+		DragonSlash move1 = new DragonSlash(this);
+		PowerfulDragonSlash move2 = new PowerfulDragonSlash(this);
+		move1.setDamage(80);
+		move2.setDamage(90);
+		
+		Move[] moveSet = {move1, move2, new FireLances(this)};
 		this.setMoveSet(moveSet);
 	}	
 	
@@ -244,12 +249,27 @@ public class DralyaDragonForm extends CombatEntity {
 	}
 	
 	public static class PowerfulDragonSlash extends Move {
+		private int bloodCost = 0;
 
 		public PowerfulDragonSlash(CombatEntity parent) {
 			super("Empowered Dragon Slash", new boolean[]{true, false, false}, parent);
 		
 			this.setDamage(150);
-			this.setDescription("Targets a single enemy with a slashing attack");
+			this.setDescription("Targets a single enemy with a powerful slashing attack at the cost of bleeding 30 HP.");
+		}
+		
+		public void setBloodCost(int blood) {
+			this.bloodCost = blood;
+		}
+		
+		@Override
+		public void useMove(CombatEntity target) {
+			target.recieveDamage((int)(this.getDamage() * this.getParent().damageMultiplier));
+			
+			this.getParent().recieveDamage(bloodCost);
+			this.getParent().updateHealthBar();
+			
+			runAnimation(target);
 		}
 		
 		
@@ -264,11 +284,6 @@ public class DralyaDragonForm extends CombatEntity {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			boolean flipImage = false;
-			if (this.getParent().facingLeft == 1) {
-				flipImage = true;
-			}
-			
 			JLabel sprite = this.getParent().sprite;
 			
 			JLabel animationLabelOne = new JLabel();
@@ -367,7 +382,7 @@ public class DralyaDragonForm extends CombatEntity {
 		public FireLances(CombatEntity parent) {
 			super("Fire Lances", new boolean[]{true, false, false}, parent);
 		
-			this.setDamage(125);
+			this.setDamage(100);
 			this.setDescription("Targets a single enemy with a slashing attack");
 		}
 		

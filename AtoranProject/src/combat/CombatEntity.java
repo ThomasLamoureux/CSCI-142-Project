@@ -18,7 +18,7 @@ import main.Window;
 import utilities.AnimationPlayerModule;
 
 public class CombatEntity {
-	protected Move[] moveSet = {};
+	public Move[] moveSet = {};
 	public double damageResistence = 0.0;
 	public int health = 0;
 	public boolean dead = false;

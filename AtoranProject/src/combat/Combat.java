@@ -21,6 +21,7 @@ import levels.GameMap;
 import levels.Level;
 import main.Window;
 import utilities.AnimationPlayerModule;
+import utilities.SoundPlayerModule.GameSound;
 
 public class Combat {
 	public byte teamTurn = 0; // 0 = player team, 1 = enemy team
@@ -37,11 +38,12 @@ public class Combat {
 	public static Combat currentCombatInstance;
 	public static Atoran atoran = new Atoran(false);
 	public static DralyaHumanForm dralya = new DralyaHumanForm(false);
+	public static GameSound combatMusic;
 	
 	
 	public Combat(Level level) {
 		currentCombatInstance = this;
-		
+
 		createLevelFromInfo(level);
 	}
 
@@ -64,18 +66,19 @@ public class Combat {
 		teams[0] = new Team();
 		
 		// Level 6 and 7 will have Dralya on the player's team
-		if (level.getLevelNumber() > 0) {
+		if (level.getLevelNumber() > 5) {
 			atoran.reset();
 			dralya.reset();
 			atoran.loadAnimations();
 			dralya.loadAnimations();
 			teams[0].members = new CombatEntity[] {atoran, dralya};
 		} else {
+			atoran.reset();
 			atoran.loadAnimations();
 			teams[0].members = new CombatEntity[] {atoran};
 		}
 		
-		if (level.getLevelNumber() > 0) {
+		if (level.getLevelNumber() > 1) {
 			this.inventory = new Inventory(2);
 			this.inventory.addItem(new HealthPotion("Health Potion", "Heals all allies on the field by 50 hp", 1));
 			this.inventory.addItem(new DefensePotion("Defense Poition", "Grants 30% damage reduction to all allies on the field for on attack", 1));
@@ -91,6 +94,13 @@ public class Combat {
 	}
 	
 	
+	public void loadMusic() {
+		combatMusic = new GameSound(this.currentLevel.getMusic());
+
+		combatMusic.playLooped();
+	}
+	
+	
 	public void initializeCombat() {
 		CombatInterface.openCombatScreen(); // Opens the GUI interface for the player
 		
@@ -98,6 +108,8 @@ public class Combat {
 		
 		Engine.toggleFps(true);
 		fighting = true;
+		
+		loadMusic();
 		
 		// Checks if the current level is the first one and it has not been completed
 		if (this.currentLevel.getLevelNumber() == 1 && this.currentLevel.isCompleted() == false) {
@@ -158,6 +170,8 @@ public class Combat {
 			try {
 				TimeUnit.MILLISECONDS.sleep(3000);
 				Window.getWindow().clearFrame();
+				combatMusic.stop();
+				combatMusic = null;
 				GameMap.currentMap.openGameMap();
 			} catch (InterruptedException err) {
 				err.printStackTrace();
@@ -177,6 +191,8 @@ public class Combat {
 			try {
 				TimeUnit.MILLISECONDS.sleep(3000);
 				Window.getWindow().clearFrame();
+				combatMusic.stop();
+				combatMusic = null;
 				GameMap.currentMap.openGameMap();
 			} catch (InterruptedException err) {
 				err.printStackTrace();
