@@ -2,9 +2,12 @@ package levels;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import animations.Animation;
+import animations.Keyframe;
 import main.Window;
 import utilities.AnimationPlayerModule;
 import utilities.AnimationsPreloader;
+import utilities.SoundPlayerModule.GameSound;
 import combat.Combat;
 import combat.CombatEntity;
 import combat.Wave;
@@ -34,7 +37,7 @@ public class GameMap {
     public JLayeredPane gameMapPane;
     
     public void loadLevels() {
-		Wave levelOneWaveOne = new Wave(new CombatEntity[] {new Slime(true)});
+		Wave levelOneWaveOne = new Wave(new CombatEntity[] {new Samoht(true)});
 		Wave levelOneWaveTwo = new Wave(new CombatEntity[] {new Slime(true), new Slime(true)});
 		Wave[] wavesOne = {levelOneWaveOne, levelOneWaveTwo};
 		
@@ -44,7 +47,7 @@ public class GameMap {
 		
 		Wave levelThreeWaveOne = new Wave(new CombatEntity[] {new RedSlime(true), new RedSlime(true)});
 		Wave levelThreeWaveTwo = new Wave(new CombatEntity[] {new RedSlime(true), new RedSlime(true), new Slime(true)});
-		Wave levelThreeWaveThree = new Wave(new CombatEntity[] {new Bear(true), new RedSlime(true), new Slime(true)});
+		Wave levelThreeWaveThree = new Wave(new CombatEntity[] {new Bear(true), new RedSlime(true), new Slime(true)}, CreatedCutscenes.bearCutscene());
 		Wave[] wavesThree = {levelThreeWaveOne, levelThreeWaveTwo, levelThreeWaveThree};
 		
 		Wave levelFourWaveOne = new Wave(new CombatEntity[] {new Spider(true), new Slime(true)}); 
@@ -54,7 +57,7 @@ public class GameMap {
 		
 		Wave levelFiveWaveOne = new Wave(new CombatEntity[] {new Spider(true), new Spider(true)}); 
 		Wave levelFiveWaveTwo = new Wave(new CombatEntity[] {new Spider(true), new Spider(true), new Spider(true)}); 
-		Wave levelFiveWaveThree = new Wave(new CombatEntity[] {new DralyaDragonForm(true)}); 
+		Wave levelFiveWaveThree = new Wave(new CombatEntity[] {new DralyaDragonForm(true)}, CreatedCutscenes.dragonIntroCutscene()); 
 		Wave[] wavesFive = {levelFiveWaveOne, levelFiveWaveTwo, levelFiveWaveThree};
 		
 		Wave levelSixWaveOne = new Wave(new CombatEntity[] {new RedSlime(true), new RedSlime(true)}); 
@@ -74,6 +77,7 @@ public class GameMap {
         levels.add(new Level(3, "Resources/Images/TemporaryForestBackgroundCropped.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesThree)); // Third level is locked
         levels.add(new Level(4, "Resources/Images/CaveBackground.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesFour)); // Fourth level is locked
         levels.add(new Level(5, "Resources/Images/CaveBackground.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesFive));
+        levels.get(1).setEndingCutscene(CreatedCutscenes.dragonOutroCutscene());
         levels.add(new Level(6, "Resources/Images/MountainBackground.png", "Resources/Sounds/MountainMusic.wav", false, wavesSix));
         levels.add(new Level(7, "Resources/Images/MountainBackground.png", "Resources/Sounds/FinalBossMusic.wav", false, wavesSeven));
     }
@@ -178,6 +182,56 @@ public class GameMap {
             
             gameMapPane.add(levelButton, JLayeredPane.PALETTE_LAYER);
         }
+        
+        JButton easterEgg = new JButton();
+        easterEgg.setLocation(new Point(0, 0));
+        easterEgg.setSize(new Dimension(5, 5));
+        easterEgg.setOpaque(false);
+        easterEgg.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	System.out.println("THE ONE PIECE IS REAL");
+            	GameSound sound = new GameSound("Resources/Sounds/ONEPIECE.wav");
+            	
+            	JLabel label = new JLabel("BIG BACK BIG BACK BIG BACK");
+            	label.setSize(new Dimension(1920, 1080));
+            	label.setLocation(new Point(0, 0));
+            	label.setOpaque(true);
+            	label.setBackground(Color.black);
+            	
+            	File targetFile = new File("Resources/Images/THEONEPIECEISREAL.png");
+        		Image image = null;
+        		try {
+        			image = ImageIO.read(targetFile);
+        		} catch (IOException err) {
+        			// TODO Auto-generated catch block
+        			err.printStackTrace();
+        		}
+        		
+        		image = Window.scaleImage(1920, 1080, image);
+        		
+        		ImageIcon icon = new ImageIcon(image);
+        		label.setIcon(icon);
+            	
+            	Animation easterAnimation = new Animation(701, "linear");
+            	Runnable addEasteregg = () -> {
+            		System.out.println("HHHH");
+            		gameMapPane.add(label, JLayeredPane.DRAG_LAYER);
+            		sound.play();
+            	};
+            	
+            	Runnable removeEasteregg = () -> {
+            		gameMapPane.remove(label);
+            	};
+            	
+            	easterAnimation.keyframes[0] = new Keyframe(addEasteregg);
+            	easterAnimation.keyframes[700] = new Keyframe(removeEasteregg);
+            	
+            	AnimationPlayerModule.addAnimation(easterAnimation);
+            }
+        });
+        Window.scaleComponent(easterEgg);
+        gameMapPane.add(easterEgg, JLayeredPane.PALETTE_LAYER);
 
         // Refresh the window
         window.setVisible(true);

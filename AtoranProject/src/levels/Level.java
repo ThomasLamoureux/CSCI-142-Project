@@ -1,8 +1,10 @@
 package levels;
 
+import combat.Combat;
 import combat.Wave;
 import cutscenes.Cutscene;
 import datastore.Datastore;
+import main.Window;
 
 public class Level {
 	// Поля класса - Class fields
@@ -66,14 +68,20 @@ public class Level {
     	}
     }
     
-    public void playEndingCutscene() {
+    public boolean playEndingCutscene() {
     	if (this.endingCutscene != null) {
-    		this.endingCutscene.start(this);
+    		this.endingCutscene.start(null);
+    		return true;
     	}
+    	return false;
     }
     
     public void setStartingCutscene(Cutscene cutscene) {
     	this.startingCutscene = cutscene;
+    }
+    
+    public void setEndingCutscene(Cutscene cutscene) {
+    	this.endingCutscene = cutscene;
     }
 
     public String getLocation() {

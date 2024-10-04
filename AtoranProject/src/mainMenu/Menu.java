@@ -85,7 +85,7 @@ public class Menu {
 		
 		CombinedAnimation finalAnimation = new CombinedAnimation(880, animationsList, new int[] {120, 740, 740});
 		finalAnimation.keyframes[560] = new Keyframe(removeLogoAnimation);
-		finalAnimation.keyframes[540] = new Keyframe(playMenuMusic);
+		finalAnimation.keyframes[530] = new Keyframe(playMenuMusic);
 		finalAnimation.keyframes[879] = new Keyframe(setPlayButtonVisible);
 
 		AnimationPlayerModule.addAnimation(finalAnimation);

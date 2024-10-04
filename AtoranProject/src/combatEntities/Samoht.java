@@ -28,6 +28,7 @@ public class Samoht extends CombatEntity {
 	private boolean usedDarkSoul;
 	public GraphicAnimation darkSoulCharge;
 	public JLabel darkSoulLabel;
+
 	
 	public static JLabel getSamohtSprite() {
 		JLabel sprite = new JLabel();
@@ -63,15 +64,15 @@ public class Samoht extends CombatEntity {
 	
 	
 	@Override
-	protected Move chooseMove() {
+	protected Move chooseMove() {	
 		Random randomGenerator = new Random();
 		
-		int randomMove;
+		int randomMove = 0;
 		Move move;
 		
 		if (this.chargingDarkSoul == true) {
 			move = this.moveSet[4];
-		} else if (this.health <= this.maxHealth && this.usedDarkSoul == false) {
+		} else if (this.health <= this.maxHealth/2 && this.usedDarkSoul == false) {
 			move = this.moveSet[3];
 		} else {
 			if (this.moveSet.length == 1) {
@@ -301,6 +302,10 @@ public class Samoht extends CombatEntity {
 		
 		@Override
 		public void useMove(CombatEntity target) {
+			for (CombatEntity entity : Combat.currentCombatInstance.notCurrentTeam.members) {
+				entity.recieveDamage(80);
+			}
+			
 			runAnimation(target);
 		}
 		
@@ -313,12 +318,13 @@ public class Samoht extends CombatEntity {
 		
 		@Override
 		protected void runAnimation(CombatEntity blank) {
-			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {				
+			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {	
 				JLabel targetSprite = target.sprite;
 				
 				JLabel attackLabel = new JLabel();
 				attackLabel.setSize(new Dimension((int)(300), (int)(300)));
 				Window.scaleComponent(attackLabel);
+				
 				
 				int attackOffset = (attackLabel.getWidth() - targetSprite.getWidth())/2;
 				Point attackLocation = new Point(
@@ -328,8 +334,8 @@ public class Samoht extends CombatEntity {
 				attackLabel.setLocation(attackLocation);
 				
 				GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 50, this.uniqueIndex[0], 0, 2);
-				attackGraphic.setLooped(true);
-				attackGraphic.setLoopStartIndex(46);
+				GraphicAnimation removeGraphic = new GraphicAnimation(attackLabel, 50, this.uniqueIndex[0], 0, 2);
+				removeGraphic.setReversed(true);
 				
 				Runnable addAttackLabel = () -> {
 					CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
@@ -341,7 +347,21 @@ public class Samoht extends CombatEntity {
 					CombatInterface.layerOnePane.remove(attackLabel);
 				};
 				
-				AnimationPlayerModule.addAnimation(attackGraphic);
+				Runnable shakeAnimation = () -> {
+					AnimationPlayerModule.shakeAnimation(target);
+					target.updateHealthBar();
+				};
+				
+				ArrayList<Animation> animationsList = new ArrayList<>();
+				animationsList.add(attackGraphic);
+				animationsList.add(removeGraphic);
+				
+				
+				Animation finalAnimation = new CombinedAnimation(140, animationsList, new int[]{0, 89});
+				finalAnimation.keyframes[60] = new Keyframe(shakeAnimation); 
+				finalAnimation.keyframes[139] = new Keyframe(removeAttackLabel);
+				
+				AnimationPlayerModule.addAnimation(finalAnimation);
 			}
 		}
 	}
@@ -408,7 +428,7 @@ public class Samoht extends CombatEntity {
 		public DarkSoul(CombatEntity parent) {
 			super("Dark Soul", new boolean[]{true, false, false}, parent);
 		
-			this.setDamage(800);
+			this.setDamage(560);
 			this.setDescription("Kills everybody basically");
 		}
 		
@@ -429,14 +449,14 @@ public class Samoht extends CombatEntity {
 		
 		@Override
 		protected void preloadAnimations() {
-			//this.uniqueIndex = new int[] {AnimationsPreloader.loadImages(};
+			
 		}
 		
 		
 		@Override
 		protected void runAnimation(CombatEntity blank) {
 			Samoht samoht = (Samoht) this.getParent();
-			Point targetLocation = new Point(400, 500);
+			Point targetLocation = new Point(350, 500);
 			targetLocation = Window.scalePoint(targetLocation);
 			
 			MovementAnimation movement = new MovementAnimation(samoht.darkSoulLabel, 24, "easeOutQuart", targetLocation, null);
@@ -445,42 +465,14 @@ public class Samoht extends CombatEntity {
 			ArrayList<Animation> animationsList = new ArrayList<>();
 			animationsList.add(movement);
 			
-			int[] startTimes = new int[1 + Combat.currentCombatInstance.notCurrentTeam.members.length];
-			startTimes[0] = 0;
-			int index = 1;
-			
-			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {	
-				if (target.dead == true) {
-					continue;
-				}
-				JLabel targetSprite = target.sprite;
-				
-				JLabel portalLabel = new JLabel();
-				portalLabel.setSize(new Dimension((int)(400), (int)(400)));
-				Window.scaleComponent(portalLabel);
-				
-				int portalOffset = (portalLabel.getWidth() - targetSprite.getWidth())/2;
-				Point portalLocation = new Point(
-						targetSprite.getX() - portalOffset,
-						targetSprite.getY() - Window.scaleInt(350)
-						);
-				portalLabel.setLocation(portalLocation);
-				
-				
-				Runnable shakeAnimation = () -> {
+			Animation finalAnimation = new CombinedAnimation(24, animationsList, new int[] {0});
+			CombatEntity[] enemyTeam = Combat.currentCombatInstance.notCurrentTeam.members;
+			Runnable shakeAnimation = () -> {
+				for (CombatEntity target : enemyTeam) {
 					AnimationPlayerModule.shakeAnimation(target);
 					target.updateHealthBar();
-				};				
-				
-				Animation shake = new Animation(2, "linear");
-				shake.keyframes[0] = new Keyframe(shakeAnimation);
-				
-				animationsList.add(shake);
-				startTimes[index] = 20;
-				index++;
-			}
-			
-			Animation finalAnimation = new CombinedAnimation(24, animationsList, startTimes);
+				}
+			};	
 			
 			Runnable removeDarkSoul = () -> {
 				samoht.darkSoulCharge.setLooped(false);
@@ -491,6 +483,7 @@ public class Samoht extends CombatEntity {
 				CombatInterface.layerOnePane.remove(samoht.darkSoulLabel);
 			};
 			
+			finalAnimation.keyframes[20] = new Keyframe(shakeAnimation);
 			finalAnimation.keyframes[22] = new Keyframe(removeDarkSoul);
 			finalAnimation.keyframes[23] = new Keyframe(removeDarkSoulLabel);
 			

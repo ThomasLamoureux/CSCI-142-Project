@@ -22,6 +22,7 @@ public class Animation {
 	public Keyframe[] keyframes;
 	public int currentKeyframe = 0;
 	public String easingStyle;
+	protected int reversed = 1;
 	
 	
 	public Animation(int frameCount, String easingStyle) {
@@ -53,7 +54,23 @@ public class Animation {
 	
 	
 	public boolean playFrame() {
-		return false;
+		playKeyframe();
+		
+		if (this.currentKeyframe == this.frameCount) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	public void setReversed(boolean reverse) {
+		if (reverse) {
+			this.reversed = -1;
+			this.currentKeyframe = this.frameCount - 1;
+		} else {
+			this.reversed = 1;
+		}
 	}
 	
 	
@@ -65,7 +82,7 @@ public class Animation {
 			}
 		}
 		
-		this.currentKeyframe += 1;
+		this.currentKeyframe += 1 * this.reversed;
 	}
 	
 	
@@ -208,6 +225,7 @@ public class Animation {
 		private boolean looped;
 		private int loopCount = -1;
 		private int loopingIndex = 0;
+		
 
 		public GraphicAnimation(JLabel sprite, int frameCount, int uniqueIndex, int skip, int frameRate) {
 			super(frameCount, null);
@@ -253,7 +271,14 @@ public class Animation {
 				}
 			}
 			
-			if (this.currentKeyframe == this.frameCount) {
+			if (this.currentKeyframe == this.frameCount && this.reversed == 1) {
+				if (this.looped == true) {
+					this.currentKeyframe = this.loopingIndex;
+					return false;
+				} else {
+					return true;
+				}
+			} else if ((this.currentKeyframe == 0 && this.reversed == -1)) {
 				if (this.looped == true) {
 					this.currentKeyframe = this.loopingIndex;
 					return false;

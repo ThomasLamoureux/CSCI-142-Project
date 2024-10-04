@@ -43,6 +43,7 @@ public class Combat {
 	
 	public Combat(Level level) {
 		currentCombatInstance = this;
+		this.fighting = true;
 
 		createLevelFromInfo(level);
 	}
@@ -129,6 +130,10 @@ public class Combat {
 		}
 		
 		CombatInterface.loadEntityImagesOfTeam(teams[1], false); // Loads enemy GUI
+		
+		if (waves[currentWave].cutscene != null) {
+			waves[currentWave].cutscene.start(null);
+		}
 	}
 	
 	// Checks if a team is dead
@@ -169,10 +174,14 @@ public class Combat {
 		Runnable wait = () -> {
 			try {
 				TimeUnit.MILLISECONDS.sleep(3000);
-				Window.getWindow().clearFrame();
-				combatMusic.stop();
-				combatMusic = null;
-				GameMap.currentMap.openGameMap();
+				this.fighting = false;
+				if (this.currentLevel.playEndingCutscene() == false) {
+					GameMap.currentMap.openGameMap();
+					Window.getWindow().clearFrame();
+					combatMusic.stop();
+					combatMusic = null;
+					currentCombatInstance = null;
+				} 
 			} catch (InterruptedException err) {
 				err.printStackTrace();
 			}
@@ -194,6 +203,7 @@ public class Combat {
 				combatMusic.stop();
 				combatMusic = null;
 				GameMap.currentMap.openGameMap();
+				currentCombatInstance = null;
 			} catch (InterruptedException err) {
 				err.printStackTrace();
 			}
