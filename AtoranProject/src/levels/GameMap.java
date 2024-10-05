@@ -37,7 +37,7 @@ public class GameMap {
     public JLayeredPane gameMapPane;
     
     public void loadLevels() {
-		Wave levelOneWaveOne = new Wave(new CombatEntity[] {new Samoht(true)});
+		Wave levelOneWaveOne = new Wave(new CombatEntity[] {new Slime(true)});
 		Wave levelOneWaveTwo = new Wave(new CombatEntity[] {new Slime(true), new Slime(true)});
 		Wave[] wavesOne = {levelOneWaveOne, levelOneWaveTwo};
 		
@@ -56,7 +56,7 @@ public class GameMap {
 		Wave[] wavesFour = {levelFourWaveOne, levelFourWaveTwo, levelFourWaveThree};
 		
 		Wave levelFiveWaveOne = new Wave(new CombatEntity[] {new Spider(true), new Spider(true)}); 
-		Wave levelFiveWaveTwo = new Wave(new CombatEntity[] {new Spider(true), new Spider(true), new Spider(true)}); 
+		Wave levelFiveWaveTwo = new Wave(new CombatEntity[] {new Spider(true), new Spider(true)}); 
 		Wave levelFiveWaveThree = new Wave(new CombatEntity[] {new DralyaDragonForm(true)}, CreatedCutscenes.dragonIntroCutscene()); 
 		Wave[] wavesFive = {levelFiveWaveOne, levelFiveWaveTwo, levelFiveWaveThree};
 		
@@ -67,19 +67,22 @@ public class GameMap {
 		
 		Wave levelSevenWaveOne = new Wave(new CombatEntity[] {new Knight(true), new Knight(true)}); 
 		Wave levelSevenWaveTwo = new Wave(new CombatEntity[] {new Knight(true), new Knight(true), new Knight(true)}); 
-		Wave levelSevenWaveThree = new Wave(new CombatEntity[] {new Samoht(true)}); 
+		Wave levelSevenWaveThree = new Wave(new CombatEntity[] {new Samoht(true)}, CreatedCutscenes.samohtIntro()); 
 		Wave[] wavesSeven = {levelSevenWaveOne, levelSevenWaveTwo, levelSevenWaveThree};
 		
 		// Defining levels
         levels = new ArrayList<>();
-        levels.add(new Level(1, "Resources/Images/TemporaryForestBackgroundCropped.png", "Resources/Sounds/ForestMusicBackground.wav", true, wavesOne));  // First level is unlocked by default
+        levels.add(new Level(1, "Resources/Images/VillageBackground.png", "Resources/Sounds/ForestMusicBackground.wav", true, wavesOne));  // First level is unlocked by default
+        levels.get(0).setEndingCutscene(CreatedCutscenes.levelOneOutro());
+        levels.get(0).setStartingCutscene(CreatedCutscenes.levelOneIntro());
         levels.add(new Level(2, "Resources/Images/TemporaryForestBackgroundCropped.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesTwo)); // Second level is locked
         levels.add(new Level(3, "Resources/Images/TemporaryForestBackgroundCropped.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesThree)); // Third level is locked
-        levels.add(new Level(4, "Resources/Images/CaveBackground.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesFour)); // Fourth level is locked
-        levels.add(new Level(5, "Resources/Images/CaveBackground.png", "Resources/Sounds/ForestMusicBackground.wav", false, wavesFive));
-        levels.get(1).setEndingCutscene(CreatedCutscenes.dragonOutroCutscene());
-        levels.add(new Level(6, "Resources/Images/MountainBackground.png", "Resources/Sounds/MountainMusic.wav", false, wavesSix));
+        levels.add(new Level(4, "Resources/Images/CaveBackground.png", "Resources/Sounds/CaveMusic.wav", false, wavesFour)); // Fourth level is locked
+        levels.add(new Level(5, "Resources/Images/CaveBackground.png", "Resources/Sounds/CaveMusic.wav", false, wavesFive));
+        levels.get(4).setEndingCutscene(CreatedCutscenes.dragonOutroCutscene());
+        levels.add(new Level(6, "Resources/Images/MountainBackground.png", "Resources/Sounds/MountainMusicLower.wav", false, wavesSix));
         levels.add(new Level(7, "Resources/Images/MountainBackground.png", "Resources/Sounds/FinalBossMusic.wav", false, wavesSeven));
+        levels.get(6).setEndingCutscene(CreatedCutscenes.ending());
     }
 
     public GameMap() {
@@ -127,8 +130,9 @@ public class GameMap {
         Window window = Window.getWindow();
     	
     	gameMapPane = new JLayeredPane();
-    	gameMapPane.setSize(window.getSize());
+    	gameMapPane.setSize(new Dimension(1920, 1080));
     	gameMapPane.setLocation(new Point(0, 0));
+    	Window.scaleComponent(gameMapPane);
         
         window.add(gameMapPane);
         
@@ -177,6 +181,7 @@ public class GameMap {
             levelButton.addActionListener(new LevelButtonActionListener(level));
             levelButton.setLocation(buttonLocations[i]);
             levelButton.setSize(new Dimension(100, 50));
+            Window.scaleComponent(levelButton);
             
             System.out.println(level.isUnlocked());
             
@@ -198,6 +203,7 @@ public class GameMap {
             	label.setLocation(new Point(0, 0));
             	label.setOpaque(true);
             	label.setBackground(Color.black);
+            	Window.scaleComponent(label);
             	
             	File targetFile = new File("Resources/Images/THEONEPIECEISREAL.png");
         		Image image = null;

@@ -45,7 +45,7 @@ public class Atoran extends CombatEntity {
 		
 		this.flipIfFacingLeft = true;
 		
-		Move[] moveSet = {new SlashMove(this), new SweepMove(this), new EmpowererMove(this)};
+		Move[] moveSet = {new SlashMove(this), new SweepMove(this), new EmpowerMove(this)};
 		this.setMoveSet(moveSet);
 	}	
 	
@@ -70,16 +70,17 @@ public class Atoran extends CombatEntity {
 		
 		this.sprite = getAtoranSprite();
 		this.empowered = false;
+		this.moveSet[2].disabled = false;
 	}
 	
 	
-	public static class EmpowererMove extends Move{
+	public static class EmpowerMove extends Move{
 		
-		public EmpowererMove(CombatEntity parent) {
-			super("Empowerer", new boolean[]{false, false, true}, parent);
+		public EmpowerMove(CombatEntity parent) {
+			super("Empower", new boolean[]{false, false, true}, parent);
 			
 			this.setDamage(0);
-			this.setDescription("Empowerer yourself, increasing the ");
+			this.setDescription("Empower yourself, increasing the ");
 		}
 		
 		@Override
@@ -104,10 +105,13 @@ public class Atoran extends CombatEntity {
 			Window.scaleComponent(label);
 			label.setLocation(this.getParent().sprite.getLocation());
 			
+			GameSound sound = new GameSound("Resources/Sounds/Empower.wav");
+			
 			GraphicAnimation graphic = new GraphicAnimation(label, 8, this.uniqueIndex[0], 0, 2);
 			
 			Runnable addLabel = () -> {
 				CombatInterface.layerOnePane.add(label, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			graphic.keyframes[0] = new Keyframe(addLabel);
 			
@@ -143,10 +147,13 @@ public class Atoran extends CombatEntity {
 			attackLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
 			Window.scaleComponent(attackLabel);
 			
+			GameSound sound = new GameSound("Resources/Sounds/SwordSwing1.wav");
+			
 			GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 6, this.uniqueIndex[0], 0, 1);
 			
 			Runnable addAttackLabel = () -> {
 				CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			attackGraphic.keyframes[0] = new Keyframe(addAttackLabel);
 			
@@ -370,6 +377,8 @@ public class Atoran extends CombatEntity {
 			animationLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
 			Window.scaleComponent(animationLabel);
 			
+			GameSound sound = new GameSound("Resources/Sounds/SwordSwing1.wav");
+			
 			Point targetDestination = new Point(Window.scaleInt(960) + Window.scaleInt(100) * this.getParent().facingLeft, Window.scaleInt(675));
 			
 			animationLabel.setLocation(new Point(targetDestination.x - Window.scaleInt(85), targetDestination.y - this.getParent().sprite.getHeight()/2));
@@ -386,6 +395,7 @@ public class Atoran extends CombatEntity {
 			
 			Runnable addLabel = () -> {
 				CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			graphics.keyframes[0] = new Keyframe(addLabel);
 			

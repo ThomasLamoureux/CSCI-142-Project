@@ -156,7 +156,7 @@ public class CombatInterface {
 		if (Combat.currentCombatInstance.inventory == null) {
 			return;
 		}
-		inventoryPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 18, 18));
+		inventoryPanel.setLayout(new FlowLayout(FlowLayout.LEFT, Window.scaleInt(18), Window.scaleInt(18)));
 		inventoryPanel.setLocation(76 - 18, 36 - 18 - 453);
 		inventoryPanel.setOpaque(false);
 		inventoryPanel.setSize(new Dimension(800, 500));
@@ -169,18 +169,19 @@ public class CombatInterface {
 		for (Item item : Combat.currentCombatInstance.inventory.getInventory()) {
 			JButton itemLabel = new JButton();
 			itemLabel.setSize(new Dimension(104, 104));
-			itemLabel.setPreferredSize(new Dimension(104, 104));
+			itemLabel.setPreferredSize(new Dimension(Window.scaleInt(104), Window.scaleInt(104)));
 			itemLabel.setBackground(Color.black);
 			itemLabel.setOpaque(false);
 			itemLabel.setBorderPainted(false);
-			
 			itemLabel.addActionListener(new ActionListener() {
 				@Override
 	            public void actionPerformed(ActionEvent event) {
-					item.useItem();
-					itemLabel.setEnabled(false);
+					if (item.useItem() == true) {
+						itemLabel.setEnabled(false);
+					};
 	            }
 	        });
+			Window.scaleComponent(itemLabel);
 			
 			File infoFile = new File(item.imagePath);
 			
@@ -359,8 +360,7 @@ public class CombatInterface {
 			healthBar.setLocation(new Point(
 					member.getFieldPosition().x + sprite.getWidth() / 2 - healthBar.getWidth() / 2, 
 					member.getFieldPosition().y + sprite.getWidth()));
-			
-			Window.scaleComponent(healthBar);
+
 			if (i == 1) {
 				layerOnePane.add(sprite, Integer.valueOf(130));
 			} else if (i == 2) {
@@ -371,16 +371,6 @@ public class CombatInterface {
 			
 			layerOnePane.add(healthBar, JLayeredPane.PALETTE_LAYER);
 		}	
-	}
-	
-	// Animation
-	public static void teamOneEntrance() {
-		
-	}
-	
-	// Animation 
-	public static void teamTwoEntrance() {
-		
 	}
 	
 	
@@ -428,6 +418,7 @@ public class CombatInterface {
 		targetButton.setOpaque(false);
 		targetButton.setContentAreaFilled(false);
 		targetButton.setBorderPainted(false);
+		Window.scaleComponent(targetButton);
 		
 		File targetFile = new File("Resources/Images/target.png");
 		Image image = null;
@@ -454,7 +445,6 @@ public class CombatInterface {
 
 		targetButton.setLocation(location);
 		
-		Window.scaleComponent(targetButton);
 		//Window.getWindow().refresh();
 	}
 	
@@ -552,8 +542,8 @@ public class CombatInterface {
 	            }
 	        });
 			
-			moveButton.setPreferredSize(new Dimension(140, 50));
-			moveButton.setSize(new Dimension(140, 50));
+			moveButton.setPreferredSize(new Dimension(Window.scaleInt(135), Window.scaleInt(50)));
+			moveButton.setSize(new Dimension(Window.scaleInt(135), Window.scaleInt(50)));
 			moveButton.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(20)));
 			moveButton.setBackground(new Color(0x1e1006));
 			moveButton.setForeground(Color.WHITE);
@@ -561,8 +551,6 @@ public class CombatInterface {
 			if (move.disabled == true) {
 				moveButton.setEnabled(false);
 			}
-			
-			Window.scaleComponent(moveButton);
 			
 			// For some reason this requires that all methods are overridden
 			moveButton.addMouseListener(new MouseListener() {

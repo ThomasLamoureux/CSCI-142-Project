@@ -44,6 +44,10 @@ public class Combat {
 	public Combat(Level level) {
 		currentCombatInstance = this;
 		this.fighting = true;
+		
+		if (combatMusic != null) {
+			combatMusic.stop();
+		}
 
 		createLevelFromInfo(level);
 	}
@@ -166,9 +170,12 @@ public class Combat {
 		currentLevel.completeLevel();
 		
 		List<Level> levels = GameMap.getLevels();
-        Level nextLevel = levels.get(currentLevel.getLevelNumber()); /* Gets the next level, (levels are numbered 1-7, 
-        										indexes are 0-6 so the current level number will return the next level*/
-        nextLevel.unlock(); // Unlocks the next level
+		if (currentLevel.getLevelNumber() != 7) {
+	        Level nextLevel = levels.get(currentLevel.getLevelNumber()); /* Gets the next level, (levels are numbered 1-7, 
+			indexes are 0-6 so the current level number will return the next level*/
+	        nextLevel.unlock(); // Unlocks the next level
+		}
+     
         
         // Adds a delay before returning to gamemap
 		Runnable wait = () -> {
@@ -176,10 +183,8 @@ public class Combat {
 				TimeUnit.MILLISECONDS.sleep(3000);
 				this.fighting = false;
 				if (this.currentLevel.playEndingCutscene() == false) {
-					GameMap.currentMap.openGameMap();
 					Window.getWindow().clearFrame();
-					combatMusic.stop();
-					combatMusic = null;
+					GameMap.currentMap.openGameMap();
 					currentCombatInstance = null;
 				} 
 			} catch (InterruptedException err) {

@@ -134,7 +134,7 @@ public class CombatEntity {
 	
 	
 	public void recieveDamage(int damage) {
-		int totalDamage = (int)(damage - damage * this.damageResistence);
+		int totalDamage = (int)((double)(damage - (double)damage * this.damageResistence));
 		
 		this.health = this.health - totalDamage;
 		

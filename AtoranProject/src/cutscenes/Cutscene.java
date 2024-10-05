@@ -77,11 +77,10 @@ public class Cutscene {
         Window window = Window.getWindow();
         //window.clearFrame();
         layeredPane = new JLayeredPane();
-        layeredPane.setSize(window.getSize());
+        layeredPane.setSize(new Dimension(1920, 1080));
         layeredPane.setLocation(new Point(0, 0));
         //layeredPane.setLayout(new GridLayout());
-        
-        System.out.println(window.getSize());
+        Window.scaleComponent(layeredPane);
 
         // Create and add cutscene components
         imageLabel = new JLabel();
@@ -104,8 +103,6 @@ public class Cutscene {
         namecard.setSize(new Dimension(600, 35));
         namecard.setLocation(new Point(680, 795));
         namecard.setForeground(Color.white);
-        /*namecard.setBackground(Color.black);
-        namecard.setOpaque(true);*/
         namecard.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(32)));
         Window.scaleComponent(namecard);
         
@@ -126,6 +123,7 @@ public class Cutscene {
                 showNextDialogue();
             }
         });
+        Window.scaleComponent(nextButton);
         layeredPane.add(nextButton, JLayeredPane.DRAG_LAYER);
         
         if (this.removeBlackBackground == true) {
@@ -140,8 +138,6 @@ public class Cutscene {
 
         layeredPane.setVisible(true);
         
-        
-        Window.scaleComponent(layeredPane);
         
 
         if (Combat.currentCombatInstance != null) {
@@ -186,8 +182,6 @@ public class Cutscene {
         	if (Combat.currentCombatInstance.fighting == false) {
     			Window.getWindow().clearFrame();
     			GameMap.currentMap.openGameMap();
-    			Combat.combatMusic.stop();
-    			Combat.combatMusic = null;
     			Combat.currentCombatInstance = null;
         	}
         } else {

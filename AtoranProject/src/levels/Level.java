@@ -60,17 +60,15 @@ public class Level {
     }
     
     public void playStartingCutscene() {
-    	System.out.println("started");
     	if (this.startingCutscene != null) {
-    		System.out.println("computed");
-    		this.startingCutscene.start(this);
-    		
+    		this.startingCutscene.start(this);	
     	}
     }
     
     public boolean playEndingCutscene() {
     	if (this.endingCutscene != null) {
     		this.endingCutscene.start(null);
+    		System.out.println("end cutscene");
     		return true;
     	}
     	return false;

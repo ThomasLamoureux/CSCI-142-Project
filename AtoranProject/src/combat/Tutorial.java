@@ -32,6 +32,7 @@ public class Tutorial {
 		tutorialPanel.setLocation(new Point(0, 0));
 		tutorialPanel.setLayout(null);
 		tutorialPanel.setOpaque(false);
+		Window.scaleComponent(tutorialPanel);
 		
 		CombatInterface.layerOnePane.add(tutorialPanel, JLayeredPane.POPUP_LAYER);
 		
@@ -44,6 +45,7 @@ public class Tutorial {
 		dialogueJLabel.setBackground(new Color(0, 0, 0, 200));
 		dialogueJLabel.setBorder(new LineBorder(new Color(30, 16, 6), 4));
 		dialogueJLabel.setOpaque(true);
+		Window.scaleComponent(dialogueJLabel);
 		
 		tutorialPanel.add(dialogueJLabel);
 		

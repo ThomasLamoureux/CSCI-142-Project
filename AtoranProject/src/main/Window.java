@@ -41,6 +41,10 @@ public class Window extends JFrame {
 		return image.getScaledInstance((int)(x * windowScale), (int)(y * windowScale), Image.SCALE_SMOOTH);
 	}
 	
+	public static Image scaleImage(int x, int y, Image image, boolean dontScale) {
+		return image.getScaledInstance(x, y, Image.SCALE_SMOOTH);
+	}
+	
 	public static Point scalePoint(Point point) {
 		return new Point((int)(point.x * windowScale), (int)(point.y * windowScale));
 	}

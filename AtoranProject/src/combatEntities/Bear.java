@@ -14,16 +14,13 @@ import animations.Keyframe;
 import animations.Animation.CombinedAnimation;
 import animations.Animation.GraphicAnimation;
 import animations.Animation.MovementAnimation;
-import combat.Combat;
 import combat.CombatEntity;
 import combat.CombatInterface;
 import combat.Move;
-import combatEntities.Atoran.EmpowererMove;
-import combatEntities.Atoran.SlashMove;
-import combatEntities.Atoran.SweepMove;
 import main.Window;
 import utilities.AnimationPlayerModule;
 import utilities.AnimationsPreloader;
+import utilities.SoundPlayerModule.GameSound;
 
 public class Bear extends CombatEntity{
 	public static JLabel getSprite() {
@@ -80,6 +77,8 @@ public class Bear extends CombatEntity{
 			attackLabel.setSize(new Dimension(500, 500));
 			Window.scaleComponent(attackLabel);
 			
+			GameSound sound = new GameSound("Resources/Sounds/Claw.wav");
+			
 			attackLabel.setLocation(
 					targetSprite.getX() - (attackLabel.getWidth() - targetSprite.getWidth())/2,
 					targetSprite.getY() - (attackLabel.getHeight() - targetSprite.getHeight())/2
@@ -89,6 +88,7 @@ public class Bear extends CombatEntity{
 			
 			Runnable addAttackLabel = () -> {
 				CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			attackGraphic.keyframes[0] = new Keyframe(addAttackLabel);
 			

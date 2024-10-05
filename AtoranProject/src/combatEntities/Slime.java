@@ -18,6 +18,7 @@ import combat.Move;
 import main.Window;
 import utilities.AnimationPlayerModule;
 import utilities.AnimationsPreloader;
+import utilities.SoundPlayerModule.GameSound;
 import combat.CombatEntity;
 import combat.CombatInterface;
 
@@ -78,6 +79,8 @@ public class Slime extends CombatEntity {
 			animationLabel.setSize(new Dimension(250, 250));
 			Window.scaleComponent(animationLabel);
 			
+			GameSound sound = new GameSound("Resources/Sounds/Punching.wav");
+			
 			Point targetDestination = new Point((int)
 					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
 					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
@@ -100,6 +103,7 @@ public class Slime extends CombatEntity {
 			
 			Runnable addLabel = () -> {
 				CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			graphics.keyframes[0] = new Keyframe(addLabel);
 			

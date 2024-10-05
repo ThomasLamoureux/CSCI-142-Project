@@ -22,6 +22,7 @@ import combat.Move;
 import main.Window;
 import utilities.AnimationPlayerModule;
 import utilities.AnimationsPreloader;
+import utilities.SoundPlayerModule.GameSound;
 
 public class Samoht extends CombatEntity {
 	private boolean chargingDarkSoul = false;
@@ -40,7 +41,7 @@ public class Samoht extends CombatEntity {
 	}
 	
 	public Samoht(boolean flipImages) {
-		super("Samoht", 800, null, getSamohtSprite(), flipImages);
+		super("Samoht", 1200, null, getSamohtSprite(), flipImages);
 		
 		File targetFile = new File("Resources/Images/Samoht.png");
 		this.setImageFile(targetFile);
@@ -58,6 +59,8 @@ public class Samoht extends CombatEntity {
 		this.damageMultiplier = 1.0;
 		this.damageResistence = 0.0;
 		this.dead = false;
+		this.chargingDarkSoul = false;
+		this.usedDarkSoul = false;
 		
 		this.sprite = getSamohtSprite();
 	}
@@ -112,6 +115,8 @@ public class Samoht extends CombatEntity {
 			portalLabel.setSize(new Dimension((int)(300), (int)(300)));
 			Window.scaleComponent(portalLabel);
 			
+			GameSound sound = new GameSound("Resources/Sounds/PortalArrow.wav");
+			
 			int portalOffset = (portalLabel.getWidth() - target.sprite.getWidth())/2;
 			Point portalLocation = new Point(
 					target.sprite.getX() - portalOffset + Window.scaleInt(400) * this.getParent().facingLeft,
@@ -158,6 +163,10 @@ public class Samoht extends CombatEntity {
 			};
 			bulletGraphics.keyframes[0] = new Keyframe(addBulletLabel);
 			
+			Runnable playSound = () -> {
+				sound.play();
+			};
+			
 			
 			
 			Runnable shakeAnimation = () -> {
@@ -176,6 +185,7 @@ public class Samoht extends CombatEntity {
 			Animation finalAnimation = new CombinedAnimation(110, animationsList, new int[]{0, 55, 57});
 			finalAnimation.keyframes[109] = new Keyframe(removePortalLabel);
 			finalAnimation.keyframes[68] = new Keyframe(removeBulletLabel);
+			finalAnimation.keyframes[45] = new Keyframe(playSound);
 			
 			AnimationPlayerModule.addAnimation(finalAnimation);
 		}
@@ -186,7 +196,7 @@ public class Samoht extends CombatEntity {
 		public Multihit(CombatEntity parent) {
 			super("Death from Above", new boolean[]{true, false, false}, parent);
 		
-			this.setDamage(30);
+			this.setDamage(35);
 			this.setDescription("Targets all enemies on the field with a sweeping attack");
 		}
 		
@@ -220,6 +230,8 @@ public class Samoht extends CombatEntity {
 				JLabel portalLabel = new JLabel();
 				portalLabel.setSize(new Dimension((int)(400), (int)(400)));
 				Window.scaleComponent(portalLabel);
+				
+				GameSound sound = new GameSound("Resources/Sounds/Punching.wav");
 				
 				int portalOffset = (portalLabel.getWidth() - targetSprite.getWidth())/2;
 				Point portalLocation = new Point(
@@ -261,6 +273,7 @@ public class Samoht extends CombatEntity {
 				
 				Runnable addAttackLabel = () -> {
 					CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
+					sound.play();
 				};
 				attackGraphic.keyframes[0] = new Keyframe(addAttackLabel);
 				
@@ -296,14 +309,14 @@ public class Samoht extends CombatEntity {
 		public TrapSpell(CombatEntity parent) {
 			super("Death from Above", new boolean[]{true, false, false}, parent);
 		
-			this.setDamage(0);
+			this.setDamage(35);
 			this.setDescription("Targets all enemies, increasing damage taken by 50% and decresing damage dealt by 50% until spell is cleansed");
 		}
 		
 		@Override
 		public void useMove(CombatEntity target) {
 			for (CombatEntity entity : Combat.currentCombatInstance.notCurrentTeam.members) {
-				entity.recieveDamage(80);
+				entity.recieveDamage(this.getDamage());
 			}
 			
 			runAnimation(target);
@@ -319,6 +332,9 @@ public class Samoht extends CombatEntity {
 		@Override
 		protected void runAnimation(CombatEntity blank) {
 			for (CombatEntity target : Combat.currentCombatInstance.notCurrentTeam.members) {	
+				if (target.dead == true) {
+					continue;
+				}
 				JLabel targetSprite = target.sprite;
 				
 				JLabel attackLabel = new JLabel();
@@ -380,6 +396,7 @@ public class Samoht extends CombatEntity {
 		public void useMove(CombatEntity target) {
 			Samoht samoht = (Samoht) this.getParent();
 			samoht.chargingDarkSoul = true;
+			samoht.usedDarkSoul = true;
 			
 			runAnimation(target);
 		}
@@ -428,7 +445,7 @@ public class Samoht extends CombatEntity {
 		public DarkSoul(CombatEntity parent) {
 			super("Dark Soul", new boolean[]{true, false, false}, parent);
 		
-			this.setDamage(560);
+			this.setDamage(500);
 			this.setDescription("Kills everybody basically");
 		}
 		
@@ -440,8 +457,11 @@ public class Samoht extends CombatEntity {
 			samoht.chargingDarkSoul = false;
 			samoht.usedDarkSoul = true;
 			
-			for (int i = 0; i < enemies.length; i++) {
-				enemies[i].recieveDamage(this.getDamage());
+			for (CombatEntity entity : enemies) {
+				if (entity.dead == true) {
+					continue;
+				}
+				entity.recieveDamage(this.getDamage());
 			}
 			
 			runAnimation(target);

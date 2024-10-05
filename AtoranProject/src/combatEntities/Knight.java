@@ -20,6 +20,7 @@ import combat.Move;
 import main.Window;
 import utilities.AnimationPlayerModule;
 import utilities.AnimationsPreloader;
+import utilities.SoundPlayerModule.GameSound;
 
 public class Knight extends CombatEntity {
 	
@@ -34,7 +35,7 @@ public class Knight extends CombatEntity {
 	}
 	
 	public Knight(boolean flip) {
-		super("Knight", 250, null, getSprite(), flip);
+		super("Knight", 210, null, getSprite(), flip);
 		
 		File targetFile = new File("Resources/Images/Knight.png");
 		this.setImageFile(targetFile);
@@ -63,7 +64,7 @@ public class Knight extends CombatEntity {
 		public KnightSlashMove(CombatEntity parent) {
 			super("Slash", new boolean[]{true, false, false}, parent);
 			
-			this.setDamage(60);
+			this.setDamage(40);
 			this.setDescription("Target enemies with a sweeping attack");
 		}
 		
@@ -76,16 +77,17 @@ public class Knight extends CombatEntity {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			
-			
 			JLabel attackLabel = new JLabel();
 			attackLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
 			Window.scaleComponent(attackLabel);
+			
+			GameSound sound = new GameSound("Resources/Sounds/SwordSwing1.wav");
 			
 			GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 6, this.uniqueIndex[0], 0, 1);
 			
 			Runnable addAttackLabel = () -> {
 				CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			attackGraphic.keyframes[0] = new Keyframe(addAttackLabel);
 			

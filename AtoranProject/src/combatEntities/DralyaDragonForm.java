@@ -25,6 +25,7 @@ import combat.Move;
 import main.Window;
 import utilities.AnimationPlayerModule;
 import utilities.AnimationsPreloader;
+import utilities.SoundPlayerModule.GameSound;
 
 public class DralyaDragonForm extends CombatEntity {
 	
@@ -114,7 +115,7 @@ public class DralyaDragonForm extends CombatEntity {
 		DragonSlash move1 = new DragonSlash(this);
 		PowerfulDragonSlash move2 = new PowerfulDragonSlash(this);
 		move1.setDamage(80);
-		move2.setDamage(90);
+		move2.setDamage(80);
 		
 		Move[] moveSet = {move1, move2, new FireLances(this)};
 		this.setMoveSet(moveSet);
@@ -153,16 +154,13 @@ public class DralyaDragonForm extends CombatEntity {
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
-			boolean flipImage = false;
-			if (this.getParent().facingLeft == 1) {
-				flipImage = true;
-			}
-			
 			JLabel sprite = this.getParent().sprite;
 			
 			JLabel animationLabelOne = new JLabel();
 			animationLabelOne.setSize(new Dimension((int)(500), (int)(500)));
 			Window.scaleComponent(animationLabelOne);
+			
+			GameSound sound = new GameSound("Resources/Sounds/Claw.wav");
 			
 			int offset = (animationLabelOne.getWidth() - target.sprite.getWidth())/2;
 			Point animationLocation = new Point(
@@ -177,10 +175,7 @@ public class DralyaDragonForm extends CombatEntity {
 			Point targetDestination = new Point((int)
 					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
 					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
-			
-			//animationLabel.setLocation(new Point(targetDestination.x - 100 * this.getParent().facingLeft, targetDestination.y - this.getParent().sprite.getHeight()/2));
 
-			String slashPath = "Resources/Animations/DragonSlash";
 			
 			Animation slashGraphics = new GraphicAnimation(animationLabelOne, 11, this.uniqueIndex[0], 0, 1);
 			
@@ -190,6 +185,7 @@ public class DralyaDragonForm extends CombatEntity {
 			
 			Runnable addLabel = () -> {
 				CombatInterface.layerOnePane.add(animationLabelOne, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			slashGraphics.keyframes[0] = new Keyframe(addLabel);
 			
@@ -290,6 +286,8 @@ public class DralyaDragonForm extends CombatEntity {
 			animationLabelOne.setSize(new Dimension((int)(600), (int)(600)));
 			Window.scaleComponent(animationLabelOne);
 			
+			GameSound sound = new GameSound("Resources/Sounds/Claw.wav");
+			
 			int offset = (animationLabelOne.getWidth() - target.sprite.getWidth())/2;
 			Point animationLocation = new Point(
 					target.sprite.getX() - offset,
@@ -303,10 +301,7 @@ public class DralyaDragonForm extends CombatEntity {
 			Point targetDestination = new Point((int)
 					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
 					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
-			
-			//animationLabel.setLocation(new Point(targetDestination.x - 100 * this.getParent().facingLeft, targetDestination.y - this.getParent().sprite.getHeight()/2));
 
-			String slashPath = "Resources/Animations/DragonPowerfulSlash";
 			
 			Animation slashGraphics = new GraphicAnimation(animationLabelOne, 25, this.uniqueIndex[0], 0, 1);
 			
@@ -316,6 +311,7 @@ public class DralyaDragonForm extends CombatEntity {
 			
 			Runnable addLabel = () -> {
 				CombatInterface.layerOnePane.add(animationLabelOne, JLayeredPane.MODAL_LAYER);
+				sound.play();
 			};
 			slashGraphics.keyframes[0] = new Keyframe(addLabel);
 			
@@ -382,7 +378,7 @@ public class DralyaDragonForm extends CombatEntity {
 		public FireLances(CombatEntity parent) {
 			super("Fire Lances", new boolean[]{true, false, false}, parent);
 		
-			this.setDamage(100);
+			this.setDamage(80);
 			this.setDescription("Targets a single enemy with a slashing attack");
 		}
 		
@@ -565,10 +561,17 @@ public class DralyaDragonForm extends CombatEntity {
 			animationStartingTimes[index + 2] = 110;
 			animationStartingTimes[index + 3] = 122;
 			
+			GameSound sound = new GameSound("Resources/Sounds/FireLance.wav");
+			
+			Runnable playSound = () -> {
+				sound.play();
+			};
+			
 			Animation finalAnimation = new CombinedAnimation(160, animationsList, animationStartingTimes);
 			finalAnimation.keyframes[6] = new Keyframe(removeLabelTwo);
 			finalAnimation.keyframes[3] = new Keyframe(changeToFlyingDragon);
 			finalAnimation.keyframes[20] = new Keyframe(removeLabelThree);
+			finalAnimation.keyframes[30] = new Keyframe(playSound);
 			finalAnimation.keyframes[117] = new Keyframe(removeLabelFour);
 			finalAnimation.keyframes[114] = new Keyframe(changeToNormalForm);
 			finalAnimation.keyframes[128] = new Keyframe(removeLabelFive);

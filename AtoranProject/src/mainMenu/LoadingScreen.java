@@ -31,6 +31,7 @@ public class LoadingScreen {
 	    loadingLabel.setSize(new Dimension(1920, 100));
 	    loadingLabel.setFont(new Font("Algerian", Font.ITALIC, Window.scaleInt(100)));
 	    loadingLabel.setForeground(Color.white);
+	    Window.scaleComponent(loadingLabel);
 	    
 	    window.add(loadingLabel);
 	    

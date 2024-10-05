@@ -10,7 +10,7 @@ public class CreatedCutscenes {
 		
 		Dialogue dialogueOne = new Dialogue("...", "Atoran");
 		dialogues.add(dialogueOne);
-		Dialogue dialogueTwo = new Dialogue("I need to get revenge, my hunger will not be satisfied until i kill Samoht— the wizard who murdered my mother and my pack", "Atoran");
+		Dialogue dialogueTwo = new Dialogue("I need to get revenge, my hunger will not be satisfied until I kill Samoht— the wizard who murdered my mother and my pack", "Atoran");
 		dialogues.add(dialogueTwo);
 		Dialogue dialogueThree = new Dialogue("I wear her pelt in honor of the life she and the pack gave me after I was abandoned in the woods as a youngling. They raised me, and I became one of them.", "Atoran");
 		dialogues.add(dialogueThree);
@@ -51,8 +51,8 @@ public class CreatedCutscenes {
 		dialogues.add(dialogueOne);
 		Dialogue dialogueTwo = new Dialogue("I didn’t do it for you. My path is set. But your village is safe... for now.", "Atoran");
 		dialogues.add(dialogueTwo);
-		Dialogue dialogueThree = new Dialogue("Still, we owe you more than words. Please, take this as a token of our thanks,\r\n"
-				+ "*\"This is a rare potion, brewed from the enchanted springs deep within the forest. It will restore your strength when you need it most.\r\n", "Villager");
+		Dialogue dialogueThree = new Dialogue("Still, we owe you more than words. Please, take this as a token of our thanks,"
+				+ "This is a rare potion, brewed from the enchanted springs deep within the forest. It will restore your strength when you need it most.", "Villager");
 		dialogues.add(dialogueThree);
 		Dialogue dialogueFour = new Dialogue("A potion? Fine. Perhaps it’ll come in handy", "Atoran");
 		dialogues.add(dialogueFour);
@@ -129,13 +129,13 @@ public class CreatedCutscenes {
 		dialogues.add(dialogueNine);
 		Dialogue dialogueTen = new Dialogue("Why would you want to help me?", "Atoran");
 		dialogues.add(dialogueTen);
-		Dialogue dialogueEleven = new Dialogue("I too have a history with Samoht, the mountains are home of the dragons no more, thanks to him.", "");
+		Dialogue dialogueEleven = new Dialogue("I too have a history with Samoht, the mountains are home of the dragons no more, thanks to him.", "Great Dragon");
 		dialogues.add(dialogueEleven);
-		Dialogue dialogueTwelve = new Dialogue("...", "Great Dragon");
+		Dialogue dialogueTwelve = new Dialogue("...", "Atoran");
 		dialogues.add(dialogueTwelve);
-		Dialogue dialogueThirteen = new Dialogue("Fine.", "Great Dragon");
+		Dialogue dialogueThirteen = new Dialogue("Fine.", "Atoran");
 		dialogues.add(dialogueThirteen);
-		Dialogue dialogueFourteen = new Dialogue("<i>TRANSFORMATION</i>", "");
+		Dialogue dialogueFourteen = new Dialogue("TRANSFORMATION", "");
 		dialogues.add(dialogueFourteen);
 		Dialogue dialogueFifteen = new Dialogue("This form will make travel easier.", "Dralya");
 		dialogues.add(dialogueFifteen);
@@ -149,4 +149,55 @@ public class CreatedCutscenes {
 		Cutscene cutscene = new Cutscene(dialogues, true);
 		return cutscene;
 	}
+	
+	
+	public static Cutscene ending() {
+		List<Dialogue> dialogues = new ArrayList<Dialogue>();
+		
+		Dialogue dialogueOne = new Dialogue("How… This is… not… possible…", "Samoht");
+		dialogues.add(dialogueOne);
+		Dialogue dialogueTwo = new Dialogue("...", "Atoran");
+		dialogues.add(dialogueTwo);
+		Dialogue dialogueThree = new Dialogue("It's over", "");
+		dialogues.add(dialogueThree);
+
+		
+		Cutscene cutscene = new Cutscene(dialogues, true);
+		return cutscene;
+	}
+	
+	
+	public static Cutscene samohtIntro() {
+		List<Dialogue> dialogues = new ArrayList<Dialogue>();
+		
+		Dialogue dialogueOne = new Dialogue("Finally, we have the pleasure to meet.", "Samoht");
+		dialogues.add(dialogueOne);
+		Dialogue dialogueTwo = new Dialogue("The pleasure is all mine.", "Atoran");
+		dialogues.add(dialogueTwo);
+		Dialogue dialogueThree = new Dialogue("Strange. I expected more fury from the last wolf. Or have you already accepted your fate?", "Samoht");
+		dialogues.add(dialogueThree);
+		Dialogue dialogueFour = new Dialogue("There’s no fate here, only an ending. Yours.", "Atoran");
+		dialogues.add(dialogueFour);
+		Dialogue dialogueFive = new Dialogue("Bold. But predictable. You’re just like me, driven by vengeance. The only difference is, I’m stronger.", "Samoht");
+		dialogues.add(dialogueFive);
+		Dialogue dialogueSix = new Dialogue("Strength has nothing to do with this. You killed my family, and now you’ll answer for it.", "Atoran");
+		dialogues.add(dialogueSix);
+		Dialogue dialogueSeven = new Dialogue("Family? They were a weakness. Just like you,", "Samoht");
+		dialogues.add(dialogueSeven);
+		Dialogue dialogueEight = new Dialogue("If weakness is what you see, you won’t survive the next few moments.", "Atoran");
+		dialogues.add(dialogueEight);
+		Dialogue dialogueNine = new Dialogue("We’re alike, you know. Both willing to destroy anything for what we want. But this time, I will win.", "Samoht");
+		dialogues.add(dialogueNine);
+		Dialogue dialogueTen = new Dialogue("We aren’t alike. I finish what I start. And this time, I will  bury you.", "Atoran");
+		dialogues.add(dialogueTen);
+		Dialogue dialogueEleven = new Dialogue("You won’t beat me, wolf. Not even you can outrun your own death.", "Samoht");
+		dialogues.add(dialogueEleven);
+		Dialogue dialogueTwelve = new Dialogue("I’m not here to run. I’m here to kill", "Atoran");
+		dialogues.add(dialogueTwelve);
+
+		
+		Cutscene cutscene = new Cutscene(dialogues, true);
+		return cutscene;
+	}
+	
 }

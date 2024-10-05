@@ -8,7 +8,9 @@ import javax.swing.JPanel;
 import levels.GameMap;
 import animations.Animation;
 import animations.Keyframe;
+import combat.Combat;
 import animations.Animation.ResizeAnimation;
+import cutscenes.CreatedCutscenes;
 import engine.Engine;
 import animations.Animation.CombinedAnimation;
 import animations.Animation.FadeAnimation;
@@ -35,18 +37,16 @@ public class Menu {
 	private static JLabel titleLabel;
 	private static JButton playButton;
 	private static JLayeredPane pane;
-	private static GameSound menuMusic;
+	private static JButton creditsButton;
 	private static int introIndex;
+	private static boolean creditsOpen = false;
+	private static JLabel creditsLabel;
 	
 	public static void loadIntroScreen() {
 		introIndex = AnimationsPreloader.loadImages("Resources/Animations/SigmaStudiosIntro", new Dimension(1920, 1080), false);
 	}
 	
 	public static void introScreen() {
-		Window window = Window.getWindow();
-		
-		titleLabel.setSize(new Dimension(1920, 350));
-		
 		JLabel animationLabel = new JLabel();
 		animationLabel.setSize(new Dimension(1920, 1080));
 		animationLabel.setLocation(new Point(0, 0));
@@ -64,18 +64,19 @@ public class Menu {
 		
 		GraphicAnimation logoAnimation = new GraphicAnimation(animationLabel, 85 * 4, introIndex, 0, 4);
 		
-		menuMusic = new GameSound("Resources/Sounds/MenuSoundtrack.wav");
+		Combat.combatMusic = new GameSound("Resources/Sounds/MenuSoundtrack.wav");
 		//menuMusic.setLooped(true);
 		Runnable removeLogoAnimation = () -> {
 			animationLabel.setVisible(false);
 		};
 		
 		Runnable playMenuMusic = () -> {
-			menuMusic.playLooped();
+			Combat.combatMusic.playLooped();
 		};
 		
 		Runnable setPlayButtonVisible = () -> {
 			playButton.setVisible(true);
+			creditsButton.setVisible(true);
 		};
 		
 		ArrayList<Animation> animationsList = new ArrayList<>();
@@ -97,15 +98,17 @@ public class Menu {
         window.clearFrame();
         
 		pane = new JLayeredPane();
-		pane.setSize(window.getSize());
+		pane.setSize(new Dimension(1920, 1080));
 		pane.setLayout(null);
 		pane.setLocation(new Point(0, 0));
+		Window.scaleComponent(pane);
 
         // Creating a title for the Main Menu
         titleLabel = new JLabel("ATORAN", JLabel.CENTER);
         titleLabel.setLocation(new Point(0, 450));
         titleLabel.setSize(new Dimension(1920, 350));
 		titleLabel.setFont(new Font("Algerian", Font.ROMAN_BASELINE, Window.scaleInt(350)));
+		titleLabel.setForeground(Color.white);
 
 		Window.scaleComponent(titleLabel);
 		
@@ -115,7 +118,8 @@ public class Menu {
 
         // Create and add the "Play" button
         playButton = new JButton("Play");
-        playButton.setFont(new Font("Algerian", Font.PLAIN, 80));  
+        playButton.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(80)));  
+        playButton.setForeground(Color.white);
         playButton.setLocation(new Point(810, 600));
         playButton.setSize(new Dimension(300, 100));
         playButton.setBorderPainted(false); 
@@ -130,11 +134,56 @@ public class Menu {
 			@Override
             public void actionPerformed(ActionEvent event) {
 				window.clearFrame();
-				menuMusic.stop();
 				GameMap.currentMap.openGameMap();
+				if (GameMap.getLevels().get(0).isCompleted() == false) {
+					CreatedCutscenes.introCutscene().start(null);
+				}
             }
         });
         
+        creditsButton = new JButton("Credits");
+        creditsButton.setFont(new Font("Algerian", Font.PLAIN, Window.scaleInt(80))); 
+        creditsButton.setForeground(Color.white);
+        creditsButton.setLocation(new Point(760, 750));
+        creditsButton.setSize(new Dimension(400, 100));
+        creditsButton.setBorderPainted(false); 
+        creditsButton.setContentAreaFilled(false); 
+        creditsButton.setFocusPainted(false); 
+        creditsButton.setOpaque(false);
+        creditsButton.setVisible(false);
+        
+        creditsLabel = new JLabel("<html>Bridget Wexler<br></br>Luke Alley<br></br>Temirlan Stamakunov<br></br>Thomas Lamoureux</html>", JLabel.CENTER);
+        creditsLabel.setLocation(new Point(500, 300));
+        creditsLabel.setSize(new Dimension(920, 500));
+        creditsLabel.setFont(new Font("Algerian", Font.ROMAN_BASELINE, Window.scaleInt(60)));
+        creditsLabel.setForeground(Color.white);
+        creditsLabel.setVisible(false);
+        Window.scaleComponent(creditsLabel);
+ 
+        creditsButton.addActionListener(new ActionListener() {
+			@Override
+            public void actionPerformed(ActionEvent event) {
+				if (creditsOpen == false) {
+					creditsOpen = true;
+					
+					creditsLabel.setVisible(true);
+					playButton.setVisible(false);
+					creditsButton.setText("Menu");
+					titleLabel.setText("SIGMA STUDIOS");
+				} else {
+					titleLabel.setText("ATORAN");
+					creditsLabel.setVisible(false);
+					playButton.setVisible(true);
+					creditsButton.setText("Credits");
+					creditsOpen = false;
+				}
+            }
+        });
+        
+        Window.scaleComponent(creditsButton);
+        
+        pane.add(creditsLabel, JLayeredPane.PALETTE_LAYER);
+        pane.add(creditsButton, JLayeredPane.PALETTE_LAYER);
         pane.add(playButton, JLayeredPane.PALETTE_LAYER);
     }
 
