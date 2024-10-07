@@ -14,42 +14,41 @@ import main.Window;
 import utilities.AnimationPlayerModule;
 
 public class Engine {
-	private static boolean running = false;
-	private static int frameMilliseconds = 10;
+	private static boolean running = false; 
+	private static int frameMilliseconds = 10; // Framerate
 	
-	
+	// Turns the FPS system on or off
 	public static void toggleFps(boolean toggle) {
-		if (toggle == true) {
+		if (toggle == true) { // Enables FPS system
 			if (running == true) {
 				return;
 			}
 			running = true;
 			
+			// Starts the FPS thread
 			Runnable fpsMethod = () -> {
 				runFps();
 			};
 			Thread fpsThread = new Thread(fpsMethod);
 			fpsThread.start();
 		} else {
-			running = false;
+			running = false; // Disables FPS system
 		}
 	}
 	
-	
+	// Refreshes the window
 	private static void refreshWindow() {
 		Window.getWindow().refresh();
 	}
 	
+	// FPS method
 	private static void runFps() {
 		while (running == true) {
-			//checkWindowSize();
 			try {
-				TimeUnit.MILLISECONDS.sleep(frameMilliseconds);
-				//TimeUnit.MILLISECONDS.wait(frameMilliseconds);
-				
-				//playAnimationFrame();
-				AnimationPlayerModule.playAnimations();
-				refreshWindow();
+				TimeUnit.MILLISECONDS.sleep(frameMilliseconds); // Framerate
+
+				AnimationPlayerModule.playAnimations(); // Plays animations
+				refreshWindow(); // Refreshes window
 				
 			} catch (InterruptedException err) {
 				err.printStackTrace();

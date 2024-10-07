@@ -15,11 +15,12 @@ import javax.swing.border.LineBorder;
 
 import main.Window;
 
+// The main tutorial
 public class Tutorial {
-	private int currentStep;
+	private int currentStep; // Current part of tutorial
 	private JPanel tutorialPanel;
-	private JLabel dialogueJLabel;
-	private JLabel highlight;
+	private JLabel dialogueJLabel; // Contains the dialogue
+	private JLabel highlight; // Highlights certain parts of the screen
 	
 	
 	public Tutorial() {
@@ -55,10 +56,11 @@ public class Tutorial {
 		
 		tutorialPanel.add(highlight);
 		
+		// For some reason this requires all methods to be overriden
 		tutorialPanel.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				nextStep();
+				nextStep(); // Next part of the tutorial
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {}
@@ -70,21 +72,21 @@ public class Tutorial {
 			public void mouseExited(MouseEvent e) {}
 		});
 		
-		nextStep();
+		nextStep(); // First part of the tutorial
 	}
 	
 	public void setDialogue(String dialogue) {
 		this.dialogueJLabel.setText("<html>" + dialogue + "</html>");
 	}
 	
-	
+	// Ends the tutorial
 	public void endTutorial() {
 		CombatInterface.layerOnePane.remove(this.tutorialPanel);
 		
 		Combat.currentCombatInstance.turn();
 	}
 	
-	
+	// Next step of the tutorial
 	public void nextStep() {
 		
 		switch(currentStep) {
@@ -107,6 +109,7 @@ public class Tutorial {
 			case 4:
 				setDialogue("You can select which move to use here, on the bottom left part of your screen. Once you select your move, "
 						+ "click on the target you'd like to perform it on");
+				// Highlighs the move menu
 				highlight.setSize(CombatInterface.moveMenu.getSize());
 				highlight.setLocation(CombatInterface.moveMenu.getLocation());
 				highlight.setVisible(true);
@@ -121,6 +124,7 @@ public class Tutorial {
 			case 6:
 				setDialogue("You can also click the dropdown at the top of your screen to access your inventory, where you can use "
 						+ "items to assist you in combat.");
+				// Highlights the inventory dropdown button
 				highlight.setSize(CombatInterface.expandButton.getSize());
 				highlight.setLocation(CombatInterface.expandButton.getLocation());
 				highlight.setVisible(true);

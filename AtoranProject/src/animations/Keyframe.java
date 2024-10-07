@@ -1,8 +1,6 @@
 package animations;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
+// This is really just a Runnable. Used for animations
 public class Keyframe {
 	private Runnable method;
 	

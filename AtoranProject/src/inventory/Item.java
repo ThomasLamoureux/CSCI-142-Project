@@ -36,7 +36,7 @@ public class Item {
     	return uses;
     }
     
-    
+    // Gives all allies 50 hp
     public static class HealthPotion extends Item {
 
 		public HealthPotion(String name, String description, int uses) {
@@ -60,7 +60,7 @@ public class Item {
 		}
     }
     
-    
+    // Gives all allies 30% damage resistance
     public static class DefensePotion extends Item {
 
 		public DefensePotion(String name, String description, int uses) {
@@ -74,29 +74,6 @@ public class Item {
 				for (CombatEntity entity : Combat.currentCombatInstance.currentTeam.members) {
 					if (entity.dead == false) {
 						entity.damageResistence += 0.3;
-					}
-				}
-				this.uses -= 1;
-				return true;
-			} else {
-				return false;
-			}
-		}
-    }
-    
-    
-    public static class DamagePotion extends Item {
-
-		public DamagePotion(String name, String description, int uses) {
-			super(name, description, uses);
-		}
-		
-		@Override
-		public boolean useItem() {
-			if (Combat.currentCombatInstance.teamTurn == 0 && this.uses > 0) {
-				for (CombatEntity entity : Combat.currentCombatInstance.currentTeam.members) {
-					if (entity.dead == false) {
-						entity.damageMultiplier += 0.3;
 					}
 				}
 				this.uses -= 1;

@@ -12,8 +12,6 @@ public class Move {
 	public String name;
 	private Map<String, Boolean> validTargets = new HashMap<String, Boolean>(); //team, enemies
 	private int damage;
-	private int critChance = 20;
-	private double critDamage = 1.4;
 	private CombatEntity parent;
 	private String description;
 	protected int[] uniqueIndex;
@@ -27,15 +25,15 @@ public class Move {
 		validTargets.put("self", targets[2]);
 	}
 	
-	
+	// Meant to be overriden, preloads all the images for graphic animations
 	protected void preloadAnimations() {
 		
 	}
-	
+
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}
-	
+
 	public int getDamage() {
 		return this.damage;
 	}
@@ -48,14 +46,6 @@ public class Move {
 		this.description = description;
 	}
 	
-	public int getCritChance() {
-		return this.critChance;
-	}
-	
-	public double getCritDamage() {
-		return this.critDamage;
-	}
-	
 	public void setParent(CombatEntity entity) {
 		this.parent = entity;
 	}
@@ -64,27 +54,19 @@ public class Move {
 		return this.parent;
 	}
 	
-	public void damageTarget(CombatEntity target) {
-		Random randomGenerator = new Random();
-		int randumNumber = randomGenerator.nextInt(0, 100);
-		if (randumNumber <= this.critChance) {
-			target.recieveDamage((int)((double)this.damage * this.critDamage));
-		} else {
-			target.recieveDamage(this.damage);
-		}
-	}
-	
+	// Meant to be override, runs the animation for the move
 	protected void runAnimation(CombatEntity target) {
 		target.updateHealthBar();
 	}
 	
-	// Overrided
+	// Uses the move, doing damage then running the animation
 	public void useMove(CombatEntity target) {
 		target.recieveDamage((int)(damage * this.getParent().damageMultiplier));
 	
 		runAnimation(target);
 	}
 	
+	// Checks to see if the target meets the valid target requirements
 	public Boolean checkIfTargetIsValid(String target) {
 		return validTargets.get(target);
 	}

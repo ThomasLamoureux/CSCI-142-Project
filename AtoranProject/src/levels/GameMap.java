@@ -162,13 +162,13 @@ public class GameMap {
         
         
         Point[] buttonLocations = {
-        	new Point(140, 540),
-        	new Point(550, 575),
-        	new Point(840, 615),
-        	new Point(1000, 375),
-        	new Point(1340, 290),
-        	new Point(1540, 605),
-        	new Point(1640, 885)
+        	new Point(155, 593),
+        	new Point(565, 680),
+        	new Point(814, 553),
+        	new Point(1112, 551),
+        	new Point(1275, 604),
+        	new Point(1446, 507),
+        	new Point(1654, 388)
         };
 
         for (int i = 0; i < levels.size(); i++) {

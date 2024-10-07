@@ -39,30 +39,25 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 public class CombatInterface {
-	public static JPanel moveMenu;// = new JPanel();
-	private static JPanel selectTargetButtonsPanel;// = new JPanel();
+	public static JPanel moveMenu; // Contains move options
+	private static JPanel selectTargetButtonsPanel; // Panel contains the targets for selecting who to use a move on
 	private static Move selectedMove;
 	private static CombatEntity selectedTarget;
-	public static JLayeredPane layerOnePane;// = new JLayeredPane(); 
-	public static JPanel inventoryPanel;// = new JPanel();
-	public static JLabel announcementText;// = new JLabel("nil", SwingConstants.CENTER);
-	public static JPanel infoPanel;
+	public static JLayeredPane layerOnePane; 
+	public static JPanel inventoryPanel; // Contains the items
+	public static JLabel announcementText; // Level beat, wave complete, etc.
+	public static JPanel infoPanel; // Inventory panel
 	public static JLabel infoLabel;
-	public static JButton expandButton;
+	public static JButton expandButton; // Button for expanding inventory pull down
 	public static JPanel moveInfoDisplay;
 	public static boolean infoPanelExpanded = false;
-	
-	public static void levelBeatScreen() {
-		
-	}
-	
+
+	// Displays the combat screen
 	public static void openCombatScreen() {
 		Window window = Window.getWindow(); // New JFrame
 		window.clearFrame();
-		// Sets window attributes
 		window.getContentPane().setBackground(new Color(0xFFFFFF));
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//window.setSize(1920, 1080);
 		window.setLayout(null);
 		
 		layerOnePane = new JLayeredPane();
@@ -74,8 +69,6 @@ public class CombatInterface {
 		window.add(layerOnePane);
 		
 		// Move menu
-		//moveMenu.setLayout(null);
-		//moveMenu.setBounds(200, 700, 0, 0);
 		moveMenu = new JPanel();
 		moveMenu.setLocation(new Point(20, 1080 - 200));
 		moveMenu.setSize(new Dimension(300, 200));
@@ -85,10 +78,9 @@ public class CombatInterface {
 		moveMenu.setLayout(new FlowLayout());
 		
 		Window.scaleComponent(moveMenu);
-		//moveMenu.setVisible(false);
 		layerOnePane.add(moveMenu, JLayeredPane.PALETTE_LAYER);
 		
-		
+		// Creates inventory panel
 		createInfoPanel();
 		
 		announcementText = new JLabel("nil", SwingConstants.CENTER);
@@ -115,13 +107,12 @@ public class CombatInterface {
 		background.setSize(new Dimension(1920, 1080));
 		background.setVisible(true);
 		
+		// Sets the background of the level
 		File backgroundFile = new File(Combat.currentCombatInstance.currentLevel.getBackground());
-		
 		Image image = null;
 		try {
 			image = ImageIO.read(backgroundFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -151,7 +142,7 @@ public class CombatInterface {
 		window.setVisible(true);
 	}
 	
-	
+	// Loads the inventory and displays the items
 	public static void loadInventory() {
 		if (Combat.currentCombatInstance.inventory == null) {
 			return;
@@ -176,8 +167,8 @@ public class CombatInterface {
 			itemLabel.addActionListener(new ActionListener() {
 				@Override
 	            public void actionPerformed(ActionEvent event) {
-					if (item.useItem() == true) {
-						itemLabel.setEnabled(false);
+					if (item.useItem() == true) { // Will return false if the item cannot be used at the moment
+						itemLabel.setEnabled(false); // Prevents item from being used again
 					};
 	            }
 	        });
@@ -201,18 +192,18 @@ public class CombatInterface {
 		}
 	}
 	
-	
+	// Brings the inventory panel down
 	public static void expandInfoPanel() {		
 		Point destination;
 		Point destinationTwo;
 		
-		if (infoPanelExpanded == true) {
+		if (infoPanelExpanded == true) { // Unexpands
 			destination = Window.scalePoint(new Point(0, -453));
 			expandButton.setLocation(Window.scalePoint(new Point(875, 0)));
 			infoPanelExpanded = false;
 			
 			destinationTwo = Window.scalePoint(new Point(76 - 18, 36 - 18 - 453));
-		} else {
+		} else { // Expands
 			destination = Window.scalePoint(new Point(0, 0));
 			expandButton.setLocation(Window.scalePoint(new Point(875, 450)));
 			infoPanelExpanded = true;
@@ -220,7 +211,7 @@ public class CombatInterface {
 			destinationTwo = Window.scalePoint(new Point(76 - 18, 36 - 18));
 		}
 		
-		//Animation animation = new Animation(infoLabel, destination, new int[] {15}, "easeInOutSine");
+		// Animation
 		MovementAnimation animation = new MovementAnimation(infoLabel, 15, "easeInOutSine", destination, null);
 		MovementAnimation animationTwo = new MovementAnimation(inventoryPanel, 15, "easeInOutSine", destinationTwo, null);
 		
@@ -228,7 +219,7 @@ public class CombatInterface {
 		AnimationPlayerModule.addAnimation(animationTwo);
 	}
 	
-	
+	// Creates the inventory panel
 	public static void createInfoPanel() {
 		infoPanel = new JPanel();
 		infoPanel.setLocation(0, 0);
@@ -246,7 +237,7 @@ public class CombatInterface {
 		infoLabel.setBackground(new Color(200, 200, 200, 230));
 		infoLabel.setVisible(true);
 		
-		File infoFile = new File("Resources/Images/AtoranInventory.png");
+		File infoFile = new File("Resources/Images/AtoranInventory.png"); // Background image
 		
 		Image infoImage = null;
 		try {
@@ -255,9 +246,7 @@ public class CombatInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
-		//image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
 		infoImage = Window.scaleImage(1920, 500, infoImage);
 		
 		ImageIcon infoIcon = new ImageIcon(infoImage);
@@ -273,7 +262,6 @@ public class CombatInterface {
 		layerOnePane.add(infoLabel, JLayeredPane.PALETTE_LAYER);
 		
 		
-		//inventoryPanel.setLocation(0, 880);
 		inventoryPanel = new JPanel();
 		inventoryPanel.setSize(new Dimension(500, 200));
 		inventoryPanel.setPreferredSize(new Dimension(500, 200));
@@ -308,7 +296,7 @@ public class CombatInterface {
 	}
 	
 	
-	
+	// Creates a health bar
 	public static JLabel createHealthBar(int size) {
 		JLabel healthBar = new JLabel("" + size + "/" + size);
 		
@@ -323,19 +311,21 @@ public class CombatInterface {
 		return healthBar;
 	}
 	
-	
+	// Loads the images of each entity in the team.
 	public static void loadEntityImagesOfTeam(Team team, boolean leftSide) {
 		Point[] positionsArray;
 		
 		if (leftSide == true) {
-			positionsArray = new Point[]{new Point(500, 900), new Point(350, 950), new Point(250, 850)};
+			positionsArray = new Point[]{new Point(500, 900), new Point(350, 950), new Point(250, 850)}; // Positions for enemies
 		} else {
-			positionsArray = new Point[]{new Point(1200, 900), new Point(1350, 950), new Point(1450, 850)};
+			positionsArray = new Point[]{new Point(1200, 900), new Point(1350, 950), new Point(1450, 850)}; // Positions for team
 		}
 		
+		// Loops through team members and creates their sprites
 		for (int i = 0; i < team.members.length; i++) {
 			CombatEntity member = team.members[i];
 			
+			// Sets the direction they are facing
 			if (leftSide == true) {
 				member.facingLeft = -1;
 			} else {
@@ -373,10 +363,11 @@ public class CombatInterface {
 		}	
 	}
 	
-	
+	// Performs turn for selected move and target
 	private static void confirmTurn() {
 		Combat.currentCombatInstance.currentEntityTurn.performTurn(selectedMove, selectedTarget);
 		
+		// Delay
 		Runnable fpsMethod = () -> {
 			try {
 				TimeUnit.MILLISECONDS.sleep(1000);
@@ -390,7 +381,7 @@ public class CombatInterface {
 		fpsThread.start();
 	}
 	
-	
+	// Selects the target
 	private static void selectTarget(CombatEntity target) {
 		selectedTarget = target;
 		
@@ -401,7 +392,7 @@ public class CombatInterface {
 		confirmTurn();
 	}
 	
-	
+	// Creates a JLabel with target icon positioned at the targets location
 	private static void createTargetButton(CombatEntity target) {
 		JButton targetButton = new JButton();
 		
@@ -412,7 +403,7 @@ public class CombatInterface {
 				selectTarget(target);
             }
         });
-		//targetButton.setPreferredSize(new Dimension(100, 100));
+
 		targetButton.setSize(new Dimension(150, 150));
 		targetButton.setBackground(null);
 		targetButton.setOpaque(false);
@@ -420,12 +411,11 @@ public class CombatInterface {
 		targetButton.setBorderPainted(false);
 		Window.scaleComponent(targetButton);
 		
-		File targetFile = new File("Resources/Images/target.png");
+		File targetFile = new File("Resources/Images/target.png"); // Target icon
 		Image image = null;
 		try {
 			image = ImageIO.read(targetFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -444,14 +434,12 @@ public class CombatInterface {
 				);
 
 		targetButton.setLocation(location);
-		
-		//Window.getWindow().refresh();
 	}
 	
-	
+	// Creates JLabels with target icons and hovers them above the enemies
 	private static void createTargetSelection(Move move) {
 		Team[] teams = Combat.currentCombatInstance.teams;
-		if (selectTargetButtonsPanel != null) {
+		if (selectTargetButtonsPanel != null) { // This is for win you select a different move after already selecting one
 			selectTargetButtonsPanel.removeAll();
 		}
 		
@@ -462,6 +450,7 @@ public class CombatInterface {
 		selectTargetButtonsPanel.setLocation(new Point(0, 0));
 		selectTargetButtonsPanel.setOpaque(false);
 		
+		// Checks if it should place targets over enemies
 		if (move.checkIfTargetIsValid("enemies")) {
 			for (int i = 0; i < teams[1].members.length; i++) {
 				if (teams[1].members[i].dead == false) { 
@@ -470,6 +459,7 @@ public class CombatInterface {
 			}
 		}
 		
+		// Checks if it should place targets over allies
 		if (move.checkIfTargetIsValid("team")) {
 			for (int i = 0; i < teams[0].members.length; i++) {
 				if (teams[1].members[i].dead == false) { 
@@ -478,6 +468,7 @@ public class CombatInterface {
 			}
 		}
 		
+		// Checks if it should only place a target on the current entity performing their turn
 		if (move.checkIfTargetIsValid("self")) {
 			createTargetButton(move.getParent());
 		}
@@ -485,15 +476,14 @@ public class CombatInterface {
 		layerOnePane.add(selectTargetButtonsPanel, JLayeredPane.MODAL_LAYER);
 	}
 	
-	
+	// Select the move
 	private static void selectMove(Move move) {
 		selectedMove = move;
-		//moveMenu.setVisible(false);
 		
 		createTargetSelection(move);
 	}
 	
-	
+	// Adds the entity's moves to the moveMenu
 	private static void addMovesToMoveMenu(Move[] moveSet) {
 		moveMenu.removeAll();
 		
@@ -531,6 +521,7 @@ public class CombatInterface {
 		Window.scaleComponent(critChanceDisplay);
 		moveInfoDisplay.add(critChanceDisplay);
 		
+		// Loops through moves and creates buttons
 		for (int i = 0; i < moveSet.length; i++) {
 			Move move = moveSet[i];
 			
@@ -556,54 +547,42 @@ public class CombatInterface {
 			moveButton.addMouseListener(new MouseListener() {
 
 				@Override
-				public void mouseClicked(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
+				public void mouseClicked(MouseEvent e) {}
 				@Override
-				public void mousePressed(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
+				public void mousePressed(MouseEvent e) {}
 				@Override
-				public void mouseReleased(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
+				public void mouseReleased(MouseEvent e) {}
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					// TODO Auto-generated method stub
+					// Sets move info display to visible and sets info
 					moveInfoDisplay.setVisible(true);
 					descriptionDisplay.setText("<html>" + move.getDescription() + "</html");
 					damageDisplay.setText("<html>Damage:<br/>" + move.getDamage() + "</html");
-					critIncreaseDisplay.setText("<html>Crit Increase:<br/>" + move.getCritDamage() + "</html");
-					critChanceDisplay.setText("<html>Crit Chance:<br/>" + move.getCritChance() + "%</html");
+					critIncreaseDisplay.setText("<html>Crit Increase:<br/>" + 1.0 + "</html");
+					critChanceDisplay.setText("<html>Crit Chance:<br/>" + 0 + "%</html");
 				}
-
 				@Override
 				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub
+					// Removes info display
 					moveInfoDisplay.setVisible(false);
 				}
 			});
 			
 			moveMenu.add(moveButton);
+			// ??
 			moveMenu.repaint();
 			moveMenu.revalidate();
 		}
 	}
 	
-	
+	// Creates the moveMenu for the turn
 	private static void moveMenuPopup(Move[] moveSet) {		
 		addMovesToMoveMenu(moveSet);
 		
 		moveMenu.setVisible(true);
 	}
 	
-	
+	// Method called by combat class to get the players turn
 	public static void getTurn(Move[] moveSet) {
 		moveMenuPopup(moveSet);
 	}

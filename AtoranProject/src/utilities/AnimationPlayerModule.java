@@ -21,47 +21,51 @@ import main.Window;
 public class AnimationPlayerModule {
 	private static ArrayList<Animation> animations = new ArrayList<Animation>();
 
+	// Plays the frame of the animation
 	public static boolean playFrame(Animation animation) {
-		if (animation.playFrame() == true) {
+		if (animation.playFrame() == true) { // true == animation finished
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
+	// Goes through all animations and plays them
 	public static void playAnimations() {
-		ArrayList<Integer> removals = new ArrayList<Integer>();
+		ArrayList<Integer> removals = new ArrayList<Integer>(); // Animations that are complete and must be removed
 		
 		for (int i = 0; i < animations.size(); i++) {
-			if (i >= animations.size()) {
+			if (i >= animations.size()) { // Breaks
 				break;
 			}
-			boolean complete = playFrame(animations.get(i));
+			boolean complete = playFrame(animations.get(i)); // Plays frame, if it returns true then that animation is complete
 			
-			if (complete == true) {
+			if (complete == true) { // The completed animation is set to be removed
 				removals.add(i);
 			}
 		}
 		
 		
-		for (int i = 0; i < removals.size(); i++) {
-			animations.remove(removals.get(i) - i);
+		for (int i = 0; i < removals.size(); i++) { // Removes animations
+			animations.remove(removals.get(i) - i); // - i is to account for shifting indexes
 		}
 	}
 	
+	// Adds an animation to be played
 	public static void addAnimation(Animation animation) {
 		animations.add(animation);
 	}
 	
+	// Creates image icons from a folder path
 	public static ImageIcon[] createIconsFromFolder(String path, Dimension size, boolean flip) {
 		
 		File folder = new File(path);
 		File[] content = folder.listFiles();
-		
-		Image[] images = new Image[content.length];
+
 		ImageIcon[] icons = new ImageIcon[content.length];
 		
 		if (content != null) {
+			// Loops through content
 			for (int i = 0; i < icons.length; i++) {
 				File file = content[i];
 				
@@ -74,10 +78,10 @@ public class AnimationPlayerModule {
 					e.printStackTrace();
 				}
 				
-				if (flip) {
+				if (flip) { // Flips the image
 					image = createMirror(image);
 				}
-				
+				// Resizes based on desired size
 				Image reSizedImage = Window.scaleImage(size.width, size.height, image);
 				
 				icons[i] = new ImageIcon(reSizedImage);
@@ -87,7 +91,7 @@ public class AnimationPlayerModule {
 		return icons;
 	}
 	
-	
+	// Prebuilt animation for shaking
 	public static void shakeAnimation(CombatEntity target) {
 		Point targetLocation = target.sprite.getLocation();
 		
@@ -111,7 +115,7 @@ public class AnimationPlayerModule {
 		addAnimation(CombinedAnimation);
 	}
 	
-	
+	// Creates a mirror image
     public static BufferedImage createMirror(Image image) {
 		BufferedImage newImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		
@@ -124,20 +128,4 @@ public class AnimationPlayerModule {
 		
 		return newImage;
     }
-    
-    public static BufferedImage rotateImage(Image image, int degrees) {
-		BufferedImage newImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-		
-		Graphics2D draw = newImage.createGraphics();
-		draw.rotate(Math.PI / degrees, newImage.getWidth() / 2, newImage.getHeight() / 2);
-		draw.drawImage(image, 0, 0, null);
-		
-		draw.dispose();
-		
-		return newImage;
-    }
-	
-	/*public static void main(String[] args) {
-		createIconsFromFolder("Resources\\Animations\\SlashingAnimation");
-	}*/
 }

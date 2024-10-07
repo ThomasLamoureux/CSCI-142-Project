@@ -178,6 +178,7 @@ public class Cutscene {
         	CombatInterface.layerOnePane.remove(layeredPane);
         	CombatInterface.expandButton.setEnabled(true);
         	CombatInterface.moveMenu.setVisible(true);
+        	this.currentDialogueIndex = 0;
         	
         	if (Combat.currentCombatInstance.fighting == false) {
     			Window.getWindow().clearFrame();

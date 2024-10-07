@@ -16,16 +16,15 @@ import levels.GameMap;
 import main.Window;
 
 public class LoadingScreen {
+	// Loading screen
 	public static void load() {
-	    // Creating a window
 	    Window window = Window.getWindow();
 
-	    // Properties for the window
 	    window.setDefaultCloseOperation(Window.EXIT_ON_CLOSE);
 	    window.setLayout(null);
 	    window.getContentPane().setBackground(Color.black);
 
-	    // Creating a title for the Main Menu
+
 	    JLabel loadingLabel = new JLabel("Loading...", JLabel.CENTER);
 	    loadingLabel.setLocation(new Point(0, 600));
 	    loadingLabel.setSize(new Dimension(1920, 100));
@@ -37,10 +36,10 @@ public class LoadingScreen {
 	    
 	    window.setVisible(true);
 	    
-	    new GameMap();
-	    Menu.loadIntroScreen();
-	    Menu.start();
+	    new GameMap(); // Loads the game map
+	    Menu.loadIntroScreen(); // Loads logo intro
+	    Menu.start(); // Runs menu
 	    
-	    Engine.toggleFps(true);
+	    Engine.toggleFps(true); // Turns on FPS system
 	}
 }

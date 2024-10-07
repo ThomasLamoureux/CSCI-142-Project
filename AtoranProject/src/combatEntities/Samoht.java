@@ -25,10 +25,10 @@ import utilities.AnimationsPreloader;
 import utilities.SoundPlayerModule.GameSound;
 
 public class Samoht extends CombatEntity {
-	private boolean chargingDarkSoul = false;
-	private boolean usedDarkSoul;
-	public GraphicAnimation darkSoulCharge;
-	public JLabel darkSoulLabel;
+	private boolean chargingDarkSoul = false; // When the charging dark soul move this is set to true
+	private boolean usedDarkSoul; // Whether or not Dark Soul has been used already
+	public GraphicAnimation darkSoulCharge; // The animation for darkSoul
+	public JLabel darkSoulLabel; // The label for Dark Soul
 
 	
 	public static JLabel getSamohtSprite() {
@@ -59,29 +59,29 @@ public class Samoht extends CombatEntity {
 		this.damageMultiplier = 1.0;
 		this.damageResistence = 0.0;
 		this.dead = false;
+		// Custom
 		this.chargingDarkSoul = false;
 		this.usedDarkSoul = false;
-		
 		this.sprite = getSamohtSprite();
 	}
 	
 	
-	@Override
+	@Override // Custom chooseMove for DarkSoul
 	protected Move chooseMove() {	
 		Random randomGenerator = new Random();
 		
 		int randomMove = 0;
 		Move move;
 		
-		if (this.chargingDarkSoul == true) {
+		if (this.chargingDarkSoul == true) { // Dark Soul will be used
 			move = this.moveSet[4];
-		} else if (this.health <= this.maxHealth/2 && this.usedDarkSoul == false) {
+		} else if (this.health <= this.maxHealth/2 && this.usedDarkSoul == false) { // Samoht will start charging Dark Soul
 			move = this.moveSet[3];
 		} else {
 			if (this.moveSet.length == 1) {
 				randomMove = 0;
 			} else {
-				randomMove = randomGenerator.nextInt(0, this.moveSet.length - 2);
+				randomMove = randomGenerator.nextInt(0, this.moveSet.length - 2); // Moveset with Dark Soul and Charge Dark Soul removed
 			}
 			
 			move = moveSet[randomMove];
@@ -231,7 +231,7 @@ public class Samoht extends CombatEntity {
 				portalLabel.setSize(new Dimension((int)(400), (int)(400)));
 				Window.scaleComponent(portalLabel);
 				
-				GameSound sound = new GameSound("Resources/Sounds/Punching.wav");
+				GameSound sound = new GameSound("Resources/Sounds/PortalMultihit.wav");
 				
 				int portalOffset = (portalLabel.getWidth() - targetSprite.getWidth())/2;
 				Point portalLocation = new Point(
@@ -479,6 +479,8 @@ public class Samoht extends CombatEntity {
 			Point targetLocation = new Point(350, 500);
 			targetLocation = Window.scalePoint(targetLocation);
 			
+			GameSound sound = new GameSound("Resources/Sounds/PortalMultihit.wav");
+			
 			MovementAnimation movement = new MovementAnimation(samoht.darkSoulLabel, 24, "easeOutQuart", targetLocation, null);
 			
 			
@@ -499,11 +501,16 @@ public class Samoht extends CombatEntity {
 				samoht.darkSoulCharge.stop();
 			};
 			
+			Runnable playSound = () -> {
+				sound.play();		
+			};
+			
 			Runnable removeDarkSoulLabel = () -> {
 				CombatInterface.layerOnePane.remove(samoht.darkSoulLabel);
 			};
 			
 			finalAnimation.keyframes[20] = new Keyframe(shakeAnimation);
+			finalAnimation.keyframes[8] = new Keyframe(playSound);
 			finalAnimation.keyframes[22] = new Keyframe(removeDarkSoul);
 			finalAnimation.keyframes[23] = new Keyframe(removeDarkSoulLabel);
 			

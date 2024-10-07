@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreatedCutscenes {
-	
+	// Cutscene at the very start of the game
 	public static Cutscene introCutscene() {
 		List<Dialogue> dialogues = new ArrayList<Dialogue>();
 		
@@ -21,7 +21,7 @@ public class CreatedCutscenes {
 		return cutscene;
 	}
 	
-	
+	// Villager cutscene at the start of the first level
 	public static Cutscene levelOneIntro() {
 		List<Dialogue> dialogues = new ArrayList<Dialogue>();
 		
@@ -44,6 +44,7 @@ public class CreatedCutscenes {
 		return cutscene;
 	}
 	
+	// Villiger cutscene after beating the first level
 	public static Cutscene levelOneOutro() {
 		List<Dialogue> dialogues = new ArrayList<Dialogue>();
 		
@@ -66,6 +67,7 @@ public class CreatedCutscenes {
 		return cutscene;
 	}
 	
+	// Cutscene when encountering the Warrior Bear
 	public static Cutscene bearCutscene() {
 		List<Dialogue> dialogues = new ArrayList<Dialogue>();
 		
@@ -89,6 +91,7 @@ public class CreatedCutscenes {
 		return cutscene;
 	}
 	
+	// Cutscene for encountering the dragon
 	public static Cutscene dragonIntroCutscene() {
 		List<Dialogue> dialogues = new ArrayList<Dialogue>();
 		
@@ -106,6 +109,7 @@ public class CreatedCutscenes {
 		return cutscene;
 	}
 	
+	// Cutscene for after beating the dragon
 	public static Cutscene dragonOutroCutscene() {
 		List<Dialogue> dialogues = new ArrayList<Dialogue>();
 		
@@ -150,7 +154,7 @@ public class CreatedCutscenes {
 		return cutscene;
 	}
 	
-	
+	// Ending cutscene after beating Samoht
 	public static Cutscene ending() {
 		List<Dialogue> dialogues = new ArrayList<Dialogue>();
 		
@@ -158,7 +162,7 @@ public class CreatedCutscenes {
 		dialogues.add(dialogueOne);
 		Dialogue dialogueTwo = new Dialogue("...", "Atoran");
 		dialogues.add(dialogueTwo);
-		Dialogue dialogueThree = new Dialogue("It's over", "");
+		Dialogue dialogueThree = new Dialogue("It's over", "Atoran");
 		dialogues.add(dialogueThree);
 
 		
@@ -166,7 +170,7 @@ public class CreatedCutscenes {
 		return cutscene;
 	}
 	
-	
+	// Cutscene for encountering Samoht
 	public static Cutscene samohtIntro() {
 		List<Dialogue> dialogues = new ArrayList<Dialogue>();
 		

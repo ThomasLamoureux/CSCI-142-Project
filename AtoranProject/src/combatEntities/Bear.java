@@ -33,7 +33,7 @@ public class Bear extends CombatEntity{
 		return atoranSprite;
 	}
 
-	// Atoran entity, the main character
+	// Warrior bear
 	public Bear(boolean flip) {
 		super("Bell Hunter Bear", 375, null, getSprite(), flip);
 		
@@ -53,10 +53,11 @@ public class Bear extends CombatEntity{
 		this.damageMultiplier = 1.0;
 		this.damageResistence = 0.0;
 		this.dead = false;
-		
+		// Custom
 		this.sprite = getSprite();
 	}
 	
+	// Damage to a sigle enemy
 	public static class BearClawMove extends Move {
 
 		public BearClawMove(CombatEntity parent) {
@@ -86,6 +87,7 @@ public class Bear extends CombatEntity{
 			
 			GraphicAnimation attackGraphic = new GraphicAnimation(attackLabel, 12, this.uniqueIndex[0], 0, 2);
 			
+			// Adds label and plays sound
 			Runnable addAttackLabel = () -> {
 				CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
 				sound.play();

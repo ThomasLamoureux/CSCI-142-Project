@@ -24,10 +24,11 @@ import utilities.AnimationsPreloader;
 import utilities.SoundPlayerModule.GameSound;
 
 public class Atoran extends CombatEntity {
-	private boolean empowered;
+	private boolean empowered; // Special attribute for atoran
 	
+	// Creates the sprite for the etntity
 	public static JLabel getAtoranSprite() {
-		JLabel atoranSprite = new JLabel("Atoran");
+		JLabel atoranSprite = new JLabel();
 		atoranSprite.setPreferredSize(new Dimension(225, 225));
 		atoranSprite.setSize(new Dimension(225, 225));
 		atoranSprite.setBackground(new Color(20, 0, 255));
@@ -49,11 +50,11 @@ public class Atoran extends CombatEntity {
 		this.setMoveSet(moveSet);
 	}	
 	
-	
+	// Empowers atoran
 	protected void setEmpowered(boolean flip) {
 		if (flip == true) {
 			this.empowered = true;
-			this.damageMultiplier += 2.0;
+			this.damageMultiplier += 2.0; // 3x damage mulitiplier
 		} else {
 			this.empowered = false;
 			this.damageMultiplier -= 2.0;
@@ -67,20 +68,20 @@ public class Atoran extends CombatEntity {
 		this.damageMultiplier = 1.0;
 		this.damageResistence = 0.0;
 		this.dead = false;
-		
+		// Custom resetes
 		this.sprite = getAtoranSprite();
 		this.empowered = false;
-		this.moveSet[2].disabled = false;
+		this.moveSet[2].disabled = false; // Sets EmpowerMove to enabled
 	}
 	
-	
+	// Empowers Atoran increasing the damage of his next attack
 	public static class EmpowerMove extends Move{
 		
 		public EmpowerMove(CombatEntity parent) {
 			super("Empower", new boolean[]{false, false, true}, parent);
 			
 			this.setDamage(0);
-			this.setDescription("Empower yourself, increasing the ");
+			this.setDescription("Empower yourself, increasing the damage of your next attack by 200%");
 		}
 		
 		@Override
@@ -93,13 +94,14 @@ public class Atoran extends CombatEntity {
 		public void useMove(CombatEntity target) {
 			Atoran atoran = (Atoran) this.getParent();
 			atoran.setEmpowered(true);
-			this.disabled = true;
+			this.disabled = true; // Cant be used until Atoran performs another move after use
 			
 			this.runAnimation(target);
 		}
 		
 		@Override
 		protected void runAnimation(CombatEntity target) {
+			// Labal used for animation graphics
 			JLabel label = new JLabel();
 			label.setSize(new Dimension(225, 225));
 			Window.scaleComponent(label);
@@ -109,18 +111,19 @@ public class Atoran extends CombatEntity {
 			
 			GraphicAnimation graphic = new GraphicAnimation(label, 8, this.uniqueIndex[0], 0, 2);
 			
+			// Method to add label and play sound
 			Runnable addLabel = () -> {
 				CombatInterface.layerOnePane.add(label, JLayeredPane.MODAL_LAYER);
 				sound.play();
 			};
-			graphic.keyframes[0] = new Keyframe(addLabel);
+			graphic.keyframes[0] = new Keyframe(addLabel); // Sets it to be ran on the first keyframe
 			
 			
 			Runnable removeLabel = () -> {
 				CombatInterface.layerOnePane.remove(label);
 			};
 		
-			
+			// Animation
 			ArrayList<Animation> animationsList = new ArrayList<>();
 			animationsList.add(graphic);
 			
@@ -131,7 +134,7 @@ public class Atoran extends CombatEntity {
 		}
 	}
 
-	
+	// Does direct damage to a single enemy
 	public static class SlashMove extends Move {
 
 		public SlashMove(CombatEntity parent) {
@@ -143,6 +146,7 @@ public class Atoran extends CombatEntity {
 		
 		
 		private void slashAnimation(CombatEntity target) {
+			// Label used for nimation graphics
 			JLabel attackLabel = new JLabel();
 			attackLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));
 			Window.scaleComponent(attackLabel);
@@ -155,22 +159,21 @@ public class Atoran extends CombatEntity {
 				CombatInterface.layerOnePane.add(attackLabel, JLayeredPane.MODAL_LAYER);
 				sound.play();
 			};
-			attackGraphic.keyframes[0] = new Keyframe(addAttackLabel);
+			attackGraphic.keyframes[0] = new Keyframe(addAttackLabel); // Set to play during the first keyframe
 			
 			
 			Runnable removeAttackLabel = () -> {
 				CombatInterface.layerOnePane.remove(attackLabel);
 			};
 			
-
+			// Causes target to shake after being hit
 			Runnable shakeAnimation = () -> {
 				AnimationPlayerModule.shakeAnimation(target);
 				target.updateHealthBar();
 			};
 			attackGraphic.keyframes[1] = new Keyframe(shakeAnimation);
 			
-			
-			
+			// The destination Atoran will head towards during the movement animation (Infront of the target)
 			Point targetDestination = new Point((int)
 					(target.sprite.getLocation().x + Window.scaleInt(250) * this.getParent().facingLeft), 
 					target.sprite.getLocation().y + target.sprite.getHeight() - this.getParent().sprite.getHeight());
@@ -178,8 +181,8 @@ public class Atoran extends CombatEntity {
 			
 			attackLabel.setLocation(targetDestination.x - Window.scaleInt(40), targetDestination.y - Window.scaleInt(120));
 			
-			MovementAnimation moveToTarget = new MovementAnimation(this.getParent().sprite, 24, "easeOutQuart", targetDestination, null);
-			MovementAnimation moveBack = new MovementAnimation(this.getParent().sprite, 22, "easeOutQuart", this.getParent().sprite.getLocation(), targetDestination);
+			MovementAnimation moveToTarget = new MovementAnimation(this.getParent().sprite, 24, "easeOutQuart", targetDestination, null); // Moves to target
+			MovementAnimation moveBack = new MovementAnimation(this.getParent().sprite, 22, "easeOutQuart", this.getParent().sprite.getLocation(), targetDestination); // Moves back
 
 			
 			
@@ -194,7 +197,7 @@ public class Atoran extends CombatEntity {
 			AnimationPlayerModule.addAnimation(finalAnimation);
 		}
 		
-		
+		// This animation is played instead if Atoran is empowered
 		private void empoweredSlashAnimation(CombatEntity target) {
 			GameSound sound = new GameSound("Resources/Sounds/SwordSwing1.wav");
 
@@ -253,14 +256,14 @@ public class Atoran extends CombatEntity {
 			AnimationPlayerModule.addAnimation(finalAnimation);
 		}
 		
-		
+		// If atoran is empowered
 		private void empoweredSlash(CombatEntity target) {
 			target.recieveDamage((int)(this.getDamage() * this.getParent().damageMultiplier));
-			this.getParent().moveSet[2].disabled = false;
+			this.getParent().moveSet[2].disabled = false; // Enables the empower move
 			empoweredSlashAnimation(target);
 		}
 		
-		
+		// If atoran is not empowered
 		private void slash(CombatEntity target) {
 			target.recieveDamage(this.getDamage());
 			
@@ -274,7 +277,7 @@ public class Atoran extends CombatEntity {
 			
 			if (atoran.empowered == true) {
 				empoweredSlash(target);
-				atoran.setEmpowered(false);
+				atoran.setEmpowered(false); // Unempowers Atoran
 			} else {
 				slash(target);
 			}
@@ -288,7 +291,7 @@ public class Atoran extends CombatEntity {
 		}
 	}
 
-	
+	// Damage to all enemies on the field
 	public static class SweepMove extends Move {
 
 		public SweepMove(CombatEntity parent) {
@@ -300,17 +303,18 @@ public class Atoran extends CombatEntity {
 			this.preloadAnimations();
 		}
 		
-		
+		// If Atoran is empowered
 		private void empoweredSweep() {
 			CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
-			this.getParent().moveSet[2].disabled = false;
-			for (int i = 0; i < enemies.length; i++) {
+			this.getParent().moveSet[2].disabled = false; // Enables empower move
+			for (int i = 0; i < enemies.length; i++) { // Damage to all enemies
 				enemies[i].recieveDamage((int)(this.getDamage() * this.getParent().damageMultiplier));
 			}
 			
 			empoweredSweepAnimation();
 		}
 		
+		// If Atoran is not empowered
 		private void sweep() {
 			CombatEntity[] enemies = Combat.currentCombatInstance.notCurrentTeam.members;
 			
@@ -321,7 +325,7 @@ public class Atoran extends CombatEntity {
 			sweepAnimation();
 		}
 		
-		
+		// Animation for empowered sweep
 		private void empoweredSweepAnimation() {
 			GameSound sound = new GameSound("Resources/Sounds/SwordSwing1.wav");
 			
@@ -371,7 +375,7 @@ public class Atoran extends CombatEntity {
 			AnimationPlayerModule.addAnimation(finalAnimation);
 		}
 		
-		
+		// Animation for uneqmpowered sweep
 		private void sweepAnimation() {
 			JLabel animationLabel = new JLabel();
 			animationLabel.setSize(new Dimension((int)(550 * 1.2), (int)(400 * 1.2)));

@@ -23,15 +23,15 @@ public class CombatEntity {
 	public int health = 0;
 	public boolean dead = false;
 	public double damageMultiplier = 1.0;
-	private Point fieldPosition;
+	private Point fieldPosition; // JLabel position on the field
 	private String name;
 	public JLabel sprite;
 	public JLabel healthBar;
 	public int maxHealth;
-	public int facingLeft;
-	public boolean flipIfFacingLeft;
-	private File imageFile;
-	public boolean flipImages;
+	public int facingLeft; // Direction entity is facing (== 1)
+	public boolean flipIfFacingLeft; // Flips the JLabel image if the character is facing left
+	private File imageFile; // Sprite image
+	public boolean flipImages; // Boolean to flip animation graphic images
 	
 	public CombatEntity(String name, int health, Move[] moveSet, JLabel sprite, boolean flipImages) {
 		this.health = health;
@@ -40,6 +40,7 @@ public class CombatEntity {
 		this.maxHealth = health;
 		this.flipImages = flipImages;
 		
+		// Creates default sprite if it does not have one
 		if (sprite == null) {
 			JLabel defaultSprite = new JLabel(this.getName());
 			defaultSprite.setPreferredSize(new Dimension(70, 70));
@@ -58,7 +59,7 @@ public class CombatEntity {
 		this.imageFile = image;
 	}
 	
-	
+	// Loads all the animations for each move in the moveset
 	public void loadAnimations() {
 		for (Move move : this.moveSet) {
 			move.preloadAnimations();
@@ -70,7 +71,7 @@ public class CombatEntity {
 		return this.name;
 	}
 	
-	
+	// Resets the character state, this will usually be overriden
 	public void reset() {
 		this.health = this.maxHealth;
 		this.damageMultiplier = 1.0;
@@ -78,20 +79,18 @@ public class CombatEntity {
 		this.dead = false;
 	}
 	
-	
+	// Loads the sprite image
 	public void loadSpriteIcon() {
 		Image image = null;
 		try {
 			image = ImageIO.read(this.imageFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Image targetImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
-		//image = image.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
 		image = Window.scaleImage(this.sprite.getWidth(), this.sprite.getHeight(), image);
 		
+		// Flips to appropriate direction
 		if (facingLeft == 1 && flipIfFacingLeft == true) {
 			image = AnimationPlayerModule.createMirror(image);
 		} else if (facingLeft == -1 && flipIfFacingLeft == false) {
@@ -107,7 +106,7 @@ public class CombatEntity {
 		this.moveSet = moveSet;
 	}
 	
-	
+	// Heals the character
 	public void heal(int amount) {
 		if (this.health + amount > this.maxHealth) {
 			this.health = this.maxHealth;
@@ -118,12 +117,12 @@ public class CombatEntity {
 		this.updateHealthBar();
 	}
 	
-	
+	// Uses the move selected
 	public void performTurn(Move move, CombatEntity target) {
 		move.useMove(target);
 	}
 	
-	
+	// Updates the healthbar JLabel
 	public void updateHealthBar() {
 		double healthBarPercent = ((double)this.health/(double)this.maxHealth);
 		int healthBarLength = Window.scaleInt((int)(healthBarPercent * 200.0));
@@ -132,12 +131,13 @@ public class CombatEntity {
 		this.healthBar.setSize(new Dimension(healthBarLength, Window.scaleInt(15)));
 	}
 	
-	
+	// Damages the entity
 	public void recieveDamage(int damage) {
-		int totalDamage = (int)((double)(damage - (double)damage * this.damageResistence));
+		int totalDamage = (int)((double)(damage - (double)damage * this.damageResistence)); // Damage - resistence
 		
 		this.health = this.health - totalDamage;
 		
+		// Death
 		if (this.health <= 0 ) {
 			this.death();
 		}
@@ -148,10 +148,11 @@ public class CombatEntity {
 		}
 	}
 	
-	
+	// Kills the entity
 	public void death() {
 		this.dead = true;
 		
+		// Removes sprite
 		Runnable removeSprite = () -> {
 			try {
 				TimeUnit.MILLISECONDS.sleep(2000);
@@ -174,7 +175,7 @@ public class CombatEntity {
 		return fieldPosition;
 	}
 	
-	
+	// Chooses the move randomly if it is automatic
 	protected Move chooseMove() {
 		Random randomGenerator = new Random();
 		
@@ -192,16 +193,16 @@ public class CombatEntity {
 		return move;
 	}
 	
-	
+	// Used for enemies, this will automatically choose a move and perform it for autonomous entities
 	public void automatedTurn(CombatEntity[] team, CombatEntity[] enemyTeam) {
-		Move move = chooseMove();
+		Move move = chooseMove(); // Random move (Unless this method is overriden)
 		
-		CombatEntity target; // Set to null to stop error
+		CombatEntity target;
 		
-		ArrayList<CombatEntity> potentialTargets = new ArrayList<CombatEntity>();
+		ArrayList<CombatEntity> potentialTargets = new ArrayList<CombatEntity>(); // A list of targets that the entity can perform the move on
 		
-			
-		if (move.checkIfTargetIsValid("enemies") == true) {
+		
+		if (move.checkIfTargetIsValid("enemies") == true) { // This move can be used on enemies if true
 			for (int i = 0; i < enemyTeam.length; i++) {
 				CombatEntity entity = enemyTeam[i];
 				
@@ -209,7 +210,7 @@ public class CombatEntity {
 					potentialTargets.add(entity);
 				}
 			}
-		} else if (move.checkIfTargetIsValid("team") == true) {
+		} else if (move.checkIfTargetIsValid("team") == true) { // This move can be used on self and teammates if true
 			for (int i = 0; i < team.length; i++) {
 				CombatEntity entity = team[i];
 				
@@ -219,6 +220,7 @@ public class CombatEntity {
 			}
 		}
 		
+		// Randomly chooses a target that meets the qualifications
 		Random randomGenerator = new Random();
 		int arrayListSize = potentialTargets.size();
 		if (arrayListSize == 0) {
@@ -230,7 +232,9 @@ public class CombatEntity {
 			int randomTarget = randomGenerator.nextInt(0, arrayListSize);
 			target = potentialTargets.get(randomTarget);
 		}
-		performTurn(move, target);
+		
+		performTurn(move, target); // Performs the turn
+		// Wait before next entity's turn
 		Runnable fpsMethod = () -> {
 			try {
 				TimeUnit.MILLISECONDS.sleep(2000);
@@ -244,12 +248,12 @@ public class CombatEntity {
 		fpsThread.start();
 	}
 	
-	
+	// Decides how to perform the turn
 	public void myTurn(boolean automatic, CombatEntity[] team, CombatEntity[] enemyTeam) {
-		if (automatic == true) {
+		if (automatic == true) { // Performs automatically
 			automatedTurn(team, enemyTeam);
 			
-		} else {
+		} else { // Player chooses move
 			CombatInterface.getTurn(moveSet);
 		}
 	}

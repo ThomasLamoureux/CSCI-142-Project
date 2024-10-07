@@ -13,51 +13,41 @@ public class SoundPlayerModule {
 	public static class GameSound {
 		private Clip clip;
 		
-		
+		// Sound
 		public GameSound(String path) {
 			createSound(path);
 		}
 		
-		
+		// Plays the sound looped
 		public void playLooped() {
 			this.clip.loop(Clip.LOOP_CONTINUOUSLY);
 		}
 		
-		
+		// Plays the sound looped for a set amount of time
 		public void playLooped(int loopCount) {
 			this.clip.loop(loopCount);
 		}
 		
-		
+		// Stops the sound from playing
 		public void stop() {
 			if (this.clip.isOpen() == true) {
 				this.clip.close();
 			}
 		}
 		
-		
-		public void pause() {
-			
-		}
-		
-		
+		// Stops the loop without stopping the sound
 		public void endLoop() {
 			if (this.clip.isRunning() == true) {
 				clip.stop();
 			}
 		}
 		
-		
+		// Plays the sound
 		public void play() {
 			playSound();
 		}
 		
-		public void setVolume() {
-			FloatControl gainControl = (FloatControl) this.clip.getControl(FloatControl.Type.MASTER_GAIN); 
-			gainControl.setValue(1.0f);
-		}
-		
-		
+		// Creates the sound clip
 		private void createSound(final String url) {
 			try {
 				Clip clip  = AudioSystem.getClip();
@@ -73,9 +63,8 @@ public class SoundPlayerModule {
 			}
 		}
 		
-		
+		// Plays the sound
 		private synchronized void playSound() {
-			//Clip sound = this.clip;
 			GameSound sound = this;
 			new Thread(new Runnable() {
 				public void run() {

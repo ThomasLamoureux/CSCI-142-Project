@@ -30,7 +30,7 @@ import utilities.SoundPlayerModule.GameSound;
 public class DralyaDragonForm extends CombatEntity {
 	
 	public static JLabel getDralyaDragonSprite() {
-		JLabel sprite = new JLabel("Dralya");
+		JLabel sprite = new JLabel();
 		sprite.setPreferredSize(new Dimension(300, 300));
 		sprite.setSize(new Dimension(300, 300));
 		sprite.setBackground(new Color(20, 0, 255));
@@ -39,14 +39,16 @@ public class DralyaDragonForm extends CombatEntity {
 		return sprite;
 	}
 	
+	// Animation used for when the dragon teleports to a location
 	public static GraphicAnimation teleportIn(JLabel animationLabel, JLabel sprite, Point destination, Point location, int index) {
 		animationLabel.setSize(new Dimension((int)(300), (int)(300)));
 		Window.scaleComponent(animationLabel);
 		
-		int offsetThree = (animationLabel.getWidth() - sprite.getWidth())/2;
+		// Offsets the position of the label based of the 2 sprite's width
+		int offset = (animationLabel.getWidth() - sprite.getWidth())/2;
 		Point animationLocationThree = new Point(
-				location.x - offsetThree,
-				location.y - offsetThree
+				location.x - offset,
+				location.y - offset
 				);
 
 		
@@ -59,7 +61,7 @@ public class DralyaDragonForm extends CombatEntity {
 			CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
 		};
 		
-		
+		// Sets sprite to visible
 		Runnable setVisible = () -> {
 			sprite.setVisible(true);;
 		};
@@ -70,14 +72,16 @@ public class DralyaDragonForm extends CombatEntity {
 		return teleportInAnimation;
 	}
 	
+	// Animation used for when the dragon teleports from a location
 	public static GraphicAnimation teleportOut(JLabel animationLabel, JLabel sprite, Point destination, Point location, int index) {
 		animationLabel.setSize(new Dimension((int)(300), (int)(300)));
 		Window.scaleComponent(animationLabel);
 		
-		int offsetTwo = (animationLabel.getWidth() - sprite.getWidth())/2;
+		// Offsets the position of the label based of the 2 sprite's width
+		int offset = (animationLabel.getWidth() - sprite.getWidth())/2;
 		Point animationLocationTwo = new Point(
-				location.x - offsetTwo,
-				location.y - offsetTwo
+				location.x - offset,
+				location.y - offset
 				);
 
 		
@@ -90,7 +94,7 @@ public class DralyaDragonForm extends CombatEntity {
 			CombatInterface.layerOnePane.add(animationLabel, JLayeredPane.MODAL_LAYER);
 		};
 		
-		
+		// Sets the dargon invisible before moving
 		Runnable setInvisibleAndMove = () -> {
 			sprite.setVisible(false);;
 			sprite.setLocation(destination);
@@ -104,6 +108,7 @@ public class DralyaDragonForm extends CombatEntity {
 		return teleportOutAnimation;
 	}
 	
+	// Dralya the greatest of dragons
 	public DralyaDragonForm(boolean flip) {
 		super("Dralya", 525, null, getDralyaDragonSprite(), flip);
 		
@@ -114,6 +119,7 @@ public class DralyaDragonForm extends CombatEntity {
 		
 		DragonSlash move1 = new DragonSlash(this);
 		PowerfulDragonSlash move2 = new PowerfulDragonSlash(this);
+		// Damage editing
 		move1.setDamage(80);
 		move2.setDamage(80);
 		
@@ -128,12 +134,12 @@ public class DralyaDragonForm extends CombatEntity {
 		this.damageMultiplier = 1.0;
 		this.damageResistence = 0.0;
 		this.dead = false;
-		
+		// Custom
 		this.sprite = getDralyaDragonSprite();
 	}
 	
 	
-	
+	// Damage to a single enemy
 	public static class DragonSlash extends Move {
 
 		public DragonSlash(CombatEntity parent) {
@@ -244,8 +250,9 @@ public class DralyaDragonForm extends CombatEntity {
 		}
 	}
 	
+	// Damages a single enemy
 	public static class PowerfulDragonSlash extends Move {
-		private int bloodCost = 0;
+		private int bloodCost = 0; // Move will bleed the user by however this much is 
 
 		public PowerfulDragonSlash(CombatEntity parent) {
 			super("Empowered Dragon Slash", new boolean[]{true, false, false}, parent);
@@ -373,6 +380,7 @@ public class DralyaDragonForm extends CombatEntity {
 		}
 	}
 	
+	// Damage to a single enemy
 	public static class FireLances extends Move {
 
 		public FireLances(CombatEntity parent) {
@@ -523,6 +531,7 @@ public class DralyaDragonForm extends CombatEntity {
 				CombatInterface.layerOnePane.remove(animationLabelFive);
 			};
 			
+			// Changes the sprite to a flying version
 			Runnable changeToFlyingDragon = () -> {
 				File targetFile = new File("Resources/Images/DragonFly.png");
 				Image image = null;

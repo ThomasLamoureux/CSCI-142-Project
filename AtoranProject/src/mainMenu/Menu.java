@@ -42,10 +42,11 @@ public class Menu {
 	private static boolean creditsOpen = false;
 	private static JLabel creditsLabel;
 	
+	// Preloads the images for the logo animation
 	public static void loadIntroScreen() {
 		introIndex = AnimationsPreloader.loadImages("Resources/Animations/SigmaStudiosIntro", new Dimension(1920, 1080), false);
 	}
-	
+	// Runs an logo animation
 	public static void introScreen() {
 		JLabel animationLabel = new JLabel();
 		animationLabel.setSize(new Dimension(1920, 1080));
@@ -65,13 +66,13 @@ public class Menu {
 		GraphicAnimation logoAnimation = new GraphicAnimation(animationLabel, 85 * 4, introIndex, 0, 4);
 		
 		Combat.combatMusic = new GameSound("Resources/Sounds/MenuSoundtrack.wav");
-		//menuMusic.setLooped(true);
+
 		Runnable removeLogoAnimation = () -> {
 			animationLabel.setVisible(false);
 		};
 		
 		Runnable playMenuMusic = () -> {
-			Combat.combatMusic.playLooped();
+			Combat.combatMusic.playLooped(); // Plays the music looped
 		};
 		
 		Runnable setPlayButtonVisible = () -> {
@@ -135,7 +136,7 @@ public class Menu {
             public void actionPerformed(ActionEvent event) {
 				window.clearFrame();
 				GameMap.currentMap.openGameMap();
-				if (GameMap.getLevels().get(0).isCompleted() == false) {
+				if (GameMap.getLevels().get(0).isCompleted() == false) { // Plays intro cutscene if player has not completed tutorial level
 					CreatedCutscenes.introCutscene().start(null);
 				}
             }
@@ -152,7 +153,7 @@ public class Menu {
         creditsButton.setOpaque(false);
         creditsButton.setVisible(false);
         
-        creditsLabel = new JLabel("<html>Bridget Wexler<br></br>Luke Alley<br></br>Temirlan Stamakunov<br></br>Thomas Lamoureux</html>", JLabel.CENTER);
+        creditsLabel = new JLabel("<html>Bridget Wexler<br></br>Luke Alley<br></br>Temirlan Stamakunov<br></br>Thomas Lamoureux</html>", JLabel.CENTER); // html!
         creditsLabel.setLocation(new Point(500, 300));
         creditsLabel.setSize(new Dimension(920, 500));
         creditsLabel.setFont(new Font("Algerian", Font.ROMAN_BASELINE, Window.scaleInt(60)));
@@ -160,6 +161,7 @@ public class Menu {
         creditsLabel.setVisible(false);
         Window.scaleComponent(creditsLabel);
  
+        // Shows credits, unshows credits. Same button
         creditsButton.addActionListener(new ActionListener() {
 			@Override
             public void actionPerformed(ActionEvent event) {
@@ -188,10 +190,8 @@ public class Menu {
     }
 
     public static void start() {
-        // Creating a window
     	openMenu();
     	introScreen();
-    	Engine.toggleFps(true);
     }
 }
 
